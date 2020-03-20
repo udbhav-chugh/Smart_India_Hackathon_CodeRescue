@@ -1,0 +1,36 @@
+<html>
+<head>
+
+</head>
+
+<body>
+    <p id="location">HI</p>
+    <button onclick="getLocation()">Locate</button>
+
+    <script>
+        var x = document.getElementById("location");
+        function getLocation() {
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+          } else {
+            x.innerHTML = "Geolocation is not supported by this browser.";
+          }
+        }
+
+        function showPosition(position) {
+          // x.innerHTML = "Latitude: " + position.coords.latitude +
+          // "<br>Longitude: " + position.coords.longitude;
+          let lat = position.coords.latitude;
+          let long = position.coords.longitude;
+          $("input[name='lat']").val(lat);
+          $("input[name='lat']").val(long);
+          let url_str = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+long+'&key=yourkey'
+          $.getJSON(url_str, function(data) {
+              console.log(data);
+              //here you get the location data, like street address, city and pass it to inputs and submit the form to save it.
+          });
+        }
+
+    </script>
+<body>
+</html>

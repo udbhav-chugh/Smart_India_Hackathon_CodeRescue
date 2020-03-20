@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 import pymongo
+import urllib
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -39,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'mongo_auth',
 ]
 
 MIDDLEWARE = [
@@ -50,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 ROOT_URLCONF = 'disaster_management.urls'
 
@@ -75,6 +80,19 @@ WSGI_APPLICATION = 'disaster_management.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 #
+#
+# DATABASES = {
+#         'default': {
+#         'ENGINE': 'djongo',
+#         'NAME': 'sih',
+#         'HOST' : 'coderescue:sih2020@sih-jhvxc.mongodb.net/test?retryWrites=true&w=majority',
+#         #
+#         # 'HOST': urllib.parse.quote_plus("user") +':' + urllib.parse.quote_plus("user")+ '@cluster0-uqtkd.gcp.mongodb.net/test?retryWrites=true&w=majority',
+#         'USER': urllib.parse.quote_plus("coderescue"),
+#         'PASSWORD': urllib.parse.quote_plus("sih2020"),
+#     }
+# }
+
 DATABASES = {
     'default': {
         # 'ENGINE': '',
@@ -82,15 +100,6 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-# DATABASES = {
-#         'default': {
-#         'ENGINE': 'djongo',
-#         'NAME': 'database',
-#         'HOST': 'mongodb+srv://code_rescue:sih2020@sih-jhvxc.mongodb.net/test?retryWrites=true&w=majority',
-#         'USER': 'code_rescue',
-#         'PASSWORD': 'sih2020',
-#     }
-# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -129,3 +138,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# MANGO_JWT_SETTINGS = {
+#     "db_host": urllib.parse.quote_plus("user")+":"+ urllib.parse.quote_plus("user") + "@sih-jhvxc.mongodb.net",
+#     "db_name": "database",
+#     "db_user": urllib.parse.quote_plus("user"),
+#     "db_pass": urllib.parse.quote_plus("user"),
+#     # "db_pass": "user",
+# }

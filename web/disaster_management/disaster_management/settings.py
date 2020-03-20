@@ -74,22 +74,22 @@ WSGI_APPLICATION = 'disaster_management.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 #
-# DATABASES = {
-#     'default': {
-#         # 'ENGINE': '',
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
 DATABASES = {
-        'default': {
-        'ENGINE': 'djongo',
-        'NAME': 'database',
-        'HOST': 'mongodb+srv://code_rescue:sih2020@sih-jhvxc.mongodb.net/test?retryWrites=true&w=majority',
-        'USER': 'code_rescue',
-        'PASSWORD': 'sih2020',
+    'default': {
+        # 'ENGINE': '',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+# DATABASES = {
+#         'default': {
+#         'ENGINE': 'djongo',
+#         'NAME': 'database',
+#         'HOST': 'mongodb+srv://code_rescue:sih2020@sih-jhvxc.mongodb.net/test?retryWrites=true&w=majority',
+#         'USER': 'code_rescue',
+#         'PASSWORD': 'sih2020',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators

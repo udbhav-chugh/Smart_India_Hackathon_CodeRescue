@@ -21,5 +21,7 @@ urlpatterns = [
     path('main/', include('main.urls')),
     path('admin/', admin.site.urls),
     path('', views.index),
+    path('user/',include( ('user.urls' , 'user'), namespace = 'user' )),
+    # path('someurl', include(('home.urls', 'home'), namespace='home'))
 
 ]

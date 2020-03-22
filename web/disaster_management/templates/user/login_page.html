@@ -13,4 +13,21 @@
   </form>
 
 
+  {% if error %}
+  <button onclick="show_error()" id="error" ></button>
+  {% endif %}
+
+{% endblock %}
+
+{% block script %}
+
+  window.onload = function(){
+    document.getElementById("error").style.visibility = "hidden";
+    document.getElementById("error").click();
+  }
+
+  function show_error()
+    {
+      alert("Unsuccessfull Login!! \nKindly enter correct credentials and proceed ");
+    }
 {% endblock %}

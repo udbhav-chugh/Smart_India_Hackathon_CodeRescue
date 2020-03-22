@@ -19,18 +19,22 @@ def login (request):
 
     if( request.method == 'POST' ):
 
-        if (not os.environ.get('PYTHONHTTPSVERIFY', '') and getattr(ssl, '_create_unverified_context', None)):
-            ssl._create_default_https_context = ssl._create_unverified_context
-
         print( request.POST['username'] )
         client = connect()
+
+        # if headquarters is trying to login
         db = client.authorization.headquarters
-        cursor = db.inventory.find({ 'username' :request.POST['username'] , 'password' : request.POST['password']})
-        print ( cursor.count() )
-        for inventory in cursor :
-            pprint(inventory)
-        data = { 'username' :request.POST['username'] , 'password' : request.POST['password']  }
-        db.insert_one(data)
+        count_authorities = db.count_documents({ 'username' :request.POST['username'] , 'password' : request.POST['password']  })
+        print(count_authorities)
+        if count_authorities == 1:
+            return render( request , 'headquarters/dashboard.html' )
 
+        # if rescue team is trying to log in
+        db = client.authorization.rescue_team
+        count_authorities = db.count_documents({ 'username' :request.POST['username'] , 'password' : request.POST['password']  })
+        print(count_authorities)
+        if count_authorities == 1:
+            return render( request , 'rescue_team/dashboard.html' )
 
+        return render( request , 'user/login_page.html' , {"error" : 1})
     return render(request, 'user/login_page.html')

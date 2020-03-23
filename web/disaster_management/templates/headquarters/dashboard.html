@@ -2,20 +2,27 @@
 
 {% block script %}
 
+  function show_success()
+    {
+      alert("Notification Sent Successfully ");
+    }
 
   window.onload = function(){
     document.getElementById("location_wise_names").style.display = "none";
     document.getElementById("disaster_wise_names").style.display = "none";
+    document.getElementById("success").style.visibility = "hidden";
+    document.getElementById("success").click();
+
   }
 
   function hideLocations(){
-    document.getElementById("location_wise_names").style.display = "block";
-    document.getElementById("disaster_wise_names").style.display = "none";
+    document.getElementById("location_wise_names").style.display = "none";
+    document.getElementById("disaster_wise_names").style.display = "block";
   }
 
   function hideDisasters(){
-    document.getElementById("location_wise_names").style.display = "none";
-    document.getElementById("disaster_wise_names").style.display = "block";
+    document.getElementById("location_wise_names").style.display = "block";
+    document.getElementById("disaster_wise_names").style.display = "none";
   }
 
 {% endblock %}
@@ -28,7 +35,6 @@
 
   <form method="POST" action="{% url 'main:headquarters_dashboard' %}">
     {% csrf_token %}
-
 
     <input type="radio" id="disaster_wise" name="is_disaster" value="disaster_wise" onclick="hideLocations()">
     <label for="disaster_wise">Disaster Name</label><br>
@@ -62,6 +68,8 @@
   <input type="submit" value="Submit">
   </form>
 
-
+  {% if success %}
+  <button onclick="show_success()" id="success" ></button>
+  {% endif %}
 
 {% endblock %}

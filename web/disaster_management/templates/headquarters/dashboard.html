@@ -1,8 +1,67 @@
 {% extends "base_generic.html" %}
 
+{% block script %}
+
+
+  window.onload = function(){
+    document.getElementById("location_wise_names").style.display = "none";
+    document.getElementById("disaster_wise_names").style.display = "none";
+  }
+
+  function hideLocations(){
+    document.getElementById("location_wise_names").style.display = "block";
+    document.getElementById("disaster_wise_names").style.display = "none";
+  }
+
+  function hideDisasters(){
+    document.getElementById("location_wise_names").style.display = "none";
+    document.getElementById("disaster_wise_names").style.display = "block";
+  }
+
+{% endblock %}
+
 {% block content %}
 
   Suceessfully logged in headquarters!!
+
+  <h3> Send notification from below </h3>
+
+  <form method="POST" action="{% url 'main:headquarters_dashboard' %}">
+    {% csrf_token %}
+
+
+    <input type="radio" id="disaster_wise" name="is_disaster" value="disaster_wise" onclick="hideLocations()">
+    <label for="disaster_wise">Disaster Name</label><br>
+    <input type="radio" id="location_wise" name="is_disaster" value="location_wise" onclick="hideDisasters()">
+    <label for="female">Location Wise</label><br>
+
+  <div id="disaster_wise_names">
+    <label for="disaster_names">Disaster Name: </label><br>
+    <select id="disaster_names" name="disaster_names">
+      {% for disaster in disaster_names %}
+        <option value = "{{disaster}}"> {{disaster}}</option>
+      {% endfor %}
+    </select>
+    <br><br>
+  </div>
+
+  <div id="location_wise_names">
+    <label for="location_names">Location Name: </label><br>
+    <select id="location_names" name="location_names">
+      {% for location in location_names %}
+        <option value = "{{location}}"> {{location}}</option>
+      {% endfor %}
+    </select>
+    <br><br>
+  </div>
+
+
+<label for="message">Message To Send:</label><br>
+  <input type="text" id="message" name= "message" value="message"><br><br>
+
+  <input type="submit" value="Submit">
+  </form>
+
 
 
 {% endblock %}

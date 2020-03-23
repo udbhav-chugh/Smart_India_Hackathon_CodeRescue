@@ -5,4 +5,6 @@ app_name = 'main'
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('headquarters_dashboard' , views.headquarters_dashboard , name='headquarters_dashboard'),
+    path('rescue_team_dashboard' , views.rescue_team_dashboard , name='rescue_team_dashboard')
 ]

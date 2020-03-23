@@ -13,11 +13,14 @@
         {% else %}
             <input type="text" id="location" name= "location" value=""><br>
             <br>
-            <input type = "submit" value = "Go">
+            <input type = "submit" value = "Go"><br>
         {% endif %}
     </form>
 
-
+    <br><br>
+    {% if location %}
+        <button onclick="location.href='{% url 'main:notifications' location %}'"> Check Notifications </button>
+    {% endif %}
     <script>
       var x = document.getElementById("coord");
       function getLocation() {

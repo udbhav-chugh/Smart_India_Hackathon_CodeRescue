@@ -1,0 +1,7 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    {% for x in notifications %}
+        <h4>{{ x }}</h4>
+    {% endfor %}
+{% endblock %}

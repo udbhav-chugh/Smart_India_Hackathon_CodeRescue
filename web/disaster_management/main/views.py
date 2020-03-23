@@ -13,17 +13,29 @@ def index(request):
     context = {}
     if request.session.has_key('location'):
         context['location'] = request.session['location']
-
+        print(context['location'])
     return render(request , 'main/index.html' , context)
 
 def getUserLocation(request):
     if request.method == 'POST':
         location = request.POST['location']
         request.session['location'] = location
-        return HttpResponseRedirect(reverse('main:index'))
+    return HttpResponseRedirect(reverse('main:index'))
+
+def notifications(request, loc):
+    client = connect()
+    db = client.main.notification
+    print("connected")
+    data = db.find()
+    notfs = list(data)
+    context = {
+        'notifications' : notfs
+    }
+    return render(request , 'main/notification.html' , context)
+
 #mayank code starts here... kindly accept my part of code if merge conflict arises
 
-locations =["Andhra Pradesh","Arunachal Pradesh ","Assam","Bihar","Chhattisgarh","Goa","Gujarat",
+locations = ["Andhra Pradesh","Arunachal Pradesh ","Assam","Bihar","Chhattisgarh","Goa","Gujarat",
 "Haryana","Himachal Pradesh","Jammu and Kashmir","Jharkhand","Karnataka","Kerala",
 "Madhya Pradesh","Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland","Odisha",
 "Punjab","Rajasthan","Sikkim","Tamil Nadu","Telangana","Tripura","Uttar Pradesh","Uttarakhand",

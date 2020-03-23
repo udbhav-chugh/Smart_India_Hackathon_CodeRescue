@@ -11,9 +11,16 @@ def connect():
 
 def index(request):
     context = {}
+    if request.session.has_key('location'):
+        context['location'] = request.session['location']
+
     return render(request , 'main/index.html' , context)
 
-
+def getUserLocation(request):
+    if request.method == 'POST':
+        location = request.POST['location']
+        request.session['location'] = location
+        return HttpResponseRedirect(reverse('main:index'))
 #mayank code starts here... kindly accept my part of code if merge conflict arises
 
 locations =["Andhra Pradesh","Arunachal Pradesh ","Assam","Bihar","Chhattisgarh","Goa","Gujarat",

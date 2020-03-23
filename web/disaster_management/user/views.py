@@ -24,6 +24,15 @@ def login (request):
 
         # if headquarters is trying to login
         db = client.authorization.headquarters
+
+        cursor = db.find({})
+        # pprint(cursor)
+        # print(cursor)
+        data = list(cursor)
+        for data in data:
+            print(data['username'] + "'s password is' " + data['password']  )
+
+
         count_authorities = db.count_documents({ 'username' :request.POST['username'] , 'password' : request.POST['password']  })
         print(count_authorities)
         if count_authorities == 1:

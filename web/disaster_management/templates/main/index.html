@@ -19,7 +19,7 @@
 
     <br><br>
     {% if location %}
-        <button onclick="location.href='{% url 'main:notifications' location %}'"> Check Notifications </button>
+        <button onclick="location.href='{% url 'main:notifications' location|lower %}'"> Check Notifications </button>
     {% endif %}
     <script>
       var x = document.getElementById("coord");
@@ -37,12 +37,16 @@
         "<br>Longitude: " + position.coords.longitude;
         let lat = position.coords.latitude;
         let long = position.coords.longitude;
-        $("input[name='lat']").val(lat);
-        $("input[name='lat']").val(long);
-        let url_str = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+long+'&key=AIzaSyB8sd6nmQXMsXjEoEHWIT1xX3iH2tR81wg'
-        $.getJSON(url_str, function(data) {
-            console.log(data);
-            //here you get the location data, like street address, city and pass it to inputs and submit the form to save it.
+        // $("input[name='lat']").val(lat);
+        // $("input[name='lat']").val(long);
+        // let url_str = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+long+'&key=AIzaSyB8sd6nmQXMsXjEoEHWIT1xX3iH2tR81wg'
+        // $.getJSON(url_str, function(data) {
+        //     console.log(data);
+        //     //here you get the location data, like street address, city and pass it to inputs and submit the form to save it.
+        // });
+
+        $.get('https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat='+lat+'&lon='+long , function(data){
+            console.log(data.address.road);
         });
       }
     </script>

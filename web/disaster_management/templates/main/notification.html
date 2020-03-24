@@ -1,7 +1,35 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-    {% for x in notifications %}
-        <h4>{{ x }}</h4>
-    {% endfor %}
+<div class="container">
+    <ul id = "notf_list">
+        {% for x in notifications %}
+            <li><h4>{{ x }}</h4>
+        {% endfor %}
+    </ul>
+</div>
 {% endblock %}
+
+{% block javascript %}
+<script>
+setInterval(function () {
+        console.log('it works' + new Date());
+        $.ajax({
+            type: 'GET',
+            url: "{% url 'main:get_new_notifications' %}",
+            success: function (response) {
+                console.log(response);
+                var newnotfs = response["new_notifications"];
+                for (notf in newnotfs) {
+                    $('#notf_list').prepend(
+                        '<li>${notf}<li>'
+                    )
+                }
+            },
+            error: function (response) {
+                console.log(response)
+            }
+        })
+    },5000);
+</script>
+{% endblock javascript %}

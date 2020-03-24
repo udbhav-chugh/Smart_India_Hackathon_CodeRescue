@@ -65,6 +65,7 @@ def get_new_notifications(request):
                 newnotfs.append(notf)
             # else:
             #     break
+        request.session['lastNotification'] = notfs[0]['date']
         return JsonResponse({"new_notifications": newnotfs}, status=200)
     else:
         HttpResponseRedirect(reverse('main:index'))

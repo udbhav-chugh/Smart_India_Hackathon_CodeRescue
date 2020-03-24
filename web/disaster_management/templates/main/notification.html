@@ -19,10 +19,10 @@ setInterval(function () {
             url: "{% url 'main:get_new_notifications' %}",
             success: function (response) {
                 console.log(response);
-                var newnotfs = JSON.parse(response["new_notifications"]);
+                var newnotfs = response["new_notifications"];
                 for (notf in newnotfs) {
                     $('#notf_list').prepend(
-                        '<li>${notf}</li>'
+                        '<li>${notf||""}</li>'
                     )
                 }
             },

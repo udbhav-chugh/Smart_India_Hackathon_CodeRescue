@@ -117,14 +117,16 @@ def headquarters_dashboard(request):
 
     disaster_names = []
     location_names = []
-
+    disaster_rescue_teams= {}
     for data in data:
         disaster_names.append(data["name"])
+    for data in data :
+        rescue_teams_names[ data["name"] ] = (data["rescue_team_usernames"])
 
     for location in locations :
         location_names.append(location)
 
-    return render( request , 'headquarters/dashboard.html' , {"disaster_names" : disaster_names , "location_names": location_names , "success" : success} )
+    return render( request , 'headquarters/dashboard.html' , {"disaster_names" : disaster_names , "location_names": location_names , "success" : success , "rescue_teams_names" : rescue_teams_names } )
 
 def rescue_team_dashboard(request):
     return render( request , 'rescue_team/dashboard.html' )

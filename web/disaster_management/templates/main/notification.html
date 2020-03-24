@@ -20,9 +20,11 @@ setInterval(function () {
             success: function (response) {
                 console.log(response);
                 var newnotfs = response["new_notifications"];
+                console.log(newnotfs);
                 for (notf in newnotfs) {
+                    console.log(newnotfs[notf])
                     $('#notf_list').prepend(
-                        '<li>${notf||""}</li>'
+                        '<li><h4>'+ JSON.stringify(newnotfs[notf]) +'</h4></li>'
                     )
                 }
             },
@@ -30,6 +32,6 @@ setInterval(function () {
                 console.log(response)
             }
         })
-    },5000);
+    },10000);
 </script>
 {% endblock javascript %}

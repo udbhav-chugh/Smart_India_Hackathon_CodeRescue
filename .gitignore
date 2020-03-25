@@ -20,6 +20,7 @@ out/
 # Gradle files
 .gradle/
 build/
+.idea/
 
 # Local configuration file (sdk path, etc)
 local.properties
@@ -110,6 +111,7 @@ local.properties
 .idea/scopes/scope_settings.xml
 .idea/vcs.xml
 *.iml
+.idea/*
 
 # OS-specific files
 .DS_Store

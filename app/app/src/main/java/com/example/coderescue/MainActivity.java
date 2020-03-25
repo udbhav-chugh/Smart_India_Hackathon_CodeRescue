@@ -18,4 +18,9 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, RescueTeamLoginActivity.class);
         startActivity(intent);
     }
+    public void gotoVictimNotifications(View view){
+        Intent intent = new Intent(this, VictimNotifications.class);
+        startActivity(intent);
+    }
+
 }

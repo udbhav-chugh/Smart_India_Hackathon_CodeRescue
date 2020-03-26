@@ -12,13 +12,8 @@ import android.widget.EditText;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.mongodb.stitch.android.core.Stitch;
-import com.mongodb.stitch.android.core.StitchAppClient;
-import com.mongodb.stitch.android.core.auth.StitchUser;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
-// MongoDB Mobile Local Database Packages
-import com.mongodb.stitch.core.auth.providers.anonymous.AnonymousCredential;
 
 import org.bson.Document;
 
@@ -29,36 +24,15 @@ import static com.mongodb.client.model.Filters.eq;
 
 public class RescueTeamLoginActivity extends AppCompatActivity {
 
-    public static StitchAppClient client;
     public static RemoteMongoClient mongoClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_rescue_team_login);
-        enableAnonymousAuth();
 
     }
 
-
-    private void enableAnonymousAuth(){
-        client = Stitch.getDefaultAppClient();
-        client.getAuth().loginWithCredential(new AnonymousCredential()).addOnCompleteListener(
-                new OnCompleteListener<StitchUser>() {
-                    @Override
-                    public void onComplete(@NonNull final Task<StitchUser> task) {
-                        if (task.isSuccessful()) {
-                            Log.d("myApp", String.format(
-                                    "logged in as user %s with provider %s",
-                                    task.getResult().getId(),
-                                    task.getResult().getLoggedInProviderType()));
-                        } else {
-                            Log.e("myApp", "failed to log in", task.getException());
-                        }
-                    }
-                });
-
-    }
 
     public void loginaction(View view) {
         Intent intent = new Intent(this, RescueTeamDashboard.class);
@@ -70,7 +44,7 @@ public class RescueTeamLoginActivity extends AppCompatActivity {
         // 1. Instantiate the Stitch client
 
 
-        mongoClient = client.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
+        mongoClient = MainActivity.client.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
 
         final RemoteMongoCollection<Document> teams =
                 mongoClient.getDatabase("authorization").getCollection("rescue_team");

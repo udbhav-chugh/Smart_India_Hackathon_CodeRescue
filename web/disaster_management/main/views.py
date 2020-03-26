@@ -117,11 +117,12 @@ def headquarters_dashboard(request):
 
     disaster_names = []
     location_names = []
-    disaster_rescue_teams= {}
-    for data in data:
-        disaster_names.append(data["name"])
-    for data in data :
-        rescue_teams_names[ data["name"] ] = (data["rescue_team_usernames"])
+    rescue_teams_names = {}
+    for data1 in data:
+        disaster_names.append(data1["name"])
+
+    for data1 in data :
+        rescue_teams_names[data1["name"]] = data1["rescue_teams_usernames"]
 
     for location in locations :
         location_names.append(location)

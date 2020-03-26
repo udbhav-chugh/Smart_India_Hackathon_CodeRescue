@@ -63,8 +63,8 @@ def get_new_notifications(request):
                 ########### since ObjectId is not json serializable
                 notf['_id'] = 0
                 newnotfs.append(notf)
-            # else:
-            #     break
+            else:
+                break
         request.session['lastNotification'] = notfs[0]['date']
         return JsonResponse({"new_notifications": newnotfs}, status=200)
     else:

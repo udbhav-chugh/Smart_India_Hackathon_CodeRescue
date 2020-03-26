@@ -20,9 +20,19 @@ def connect():
 
 def index(request):
     context = {}
+    client = connect()
+
     if request.session.has_key('location'):
         context['location'] = request.session['location']
         print(context['location'])
+
+    db = client.main.disaster
+    print("HELLO Main Dashboard")
+
+    info = db.find({})
+    data = list(info)
+
+    context = { "data" : data }
     return render(request , 'main/index.html' , context)
 
 def getUserLocation(request):
@@ -79,11 +89,6 @@ def headquarters_dashboard(request):
     dt_string = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
     if( request.method == 'POST' ):
-        print( request.POST['is_disaster'] )
-        print( request.POST['disaster_names'] )
-        print( request.POST['location_names'] )
-        print( request.POST['message'] )
-
         if( request.POST['is_disaster'] == "disaster_wise" ):
             data = {
                 "is_disaster" :  1,

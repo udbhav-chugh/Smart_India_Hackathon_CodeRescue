@@ -15,4 +15,12 @@
         android:text="Write your message here!"
         tools:layout_editor_absoluteX="55dp"
         tools:layout_editor_absoluteY="88dp" />
+
+    <Button
+        android:id="@+id/snd_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Send"
+        tools:layout_editor_absoluteX="155dp"
+        tools:layout_editor_absoluteY="179dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

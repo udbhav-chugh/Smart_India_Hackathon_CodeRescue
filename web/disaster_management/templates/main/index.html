@@ -98,13 +98,13 @@
         {% for dictionary in data %}
 
             center = [ {{dictionary.coordinates.latitude}} , {{ dictionary.coordinates.longitude }} ]
-            var circle{{dictionary.scale}} = L.circle(center, {
+            var circle_{{dictionary.id}} = L.circle(center, {
               color: colors[ {{dictionary.scale}} -1 ],
               fillColor: colors[ {{dictionary.scale}} -1 ],
               fillOpacity: 0.7,
               radius: {{dictionary.coordinates.radius }}
             }).addTo(mymap);
-            circle{{dictionary.scale}}.bindPopup
+            circle_{{dictionary.id}}.bindPopup
             ( "<b>{{dictionary.name}}</b><br>"+
               "<b>Scale:</b> {{dictionary.scale}}<br>"+
               "<b>Total Affected: </b>{{dictionary.statistics.total.affected}}<br>"+

@@ -30,7 +30,11 @@ def index(request):
     print("HELLO Main Dashboard")
 
     info = db.find({})
-    data = list(info)
+    temp_data = list(info)
+
+    data = {}
+    for disaster in temp_data:
+        data[disaster["name"]] = disaster
 
     context = { "data" : data }
     return render(request , 'main/index.html' , context)

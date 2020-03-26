@@ -32,7 +32,18 @@
         <button onclick="location.href='{% url 'main:notifications' location|lower %}'"> Check Notifications </button>
     {% endif %}
 
+    <!-- the drop down menu to take disaster name as input  -->
+      <div id="disaster_wise_names">
+        <label for="disaster_names">Disaster Name: </label><br>
+        <select id="disaster_names" onchange="changeMapInfo()" name="disaster_names">
+          <option value = "all_disasters"> All</option>
+          {% for data in data %}
+            <option value = "{{data}}"> {{data}}</option>
+          {% endfor %}
+        </select>
+        <br><br>
 
+      </div>
 
     <div style="height:800px;width:700px;" id="mapid"></div>
 
@@ -66,16 +77,31 @@
       }
 
         center = [0, 0];
-        center =[21.730671,79.6728];
         center =[21.853283,81.079102];
         // center =[51.505, -0.09];
 
         //create the map
-        var mymap = L.map('mapid').setView( center, 5);
         // var mymap = L.map('mapid').setView(center, 0);
 
         // var map = L.map('map').setView(center, 0);
 
+        var disaster_data ={} ;
+        {% for disaster_key,disaster_values in data.items %}
+          disaster_data.{{disaster_values.id}} = {};
+          disaster_data.{{disaster_values.id}}.name = "{{disaster_values.name}}";
+          disaster_data.{{disaster_values.id}}.coordinates={}
+          disaster_data.{{disaster_values.id}}.coordinates.latitude = "{{disaster_values.coordinates.latitude}}";
+          disaster_data.{{disaster_values.id}}.coordinates.longitude = "{{disaster_values.coordinates.longitude}}";
+          disaster_data.{{disaster_values.id}}.coordinates.radius = {{disaster_values.coordinates.radius}};
+          disaster_data.{{disaster_values.id}}.id = "{{disaster_values.id}}";
+          disaster_data.{{disaster_values.id}}.scale = {{disaster_values.scale}};
+          disaster_data.{{disaster_values.id}}.statistics = {};
+          disaster_data.{{disaster_values.id}}.statistics.total = {};
+          disaster_data.{{disaster_values.id}}.statistics.total.affected = {{disaster_values.statistics.total.affected}};
+          disaster_data.{{disaster_values.id}}.statistics.total.deaths = {{disaster_values.statistics.total.deaths}};
+        {% endfor %}
+
+        var mymap = L.map('mapid').setView( center, 5);
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
           attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
           maxZoom: 100,
@@ -84,35 +110,64 @@
           zoomOffset: -1,
           accessToken: 'pk.eyJ1IjoibW5rMzQzIiwiYSI6ImNrODY0Z3F2NDBhcW8zZ284Yjg3Z3Q2ZWoifQ.XR8nBDHgRGjJq6nOg0rZAQ'
         }).addTo(mymap);
-        // var circle = L.circle(center, {
-        //   color: 'red',
-        //   fillColor: '#f03',
-        //   fillOpacity: 0.5,
-        //   radius: 90000
-        // }).addTo(mymap);
-        // circle.bindPopup("I am a circle.");
 
         var colors = ["#FA8072" , "#CD5C5C" , "#BA4545" , "#ED2939" , "#CA3433",
                       "#B22222", "#960018" , "#7CDAD2" , "#5E1914" , "#420D09"];
+        for (let [disaster_key, disaster_values] of Object.entries(disaster_data)) {
+          console.log(disaster_values.name);
+          console.log(disaster_values.coordinates.latitude);
+          console.log(disaster_values.coordinates.longitude);
+          console.log(disaster_values.scale);
+          console.log(disaster_values.coordinates.radius);
+          center = [  disaster_values.coordinates.latitude  ,  disaster_values.coordinates.longitude  ]
+          console.log(center);
+          eval( 'var circle_' + disaster_values.id + '= ' +
+          ' L.circle(center, {' +
+          '  color: colors[' + disaster_values.scale +'-1 ],' +
+          '  fillColor: colors['+ disaster_values.scale +'-1 ],' +
+          ' fillOpacity: 0.7,' +
+          '  radius: '+disaster_values.coordinates.radius+
+          '}).addTo(mymap);');
+          eval('circle_' + disaster_values.id + '.bindPopup( "<b>'+disaster_values.name+'</b><br><b>Scale:</b>'+ disaster_values.scale+'<br><b>Total Affected: </b>'+disaster_values.statistics.total.affected+ '<br><b>Total Deaths: </b>'+disaster_values.statistics.total.deaths+'<br>" );');
+          }
 
-        {% for dictionary in data %}
+        // console.log(disaster_data);
 
-            center = [ {{dictionary.coordinates.latitude}} , {{ dictionary.coordinates.longitude }} ]
-            var circle_{{dictionary.id}} = L.circle(center, {
-              color: colors[ {{dictionary.scale}} -1 ],
-              fillColor: colors[ {{dictionary.scale}} -1 ],
-              fillOpacity: 0.7,
-              radius: {{dictionary.coordinates.radius }}
-            }).addTo(mymap);
-            circle_{{dictionary.id}}.bindPopup
-            ( "<b>{{dictionary.name}}</b><br>"+
-              "<b>Scale:</b> {{dictionary.scale}}<br>"+
-              "<b>Total Affected: </b>{{dictionary.statistics.total.affected}}<br>"+
-              "<b>Total Deaths: </b>{{dictionary.statistics.total.deaths}}<br>" );
+        function changeMapInfo()
+        {
+          center =[21.853283,81.079102];
+          var disaster_name = document.getElementById("disaster_names").value;
+          console.log(disaster_name);
+          mymap.remove();
+          mymap = L.map('mapid').setView( center, 5);
 
-        {% endfor %}
+          L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 100,
+            id: 'mapbox/streets-v11',
+            tileSize: 512,
+            zoomOffset: -1,
+            accessToken: 'pk.eyJ1IjoibW5rMzQzIiwiYSI6ImNrODY0Z3F2NDBhcW8zZ284Yjg3Z3Q2ZWoifQ.XR8nBDHgRGjJq6nOg0rZAQ'
+          }).addTo(mymap);
 
-
+          var colors = ["#FA8072" , "#CD5C5C" , "#BA4545" , "#ED2939" , "#CA3433",
+                        "#B22222", "#960018" , "#7CDAD2" , "#5E1914" , "#420D09"];
+          for (let [disaster_key, disaster_values] of Object.entries(disaster_data)) {
+              if( disaster_name == "all_disasters" || ( disaster_name!="all_disasters" && disaster_name == disaster_values.name  )  )
+              {
+                center = [  disaster_values.coordinates.latitude  ,  disaster_values.coordinates.longitude  ]
+                console.log(center);
+                eval( 'var circle_' + disaster_values.id + '= ' +
+                ' L.circle(center, {' +
+                '  color: colors[' + disaster_values.scale +'-1 ],' +
+                '  fillColor: colors['+ disaster_values.scale +'-1 ],' +
+                ' fillOpacity: 0.7,' +
+                '  radius: '+disaster_values.coordinates.radius+
+                '}).addTo(mymap);');
+                eval('circle_' + disaster_values.id + '.bindPopup( "<b>'+disaster_values.name+'</b><br><b>Scale:</b>'+ disaster_values.scale+'<br><b>Total Affected: </b>'+disaster_values.statistics.total.affected+ '<br><b>Total Deaths: </b>'+disaster_values.statistics.total.deaths+'<br>" );');
+              }
+          }
+        };
         // var circle1 = L.circle([51.519, -0.11], {
         //   color: 'red',
         //   fillColor: '#f03',

@@ -20,18 +20,9 @@ setInterval(function () {
             success: function (response) {
                 console.log(response);
                 var newnotfs = response["new_notifications"];
-<<<<<<< HEAD
-                console.log("hi ");
-                console.log(newnotfs);
-
-                for (notf in newnotfs) {
-                  console.log(notf);
-
-=======
                 console.log(newnotfs);
                 for (notf in newnotfs) {
                     console.log(newnotfs[notf])
->>>>>>> ad9e6e2f83c0c9ff816bf0503c929c863088dfcf
                     $('#notf_list').prepend(
                         '<li><h4>'+ JSON.stringify(newnotfs[notf]) +'</h4></li>'
                     )

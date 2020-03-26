@@ -20,7 +20,12 @@ setInterval(function () {
             success: function (response) {
                 console.log(response);
                 var newnotfs = response["new_notifications"];
+                console.log("hi ");
+                console.log(newnotfs);
+
                 for (notf in newnotfs) {
+                  console.log(notf);
+
                     $('#notf_list').prepend(
                         '<li>${notf||""}</li>'
                     )

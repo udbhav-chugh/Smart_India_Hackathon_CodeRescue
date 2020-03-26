@@ -7,7 +7,7 @@ import android.widget.Button;
 
 public class victim_sendmessage extends AppCompatActivity {
     private Button snd;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

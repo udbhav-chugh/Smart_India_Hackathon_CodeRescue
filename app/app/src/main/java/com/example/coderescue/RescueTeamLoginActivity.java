@@ -8,32 +8,21 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 
-import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import com.mongodb.stitch.android.core.Stitch;
 import com.mongodb.stitch.android.core.StitchAppClient;
 import com.mongodb.stitch.android.core.auth.StitchUser;
-import com.mongodb.stitch.android.services.mongodb.remote.RemoteFindIterable;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
-import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoDatabase;
 // MongoDB Mobile Local Database Packages
-import com.mongodb.stitch.android.services.mongodb.local.LocalMongoDbService;
 import com.mongodb.stitch.core.auth.providers.anonymous.AnonymousCredential;
-import com.mongodb.stitch.core.services.mongodb.remote.RemoteUpdateOptions;
-import com.mongodb.stitch.core.services.mongodb.remote.RemoteUpdateResult;
 
 import org.bson.Document;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 
@@ -83,7 +72,7 @@ public class RescueTeamLoginActivity extends AppCompatActivity {
 
         mongoClient = client.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
 
-        final RemoteMongoCollection teams =
+        final RemoteMongoCollection<Document> teams =
                 mongoClient.getDatabase("authorization").getCollection("rescue_team");
 //        int count=0;
 //        RemoteFindIterable docs= teams.find(and(eq("username", user), eq("password", pswd)));
@@ -98,6 +87,7 @@ public class RescueTeamLoginActivity extends AppCompatActivity {
                     }
                     else{
                         Log.d("Correct Sign In", "Correct username and password");
+                        intent.putExtra(EXTRA_MESSAGE, user);
                         startActivity(intent);
                     }
                     Log.d("app", String.format("%s items have a review.", numDocs.toString()));

@@ -41,20 +41,15 @@ public class VictimNotifications extends AppCompatActivity {
         textState = findViewById(R.id.textViewAddress);
         prog=findViewById(R.id.progressBar);
 
-        findViewById(R.id.button4).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (ContextCompat.checkSelfPermission(
-                        getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(VictimNotifications.this,
-                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION_PERMISSION);
-                } else {
-                    getCurrentLocation();
-                }
+        if (ContextCompat.checkSelfPermission(
+                getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(VictimNotifications.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION_PERMISSION);
+        } else {
+            getCurrentLocation();
+        }
 
-            }
-        });
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
@@ -100,12 +95,13 @@ public class VictimNotifications extends AppCompatActivity {
                                 addresses = gcd.getFromLocation(latitude,
                                         longitude, 1);
                                 if (addresses.size() > 0) {
-                                    String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-                                    String locality = addresses.get(0).getLocality();
+//                                    //If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+//                                    String address = addresses.get(0).getAddressLine(0);
+//                                    String locality = addresses.get(0).getLocality();
+//                                    String country = addresses.get(0).getCountryName();
+//                                    String postalCode = addresses.get(0).getPostalCode();
+//                                    String knownName = addresses.get(0).getFeatureName();
                                     state = addresses.get(0).getAdminArea();
-                                    String country = addresses.get(0).getCountryName();
-                                    String postalCode = addresses.get(0).getPostalCode();
-                                    String knownName = addresses.get(0).getFeatureName();
                                     textState.setText(
                                             String.format(
                                                     "State: %s",

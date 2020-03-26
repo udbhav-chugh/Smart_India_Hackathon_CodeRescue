@@ -6,33 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".VictimNotifications">
 
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="228dp"
-        android:text="get current location"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="112dp" />
-
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/button4"
-        tools:layout_editor_absoluteX="181dp" />
+        tools:layout_editor_absoluteX="181dp"
+        tools:layout_editor_absoluteY="276dp" />
 
     <TextView
         android:id="@+id/textViewLatLong"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="180dp"
         android:text="TextView"
-        app:layout_constraintTop_toBottomOf="@+id/button4"
-        tools:layout_editor_absoluteX="176dp" />
+        tools:layout_editor_absoluteX="176dp"
+        tools:layout_editor_absoluteY="456dp" />
 
     <TextView
         android:id="@+id/textViewAddress"

@@ -12,8 +12,11 @@
 
 {% block javascript %}
 <script>
+
+// Global variable to store time-date of last notification displayed
+var lastNotification = "0";
 setInterval(function () {
-        console.log('it works' + new Date());
+        console.log('Called new notifications at : ' + new Date());
         $.ajax({
             type: 'GET',
             url: "{% url 'main:get_new_notifications' %}",
@@ -22,10 +25,15 @@ setInterval(function () {
                 var newnotfs = response["new_notifications"];
                 console.log(newnotfs);
                 for (notf in newnotfs) {
-                    console.log(newnotfs[notf])
-                    $('#notf_list').prepend(
-                        '<li><h4>'+ JSON.stringify(newnotfs[notf]) +'</h4></li>'
-                    )
+                    console.log(lastNotification);
+                    console.log(newnotfs[notf]['date']);
+                    console.log(newnotfs[notf]);
+                    if(newnotfs[notf]['date'] > lastNotification) {
+                        $('#notf_list').prepend(
+                            '<li><h4>'+ JSON.stringify(newnotfs[notf]) +'</h4></li>'
+                        )
+                        lastNotification = newnotfs[notf]['date'];
+                    }
                 }
             },
             error: function (response) {

@@ -5,6 +5,8 @@ from django.urls import reverse
 import pymongo
 from pymongo import MongoClient
 from datetime import datetime
+from graphos.sources.simple import SimpleDataSource
+from graphos.renderers.gchart import LineChart
 
 locations = ["Andhra Pradesh","Arunachal Pradesh ","Assam","Bihar","Chhattisgarh","Goa","Gujarat",
 "Haryana","Himachal Pradesh","Jammu and Kashmir","Jharkhand","Karnataka","Kerala",
@@ -32,9 +34,36 @@ def index(request):
     info = db.find({})
     temp_data = list(info)
 
+# CREATING A DICTIONARY OF ALL DISASTER RELATED DATA
     data = {}
     for disaster in temp_data:
         data[disaster["name"]] = disaster
+
+# #WORKING ON CHARTS!!
+#
+#     charts_data = {}
+#
+#     for data in temp_data:
+#         chart = [['Day' , 'Affected' , 'Deaths']]
+#
+#
+#
+#
+#
+#
+#     data =  [
+#             ['Year', 'Sales', 'Expenses'],
+#             [2004, 1000, 400],
+#             [2005, 1170, 460],
+#             [2006, 660, 1120],
+#             [2007, 1030, 540]
+#         ]
+#     data_source = SimpleDataSource(data=data)
+#     chart = LineChart(data_source)
+#     context = {'chart': chart}
+#     return render(request, 'yourtemplate.html', context)
+#
+
 
     context = { "data" : data }
     return render(request , 'main/index.html' , context)

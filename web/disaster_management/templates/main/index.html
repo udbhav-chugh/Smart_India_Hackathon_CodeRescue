@@ -2,6 +2,11 @@
 
 {% block include_header %}
 
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+     google.charts.load('current', {'packages':['line']});
+    </script>
+
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
@@ -37,8 +42,8 @@
         <label for="disaster_names">Disaster Name: </label><br>
         <select id="disaster_names" onchange="changeMapInfo()" name="disaster_names">
           <option value = "all_disasters"> All</option>
-          {% for data in data %}
-            <option value = "{{data}}"> {{data}}</option>
+          {% for data_key , data_values in data.items %}
+            <option value = "{{data_values.id}}"> {{data_key}}</option>
           {% endfor %}
         </select>
         <br><br>
@@ -46,6 +51,7 @@
       </div>
 
     <div style="height:800px;width:700px;" id="mapid"></div>
+    <div style="height:800px;width:700px;" id="line_top_x"></div>
 
     <script>
       var x = document.getElementById("coord");
@@ -78,27 +84,25 @@
 
         center = [0, 0];
         center =[21.853283,81.079102];
-        // center =[51.505, -0.09];
 
         //create the map
-        // var mymap = L.map('mapid').setView(center, 0);
-
-        // var map = L.map('map').setView(center, 0);
-
         var disaster_data ={} ;
         {% for disaster_key,disaster_values in data.items %}
           disaster_data.{{disaster_values.id}} = {};
           disaster_data.{{disaster_values.id}}.name = "{{disaster_values.name}}";
-          disaster_data.{{disaster_values.id}}.coordinates={}
+          disaster_data.{{disaster_values.id}}.coordinates={};
           disaster_data.{{disaster_values.id}}.coordinates.latitude = "{{disaster_values.coordinates.latitude}}";
           disaster_data.{{disaster_values.id}}.coordinates.longitude = "{{disaster_values.coordinates.longitude}}";
           disaster_data.{{disaster_values.id}}.coordinates.radius = {{disaster_values.coordinates.radius}};
           disaster_data.{{disaster_values.id}}.id = "{{disaster_values.id}}";
           disaster_data.{{disaster_values.id}}.scale = {{disaster_values.scale}};
-          disaster_data.{{disaster_values.id}}.statistics = {};
-          disaster_data.{{disaster_values.id}}.statistics.total = {};
-          disaster_data.{{disaster_values.id}}.statistics.total.affected = {{disaster_values.statistics.total.affected}};
-          disaster_data.{{disaster_values.id}}.statistics.total.deaths = {{disaster_values.statistics.total.deaths}};
+          disaster_data.{{disaster_values.id}}.statistics={};
+         {% for day_key,day_value in disaster_values.statistics.items %}
+           disaster_data.{{disaster_values.id}}.statistics.{{day_key}} ={};
+           disaster_data.{{disaster_values.id}}.statistics.{{day_key}}.affected ={{ day_value.affected }};
+           disaster_data.{{disaster_values.id}}.statistics.{{day_key}}.deaths ={{ day_value.deaths }};
+         {% endfor %}
+
         {% endfor %}
 
         var mymap = L.map('mapid').setView( center, 5);
@@ -114,13 +118,7 @@
         var colors = ["#FA8072" , "#CD5C5C" , "#BA4545" , "#ED2939" , "#CA3433",
                       "#B22222", "#960018" , "#7CDAD2" , "#5E1914" , "#420D09"];
         for (let [disaster_key, disaster_values] of Object.entries(disaster_data)) {
-          console.log(disaster_values.name);
-          console.log(disaster_values.coordinates.latitude);
-          console.log(disaster_values.coordinates.longitude);
-          console.log(disaster_values.scale);
-          console.log(disaster_values.coordinates.radius);
           center = [  disaster_values.coordinates.latitude  ,  disaster_values.coordinates.longitude  ]
-          console.log(center);
           eval( 'var circle_' + disaster_values.id + '= ' +
           ' L.circle(center, {' +
           '  color: colors[' + disaster_values.scale +'-1 ],' +
@@ -130,11 +128,9 @@
           '}).addTo(mymap);');
           eval('circle_' + disaster_values.id + '.bindPopup( "<b>'+disaster_values.name+'</b><br><b>Scale:</b>'+ disaster_values.scale+'<br><b>Total Affected: </b>'+disaster_values.statistics.total.affected+ '<br><b>Total Deaths: </b>'+disaster_values.statistics.total.deaths+'<br>" );');
           }
-
-        // console.log(disaster_data);
-
         function changeMapInfo()
         {
+          drawChart();
           center =[21.853283,81.079102];
           var disaster_name = document.getElementById("disaster_names").value;
           console.log(disaster_name);
@@ -153,7 +149,7 @@
           var colors = ["#FA8072" , "#CD5C5C" , "#BA4545" , "#ED2939" , "#CA3433",
                         "#B22222", "#960018" , "#7CDAD2" , "#5E1914" , "#420D09"];
           for (let [disaster_key, disaster_values] of Object.entries(disaster_data)) {
-              if( disaster_name == "all_disasters" || ( disaster_name!="all_disasters" && disaster_name == disaster_values.name  )  )
+              if( disaster_name == "all_disasters" || ( disaster_name!="all_disasters" && disaster_name == disaster_values.id  )  )
               {
                 center = [  disaster_values.coordinates.latitude  ,  disaster_values.coordinates.longitude  ]
                 console.log(center);
@@ -167,22 +163,56 @@
                 eval('circle_' + disaster_values.id + '.bindPopup( "<b>'+disaster_values.name+'</b><br><b>Scale:</b>'+ disaster_values.scale+'<br><b>Total Affected: </b>'+disaster_values.statistics.total.affected+ '<br><b>Total Deaths: </b>'+disaster_values.statistics.total.deaths+'<br>" );');
               }
           }
+          return;
         };
-        // var circle1 = L.circle([51.519, -0.11], {
-        //   color: 'red',
-        //   fillColor: '#f03',
-        //   fillOpacity: 0.5,
-        //   radius: 500
-        // }).addTo(mymap);
-        //
-        // circle1.bindPopup("I am a circle.");
-        //
-        // function onMapClick(e) {
-        //   alert("You clicked the map at " + e.latlng);
-        // }
-        //
-        // mymap.on('click', onMapClick);
 
+    function drawChart() {
+
+      var disaster_name = document.getElementById("disaster_names").value;
+      var data = new google.visualization.DataTable();
+      var data_for_chart = new google.visualization.DataTable();
+      if( disaster_name == "all_disasters" )
+        return;
+
+      data_for_chart.addColumn('number', 'Day');
+      data_for_chart.addColumn('number', 'Affected');
+      data_for_chart.addColumn('number', 'Deaths');
+
+      var ctr = 0;
+
+      for (let [ statistics_key,statistics_value ] of Object.entries(disaster_data[disaster_name]["statistics"] )) {
+        // console.log(statistics_key);
+        if( statistics_key != "total" )
+        {
+          var temp_list =[];
+          temp_list.push(ctr);
+          temp_list.push(statistics_value.affected);
+          temp_list.push(statistics_value.deaths);
+          ctr++;
+          data_for_chart.addRow(temp_list);
+        }
+      }
+
+      console.log(data_for_chart);
+      var options = {
+        chart: {
+          title: 'No of people affected by  ' + disaster_data[disaster_name]["name"],
+          subtitle: 'Day Wise'
+        },
+        width: 900,
+        height: 500,
+        axes: {
+          x: {
+            0: {side: 'bottom'}
+          }
+        }
+      };
+
+      var chart = new google.charts.Line(document.getElementById('line_top_x'));
+      chart.draw(data_for_chart, google.charts.Line.convertOptions(options));
+      return;
+
+    }
     </script>
 
 

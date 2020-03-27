@@ -3,9 +3,16 @@
 {% block content %}
 <div class="container">
     <ul id = "notf_list">
-        {% for x in notifications %}
-            <li><h4>{{ x }}</h4></li>
-        {% endfor %}
+        {% if not notifications %}
+            <h4>No notifications</h4>
+        {% else %}
+            {% for x in notifications %}
+                <li><h4>{{ x }}</h4></li>
+                <script>
+                    lastNotification = {{ x.date }};
+                </script>
+            {% endfor %}
+        {% endif %}
     </ul>
 </div>
 {% endblock %}
@@ -19,7 +26,7 @@ setInterval(function () {
         console.log('Called new notifications at : ' + new Date());
         $.ajax({
             type: 'GET',
-            url: "{% url 'main:get_new_notifications' %}",
+            url: "{% url 'main:get_new_notifications' notfLocIndex %}",
             success: function (response) {
                 console.log(response);
                 var newnotfs = response["new_notifications"];

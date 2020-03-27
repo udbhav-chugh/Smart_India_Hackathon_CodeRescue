@@ -24,9 +24,10 @@ def index(request):
     context = {}
     client = connect()
 
-    if request.session.has_key('location'):
-        context['location'] = request.session['location']
-        print(context['location'])
+    if request.session.has_key('locationIndex'):
+        context['locationIndex'] = request.session['locationIndex']
+        print(context['locationIndex'])
+        context['locationName'] = request.session['locationName']
 
     location_names = []
     for location in locations :
@@ -75,46 +76,62 @@ def index(request):
 
 def getUserLocation(request):
     if request.method == 'POST':
-        location = request.POST['location']
+        locName = request.POST['location']
         # location = location.tolower()
-        if location in locations:
-            request.session['location'] = location
+        if locName in locations:
+            request.session['locationName'] = locName
+            request.session['locationIndex'] = locations.index(locName)
     return HttpResponseRedirect(reverse('main:index'))
 
-def notifications(request, loc):
+def notifications(request, loc_no):
     client = connect()
     db = client.main.notification
     print("connected")
     data = db.find().sort("date", pymongo.DESCENDING)
-    notfs = list(data)
+    allnotfs = list(data)
+    if 0 <= loc_no < len(locations):
+        notfLocation = locations[loc_no]
+    else:
+        HttpResponseRedirect(reverse('main:index'))
     ########################
     # some error chances bcoz i m considering last time of
     # or may be not
-    request.session['lastNotification'] = notfs[0]['date']
-    print(notfs[0]['date'])
+    notfs = []
+    for notf in allnotfs:
+        if 'location' in notf and notf['location'] == notfLocation:
+            notfs.append(notf)
+
+    if notfs != []:
+        request.session['lastNotification'] = notfs[0]['date']
+        print(notfs[0]['date'])
     context = {
-        'notifications' : notfs
+        'notifications' : notfs,
+        'notfLocIndex' : loc_no
     }
     return render(request , 'main/notification.html' , context)
 
-def get_new_notifications(request):
+def get_new_notifications(request, loc_no):
     if request.is_ajax and request.method == "GET":
         lastNotif = request.session['lastNotification']
+        # get locName from url and not session
+        locName = locations[loc_no]
         client = connect()
         db = client.main.notification
         print("Queried new notifications")
         data = db.find().sort("date", pymongo.DESCENDING)
-        notfs = list(data)
+        allnotfs = list(data)
         newnotfs = []
-        for notf in notfs:
-            if notf['date'] != lastNotif:
-                ########### since ObjectId is not json serializable
-                notf['_id'] = 0
-                newnotfs.append(notf)
-            else:
-                break
-        request.session['lastNotification'] = notfs[0]['date']
-        newnotfs.reverse()
+        for notf in allnotfs:
+            if 'location' in notf and notf['location'] == locName:
+                if notf['date'] != lastNotif:
+                    ########### since ObjectId is not json serializable
+                    notf['_id'] = 0
+                    newnotfs.append(notf)
+                else:
+                    break
+        if newnotfs != []:
+            request.session['lastNotification'] = newnotfs[0]['date']
+            newnotfs.reverse()
         # so that last notification is picked first to add
         return JsonResponse({"new_notifications": newnotfs}, status=200)
     else:

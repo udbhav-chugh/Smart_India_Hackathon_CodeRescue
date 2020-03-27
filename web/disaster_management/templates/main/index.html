@@ -23,14 +23,14 @@
     <form method = "POST" action = "{% url 'main:getUserLocation' %}">
         {% csrf_token %}
             <label>Current State :</label><br>
-        {% if location %}
-            {{ location }}<br>
+        {% if locationName %}
+            {{ locationName }}<br>
         {% else %}
             <div id="location_wise_names">
               <label for="location_names">Location Name: </label><br>
               <select id="location" name="location">
-                {% for location in location_names %}
-                  <option value = "{{location}}"> {{location}}</option>
+                {% for loc in location_names %}
+                  <option value = "{{loc}}"> {{loc}}</option>
                 {% endfor %}
               </select>
               <br><br>
@@ -41,8 +41,8 @@
     </form>
 
     <br><br>
-    {% if location %}
-        <button onclick="location.href='{% url 'main:notifications' location|lower %}'"> Check Notifications </button>
+    {% if locationIndex %}
+        <button onclick="location.href='{% url 'main:notifications' locationIndex %}'"> Check Notifications </button>
     {% endif %}
 
     <!-- the drop down menu to take disaster name as input  -->

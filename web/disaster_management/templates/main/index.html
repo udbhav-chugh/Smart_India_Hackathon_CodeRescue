@@ -26,7 +26,15 @@
         {% if location %}
             {{ location }}<br>
         {% else %}
-            <input type="text" id="location" name= "location" value=""><br>
+            <div id="location_wise_names">
+              <label for="location_names">Location Name: </label><br>
+              <select id="location" name="location">
+                {% for location in location_names %}
+                  <option value = "{{location}}"> {{location}}</option>
+                {% endfor %}
+              </select>
+              <br><br>
+            </div>
             <br>
             <input type = "submit" value = "Go"><br>
         {% endif %}

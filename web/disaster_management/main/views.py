@@ -28,6 +28,11 @@ def index(request):
         context['location'] = request.session['location']
         print(context['location'])
 
+    location_names = []
+    for location in locations :
+        location_names.append(location)
+    context['location_names'] = location_names
+
     db = client.main.disaster
     print("HELLO Main Dashboard")
 

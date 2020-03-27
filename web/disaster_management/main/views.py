@@ -65,7 +65,7 @@ def index(request):
 #
 
 
-    context = { "data" : data }
+    context['data'] = data
     return render(request , 'main/index.html' , context)
 
 def getUserLocation(request):

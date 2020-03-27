@@ -1,0 +1,22 @@
+
+          {% for disaster_key,disaster_values in data.items %}
+              center = [ {{ disaster_values.coordinates.latitude }} , {{ disaster_values.coordinates.longitude }} ]
+              var circle_{{disaster_values.id}} = L.circle(center, {
+                color: colors[ {{disaster_values.scale}} -1 ],
+                fillColor: colors[ {{disaster_values.scale}} -1 ],
+                fillOpacity: 0.7,
+                radius: {{disaster_values.coordinates.radius }}
+              }).addTo(mymap);
+              circle_{{disaster_values.id}}.bindPopup
+              ( "<b>{{disaster_values.name}}</b><br>"+
+                "<b>Scale:</b> {{disaster_values.scale}}<br>"+
+                "<b>Total Affected: </b>{{disaster_values.statistics.total.affected}}<br>"+
+                "<b>Total Deaths: </b>{{disaster_values.statistics.total.deaths}}<br>" );
+          {% endfor %}
+
+
+all specific
+T T T
+T F T
+F T T
+F F F

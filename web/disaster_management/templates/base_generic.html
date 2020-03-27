@@ -4,6 +4,8 @@
 <head>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 
+  {% block include_header %}
+  {% endblock%}
   <title>{% block title%}{% endblock %}</title>
   {% block css %}
   {% endblock %}
@@ -25,6 +27,7 @@
 
 {% block javascript %}
 {% endblock javascript %}
+
 </body>
 
 </html>

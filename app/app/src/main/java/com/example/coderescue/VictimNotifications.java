@@ -10,6 +10,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -19,13 +20,26 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.mongodb.lang.NonNull;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteFindIterable;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
 
+import org.bson.Document;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import static com.mongodb.client.model.Filters.eq;
+
 public class VictimNotifications extends AppCompatActivity {
 
+    public static RemoteMongoClient mongoClient;
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
     private TextView textLatLong;
     private TextView textState;
@@ -108,6 +122,7 @@ public class VictimNotifications extends AppCompatActivity {
                                                     state
                                             )
                                     );
+                                    getNotifications();
                                 }
 
                             } catch (Exception e) {
@@ -117,5 +132,34 @@ public class VictimNotifications extends AppCompatActivity {
                         prog.setVisibility(View.GONE);
                     }
                 }, Looper.getMainLooper());
+    }
+
+    public void getNotifications(){
+        mongoClient = MainActivity.client.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
+        final RemoteMongoCollection<Document> disasters = mongoClient.getDatabase("main").getCollection("disaster");
+        final RemoteMongoCollection<Document> notifications = mongoClient.getDatabase("main").getCollection("notification");
+
+        RemoteFindIterable<Document> importantDisasters = disasters.find(eq("location",state));
+        RemoteFindIterable<Document> notifs = notifications.find();
+
+        notifs.forEach(item -> {
+            if(item.getString("directed_from").equals("headquarters") && item.getInteger("is_disaster")==0 && item.getString("location").equals(state))
+                Log.d("app", String.format("successfully found:  %s", item.toString()));
+            else if (item.getString("directed_from").equals("headquarters") && item.getInteger("is_disaster")==1)
+            {
+                importantDisasters.forEach(itemDisaster -> {
+                    if( itemDisaster.getString("name").equals(item.getString("name")) )
+                    {
+                        ArrayList<String> locArray = (ArrayList<String>) itemDisaster.get("location");
+                        if(locArray.contains(state))
+                            Log.d("app", String.format("successfully found:  %s", item.toString()));
+                    }
+                });
+            }
+        });
+
+
+
+
     }
 }

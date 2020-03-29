@@ -76,7 +76,7 @@ def index(request):
 
 def getUserLocation(request):
     if request.method == 'POST':
-        locName = request.POST['location']
+        locName = request.POST.get('location')
         # location = location.tolower()
         if locName in locations:
             request.session['locationName'] = locName

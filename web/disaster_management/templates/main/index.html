@@ -16,11 +16,11 @@
 
 
 {% block content %}
-    <p id="coord">Your coordinates: </p>
-    <button onclick="getLocation()">Locate Me</button>
+    <!-- <p id="coord">Your coordinates: </p> -->
+    <!-- <button onclick="getLocation()">Locate Me</button> -->
     <br><br>
 
-    <form method = "POST" action = "{% url 'main:getUserLocation' %}">
+    <form id='locform' method = "POST" action = "{% url 'main:getUserLocation' %}">
         {% csrf_token %}
             <label>Current State :</label><br>
         {% if locationName %}
@@ -62,21 +62,25 @@
     <div style="height:800px;width:700px;" id="line_top_x"></div>
 
     <script>
-      var x = document.getElementById("coord");
+
+      // var x = document.getElementById("coord");
       function getLocation() {
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(showPosition);
         } else {
-          x.innerHTML = "Geolocation is not supported by this browser.";
+          // x.innerHTML = "Geolocation is not supported by this browser.";
+          alert("Geolocation is not supported by this browser. Try selecting manually.")
         }
       }
 
       function showPosition(position) {
-          console.log("y");
-        x.innerHTML = "Latitude: " + position.coords.latitude +
-        "<br>Longitude: " + position.coords.longitude;
+        console.log("Position received");
+        // x.innerHTML = "Latitude: " + position.coords.latitude +
+        // "<br>Longitude: " + position.coords.longitude;
         let lat = position.coords.latitude;
         let long = position.coords.longitude;
+        var querystr = lat + long;
+
         // $("input[name='lat']").val(lat);
         // $("input[name='lat']").val(long);
         // let url_str = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+long+'&key=AIzaSyB8sd6nmQXMsXjEoEHWIT1xX3iH2tR81wg'
@@ -86,8 +90,24 @@
         // });
 
         $.get('https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat='+lat+'&lon='+long , function(data){
-            console.log(data.address.road);
+            console.log(data.address);
+            var state = data.address.state;
+            console.log(state);
+            $('#location').val(state).change();
+            $('#locform').submit();
         });
+
+        // const provider = new OpenStreetMapProvider();
+        // provider.search({ query: querystr }).then((results) => {
+        //     console.log(results);
+        // });
+      }
+
+      window.onload = function() {
+          var loc = "{{locationName}}";
+          if(loc == "") {
+              getLocation();
+          }
       }
 
         center = [0, 0];
@@ -223,6 +243,12 @@
     }
     </script>
 
+
+{% endblock %}
+
+{% block script %}
+
+<!-- import { OpenStreetMapProvider } from 'leaflet-geosearch'; -->
 
 {% endblock %}
 

@@ -29,10 +29,10 @@ setInterval(function () {
             url: "{% url 'main:get_new_notifications' notfLocIndex %}",
             success: function (response) {
                 console.log(response);
+                console.log(lastNotification);
                 var newnotfs = response["new_notifications"];
                 console.log(newnotfs);
                 for (notf in newnotfs) {
-                    console.log(lastNotification);
                     console.log(newnotfs[notf]['date']);
                     console.log(newnotfs[notf]);
                     if(newnotfs[notf]['date'] > lastNotification) {

@@ -225,3 +225,19 @@ def all_disasters(request):
         'disasters_data' : disasters_data
     }
     return render(request, 'headquarters/disasters.html', context)
+
+def change_active_status(request):
+    if request.is_ajax and request.method == "POST":
+        data = request.POST
+        status = data['status']
+        id = data['id']
+        print(id + " " + status)
+        client = connect()
+        db = client.main.disaster
+        print("Connected")
+        db.update(
+        { "id", id },
+        { "$set": { "isactive" : id } }
+        )
+        return JsonResponse({}, status=200)
+    return JsonResponse({"error": "some error"}, status=400)

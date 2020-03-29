@@ -1,13 +1,17 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
+{% csrf_token %}
 <div class = "container">
     <h3>All Disasters</h3>
     <hr>
     {% for disaster in disasters_data %}
+        <form>
+            {% csrf_token %}
         <h4><label for="{{ disaster.id }}"> {{ disaster.name }}</label>
-        <input type="checkbox" id="{{ disaster.id }}" name="{{ disaster.id }}"
+        <input type="checkbox" class = "disasterClass" id="{{ disaster.id }}" name="{{ disaster.id }}"
         value="{{ disaster.id }}" {% if disaster.isactive %} checked {% endif %}></h4>
+        </form>
         <b>Locations:</b>
         {% for loc in disaster.location %}
             {{loc}},
@@ -18,3 +22,35 @@
 </div>
 
 {% endblock %}
+
+
+{% block javascript %}
+
+<script>
+$(".disasterClass").change(function() {
+    var status = this.checked ? 1 : 0;
+    console.log($(this).attr("id"));
+    var id = $(this).attr("id");
+    var token = $('input[name="csrfmiddlewaretoken"]').attr('value');
+    console.log(token);
+    $.ajaxSetup({
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader('Csrf-Token', token);
+        }
+    });
+    $.ajax({
+        type: 'POST',
+        url: "{% url 'main:change_active_status' %}",
+        data: {"status" : status, "id" : id},
+        // headers: { 'Csrf-Token': token },
+        success: function (response) {
+            console.log("Active status of " + id + " changed successfully!")
+        },
+        error: function (response) {
+            alert(response["error"]);
+        }
+    });
+});
+</script>
+
+{% endblock javascript %}

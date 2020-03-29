@@ -180,8 +180,11 @@ def headquarters_dashboard(request):
     disaster_names = []
     location_names = []
     rescue_teams_names = {}
+    active_disasters = []
     for data1 in data:
         disaster_names.append(data1["name"])
+        if data1['isactive'] == 1:
+            active_disasters.append(data1)
 
     for data1 in data :
         rescue_teams_names[data1["name"]] = data1["rescue_teams_usernames"]
@@ -189,7 +192,36 @@ def headquarters_dashboard(request):
     for location in locations :
         location_names.append(location)
 
-    return render( request , 'headquarters/dashboard.html' , {"disaster_names" : disaster_names , "location_names": location_names , "success" : success , "rescue_teams_names" : rescue_teams_names } )
+    context = {
+        "disaster_names" : disaster_names ,
+        "location_names": location_names ,
+        "success" : success ,
+        "rescue_teams_names" : rescue_teams_names,
+        "active_disasters" : active_disasters
+    }
+
+    return render( request , 'headquarters/dashboard.html' , context )
 
 def rescue_team_dashboard(request):
     return render( request , 'rescue_team/dashboard.html' )
+
+def all_disasters(request):
+    client = connect()
+    db = client.main.disaster
+    print("Connected")
+    info = db.find({})
+    data = list(info)
+
+    disasters_data = []
+    for record in data:
+        temp = {}
+        temp['id'] = record['id']
+        temp['name'] = record['name']
+        temp['location'] = record['location']
+        temp['isactive'] = record['isactive']
+        disasters_data.append(temp)
+
+    context = {
+        'disasters_data' : disasters_data
+    }
+    return render(request, 'headquarters/disasters.html', context)

@@ -1,0 +1,20 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<div class = "container">
+    <h3>All Disasters</h3>
+    <hr>
+    {% for disaster in disasters_data %}
+        <h4><label for="{{ disaster.id }}"> {{ disaster.name }}</label>
+        <input type="checkbox" id="{{ disaster.id }}" name="{{ disaster.id }}"
+        value="{{ disaster.id }}" {% if disaster.isactive %} checked {% endif %}></h4>
+        <b>Locations:</b>
+        {% for loc in disaster.location %}
+            {{loc}},
+        {% endfor %}
+        <br>
+        <hr>
+    {% endfor%}
+</div>
+
+{% endblock %}

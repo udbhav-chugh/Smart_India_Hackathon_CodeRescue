@@ -11,5 +11,6 @@ urlpatterns = [
     path('headquarters_dashboard' , views.headquarters_dashboard , name='headquarters_dashboard'),
     path('rescue_team_dashboard' , views.rescue_team_dashboard , name='rescue_team_dashboard'),
     path('headquarters/all_disasters', views.all_disasters, name = 'all_disasters'),
-    path('headquarters/all_disasters/change_active_status', views.change_active_status, name='change_active_status')
+    path('headquarters/all_disasters/change_active_status', views.change_active_status, name='change_active_status'),
+    path('headquarters/all_disasters/search/ajax', views.search_disaster, name = 'search_disaster')
 ]

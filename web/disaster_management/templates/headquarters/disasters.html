@@ -1,24 +1,37 @@
 {% extends "base_generic.html" %}
 
+{% block css %}
+<style>
+@keyframes blinker {
+    from {opacity: 1.0;}
+    to {opacity: 0.0;}
+  }
+
+.blink {
+    text-decoration: blink;
+    animation-name: blinker;
+    animation-duration: 0.6s;
+    animation-iteration-count:infinite;
+    animation-timing-function:ease-in-out;
+    animation-direction: alternate;
+  }
+ </style>
+{% endblock %}
+
+
 {% block content %}
 {% csrf_token %}
 <div class = "container">
     <h3>All Disasters</h3>
     <hr>
-    {% for disaster in disasters_data %}
-        <!-- <form> -->
-            <!-- {% csrf_token %} -->
-        <h4><label for="{{ disaster.id }}"> {{ disaster.name }}</label>
-        <input type="checkbox" class = "disasterClass" id="{{ disaster.id }}" name="{{ disaster.id }}"
-        value="{{ disaster.id }}" {% if disaster.isactive == 1 %} checked {% endif %}></h4>
-        <!-- </form> -->
-        <b>Locations:</b>
-        {% for loc in disaster.location %}
-            {{loc}},
-        {% endfor %}
-        <br>
-        <hr>
-    {% endfor%}
+    <div class="col-6 align-left">
+        <i id="search-icon" class="fas fa-search"></i>
+        <input id="user-input" placeholder="Search">
+    </div>
+
+    <div id="replaceable-content" class="col-6">
+        {% include 'headquarters/disaster-results.html' %}
+    </div>
 </div>
 
 {% endblock %}
@@ -27,28 +40,85 @@
 {% block javascript %}
 
 <script>
-$(".disasterClass").change(function() {
-    var status = this.checked ? 1 : 0;
-    console.log($(this).attr("id"));
-    var id = $(this).attr("id");
-    var token = $('input[name="csrfmiddlewaretoken"]').attr('value');
-    console.log(token);
-    // $.ajaxSetup({
-    //     beforeSend: function(xhr) {
-    //         xhr.setRequestHeader('Csrf-Token', token);
-    //     }
-    // });
-    $.ajax({
-        type: 'POST',
-        url: "{% url 'main:change_active_status' %}",
-        data: {"status" : status, "id" : id, "csrfmiddlewaretoken" : token},
-        // headers: { 'Csrf-Token': token },
-        success: function (response) {
-            console.log("Active status of " + id + " changed successfully to " + status + "!")
-        },
-        error: function (response) {
-            alert(response["error"]);
+$(document).ready(function(){
+    $('#replaceable-content').on('change', '.disasterClass:checkbox', function(){
+    // $(".disasterClass").change(function() {
+        var status = this.checked ? 1 : 0;
+        console.log($(this).attr("id"));
+        var id = $(this).attr("id");
+        var token = $('input[name="csrfmiddlewaretoken"]').attr('value');
+        console.log(token);
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'main:change_active_status' %}",
+            data: {"status" : status, "id" : id, "csrfmiddlewaretoken" : token},
+            success: function (response) {
+                console.log("Active status of " + id + " changed successfully to " + status + "!")
+            },
+            error: function (response) {
+                alert(response["error"]);
+            }
+        });
+    });
+});
+
+const user_input = $("#user-input")
+const search_icon = $('#search-icon')
+const disasters_div = $('#replaceable-content')
+const delay_by_in_ms = 200
+let scheduled_function = false
+const endpoint = "{% url 'main:search_disaster' %}"
+// Delay added to aoid flooding on each key press
+
+let ajax_call = function (endpoint, request_parameters) {
+    $.getJSON(endpoint, request_parameters)
+        .done(response => {
+            // fade out the artists_div, then:
+            disasters_div.fadeTo('fast', 0).promise().then(() => {
+                // replace the HTML contents
+                disasters_div.html(response['html_from_view'])
+                // fade-in the div with new contents
+                disasters_div.fadeTo('fast', 1)
+                // stop animating search icon
+                search_icon.removeClass('blink')
+            })
+        })
+}
+
+$(document).ready(function(){
+    $('#user-input').keyup(function(){
+        var query = $(this).val();
+        search_icon.addClass('blink');
+        const request_parameters = {
+            'query': $(this).val() // value of user_input: the HTML element with ID user-input
         }
+        // if scheduled_function is NOT false, cancel the execution of the function
+        if (scheduled_function) {
+            clearTimeout(scheduled_function)
+        }
+        // setTimeout returns the ID of the function to be executed
+        scheduled_function = setTimeout(ajax_call, delay_by_in_ms, endpoint, request_parameters)
+
+        // $.ajax({
+        //     type: 'GET',
+        //     url: "{% url 'main:search_disaster' %}",
+        //     data: {'query': query},
+        //     success: function(response){
+        //         console.log("Results after searching " + query + " in database :");
+        //         console.log(response);
+        //         disasters_div.fadeTo('slow', 0).promise().then(() => {
+        //         // replace the HTML contents
+        //             disasters_div.html(response['html_from_view'])
+        //             // fade-in the div with new contents
+        //             disasters_div.fadeTo('slow', 1)
+        //             // stop animating search icon
+        //             search_icon.removeClass('blink')
+        //         })
+        //     },
+        //     error: function (response) {
+        //         alert(response['error']);
+        //     }
+        // });
     });
 });
 </script>

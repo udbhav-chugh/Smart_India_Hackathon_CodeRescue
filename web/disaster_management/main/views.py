@@ -7,6 +7,7 @@ from pymongo import MongoClient
 from datetime import datetime
 from graphos.sources.simple import SimpleDataSource
 from graphos.renderers.gchart import LineChart
+from django.template.loader import render_to_string
 
 locations = ["Andhra Pradesh","Arunachal Pradesh ","Assam","Bihar","Chhattisgarh","Goa","Gujarat",
 "Haryana","Himachal Pradesh","Jammu and Kashmir","Jharkhand","Karnataka","Kerala",
@@ -240,4 +241,35 @@ def change_active_status(request):
         { "$set": { "isactive" : status } }
         )
         return JsonResponse({}, status=200)
+    return JsonResponse({"error": "some error"}, status=400)
+
+def search_disaster(request):
+    if request.is_ajax and request.method == "GET":
+        query = request.GET.get("query")
+        print(query)
+        client = connect()
+        db = client.main.disaster
+        print("Connected")
+        # data = db.find({})
+        data = db.find({"name" : {"$regex" : ".*" + query + ".*"}})
+        disasters = list(data)
+
+        disasters_data = []
+        for record in disasters:
+            temp = {}
+            temp['id'] = record['id']
+            temp['name'] = record['name']
+            temp['location'] = record['location']
+            temp['isactive'] = record['isactive']
+            disasters_data.append(temp)
+
+        print(disasters_data)
+        html = render_to_string(
+            template_name = "headquarters/disaster-results.html",
+            context = {'disasters_data' : disasters_data}
+        )
+
+        data_dict = {"html_from_view": html}
+        return JsonResponse(data=data_dict, safe=False, status=200)
+
     return JsonResponse({"error": "some error"}, status=400)

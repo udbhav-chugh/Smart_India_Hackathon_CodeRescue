@@ -75,6 +75,18 @@
 
   <br><br>
   <h3> Manage Active Disasters : </h3>
+  <hr>
+  {% for disaster in active_disasters %}
+      <h4><label for="{{ disaster.id }}"> {{ disaster.name }}</label></h4>
+      <!-- <input type="checkbox" class = "disasterClass" id="{{ disaster.id }}" name="{{ disaster.id }}"
+      value="{{ disaster.id }}" {% if disaster.isactive == 1 %} checked {% endif %}></h4> -->
+      <b>Locations:</b>
+      {% for loc in disaster.location %}
+          {{loc}},
+      {% endfor %}
+      <br>
+      <hr>
+  {% endfor%}
 
   <a href='{% url 'main:all_disasters' %}'> See all disasters and change their status </a>
 {% endblock %}

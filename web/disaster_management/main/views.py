@@ -193,6 +193,7 @@ def headquarters_dashboard(request):
     for location in locations :
         location_names.append(location)
 
+    # print(active_disasters)
     context = {
         "disaster_names" : disaster_names ,
         "location_names": location_names ,
@@ -250,7 +251,6 @@ def search_disaster(request):
         client = connect()
         db = client.main.disaster
         print("Connected")
-        # data = db.find({})
         data = db.find({"name" : {"$regex" : ".*" + query + ".*"}})
         disasters = list(data)
 
@@ -262,7 +262,8 @@ def search_disaster(request):
             temp['location'] = record['location']
             temp['isactive'] = record['isactive']
             disasters_data.append(temp)
-
+        #########################
+        # add those disasters whose location matches and case sensitivity
         print(disasters_data)
         html = render_to_string(
             template_name = "headquarters/disaster-results.html",

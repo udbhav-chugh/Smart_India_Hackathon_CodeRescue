@@ -229,15 +229,15 @@ def all_disasters(request):
 def change_active_status(request):
     if request.is_ajax and request.method == "POST":
         data = request.POST
-        status = data['status']
+        status = int(data['status'])
         id = data['id']
-        print(id + " " + status)
+        print(id + " " + str(status))
         client = connect()
         db = client.main.disaster
         print("Connected")
-        db.update(
-        { "id", id },
-        { "$set": { "isactive" : id } }
+        db.update_one(
+        { "id" : id },
+        { "$set": { "isactive" : status } }
         )
         return JsonResponse({}, status=200)
     return JsonResponse({"error": "some error"}, status=400)

@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.coderescue.Activities.RescueTeamLoginActivity;
+import com.example.coderescue.Activities.VictimHomeActivity;
 import com.example.coderescue.Activities.VictimNotifications;
 import com.example.coderescue.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,13 +25,15 @@ import com.mongodb.stitch.core.auth.providers.anonymous.AnonymousCredential;
 public class HomeFragment extends Fragment {
 
     public static StitchAppClient client;
-    Button button_helper, button_victim, victim_notif;
+    Button button_helper, button_victim, button_victim_notif;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         button_victim = root.findViewById(R.id.button_victim);
         button_helper = root.findViewById(R.id.button_helper);
+        button_victim_notif = root.findViewById(R.id.button_victim_notif);
+
         button_helper.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -39,6 +42,13 @@ public class HomeFragment extends Fragment {
             }
         });
         button_victim.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), VictimHomeActivity.class);
+                startActivity(intent);
+            }
+        });
+        button_victim_notif.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), VictimNotifications.class);

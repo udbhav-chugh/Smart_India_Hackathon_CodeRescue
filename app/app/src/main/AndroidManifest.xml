@@ -15,7 +15,11 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".Activities.VictimHomeActivity"></activity>
+        <activity
+            android:name=".Activities.MainDashboardActivity"
+            android:label="@string/title_activity_main_dashboard"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".Activities.VictimHomeActivity" />
         <activity
             android:name=".Activities.HomeActivity"
             android:label="@string/title_activity_home"

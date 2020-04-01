@@ -32,4 +32,7 @@
     <string name="menu_map">Map</string>
 
     <string name="home_second">Home Second</string>
+    <string name="title_activity_main_dashboard">MainDashboardActivity</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
 </resources>

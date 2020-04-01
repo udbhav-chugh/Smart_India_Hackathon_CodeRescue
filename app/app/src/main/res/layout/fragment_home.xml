@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Fragments.HomeFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="70dp"
+        android:padding="15dp"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/button_victim"
+            android:layout_width="247dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/round_button"
+            android:layout_margin="15dp"
+            android:text="I need help" />
+
+        <Button
+            android:id="@+id/button_helper"
+            android:layout_width="247dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/round_button"
+            android:layout_below="@+id/button_victim"
+            android:layout_margin="15dp"
+            android:text="I want to help"/>
+
+        <Button
+            android:id="@+id/button_victim_notif"
+            android:layout_width="247dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/round_button"
+            android:layout_below="@+id/button_helper"
+            android:layout_margin="15dp"
+            android:text="Victim Notifications" />
+    </RelativeLayout>
+</RelativeLayout>

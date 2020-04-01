@@ -1,4 +1,4 @@
-package com.example.coderescue;
+package com.example.coderescue.Classes;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -9,6 +9,8 @@ import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.widget.Button;
+
+import com.example.coderescue.R;
 
 public class victim_sendmessage extends AppCompatActivity {
     private Button snd;

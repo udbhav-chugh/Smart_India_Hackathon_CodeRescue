@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.coderescue">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -15,17 +15,21 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".victim_sendmessage"></activity>
-        <activity android:name=".VictimNotifications" />
-        <activity android:name=".RescueTeamDashboard" />
-        <activity android:name=".RescueTeamLoginActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".Activities.VictimHomeActivity"></activity>
+        <activity
+            android:name=".Activities.HomeActivity"
+            android:label="@string/title_activity_home"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Classes.victim_sendmessage" />
+        <activity android:name=".Activities.VictimNotifications" />
+        <activity android:name=".Activities.RescueTeamDashboard" />
+        <activity android:name=".Activities.RescueTeamLoginActivity" />
     </application>
-</manifest>
 
+</manifest>

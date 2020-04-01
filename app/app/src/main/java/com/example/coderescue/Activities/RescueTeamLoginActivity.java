@@ -1,4 +1,4 @@
-package com.example.coderescue;
+package com.example.coderescue.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import com.example.coderescue.Fragments.HomeFragment;
+import com.example.coderescue.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
@@ -44,7 +46,7 @@ public class RescueTeamLoginActivity extends AppCompatActivity {
         // 1. Instantiate the Stitch client
 
 
-        mongoClient = MainActivity.client.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
+        mongoClient = HomeFragment.client.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
 
         final RemoteMongoCollection<Document> teams =
                 mongoClient.getDatabase("authorization").getCollection("rescue_team");

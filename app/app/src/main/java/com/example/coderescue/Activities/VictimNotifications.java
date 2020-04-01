@@ -1,4 +1,4 @@
-package com.example.coderescue;
+package com.example.coderescue.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -16,12 +16,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.coderescue.Fragments.HomeFragment;
+import com.example.coderescue.R;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.mongodb.lang.NonNull;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteFindIterable;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
@@ -30,8 +30,6 @@ import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
 import org.bson.Document;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -135,7 +133,7 @@ public class VictimNotifications extends AppCompatActivity {
     }
 
     public void getNotifications(){
-        mongoClient = MainActivity.client.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
+        mongoClient = HomeFragment.client.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
         final RemoteMongoCollection<Document> disasters = mongoClient.getDatabase("main").getCollection("disaster");
         final RemoteMongoCollection<Document> notifications = mongoClient.getDatabase("main").getCollection("notification");
 

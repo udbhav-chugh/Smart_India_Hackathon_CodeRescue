@@ -22,6 +22,7 @@ import com.mongodb.stitch.android.core.Stitch;
 import com.mongodb.stitch.android.core.StitchAppClient;
 import com.mongodb.stitch.android.core.auth.StitchUser;
 import com.mongodb.stitch.core.auth.providers.anonymous.AnonymousCredential;
+import com.mongodb.stitch.core.auth.providers.userpassword.UserPasswordCredential;
 
 public class HomeFragment extends Fragment {
 
@@ -70,19 +71,23 @@ public class HomeFragment extends Fragment {
 
     private void enableAnonymousAuth(){
         client = Stitch.getDefaultAppClient();
-        client.getAuth().loginWithCredential(new AnonymousCredential()).addOnCompleteListener(
-            new OnCompleteListener<StitchUser>() {
-                @Override
-                public void onComplete(@NonNull final Task<StitchUser> task) {
-                    if (task.isSuccessful()) {
-                        Log.d("myApp", String.format(
-                                "logged in as user %s with provider %s",
-                                task.getResult().getId(),
-                                task.getResult().getLoggedInProviderType()));
-                    } else {
-                        Log.e("myApp", "failed to log in", task.getException());
+        UserPasswordCredential credential = new UserPasswordCredential("coderescue2020@gmail.com", "sih@2020");
+        client.getAuth().loginWithCredential(credential).addOnCompleteListener(
+                new OnCompleteListener<StitchUser>() {
+                    @Override
+                    public void onComplete(@NonNull final Task<StitchUser> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("myApp", String.format(
+                                    "logged in as user %s with provider %s",
+                                    task.getResult().getId(),
+                                    task.getResult().getLoggedInProviderType()));
+                            System.out.println("lol login");
+
+                        } else {
+                            Log.e("myApp", "failed to log in", task.getException());
+                            System.out.println("nhi hua login");
+                        }
                     }
-                }
-            });
+                });
     }
 }

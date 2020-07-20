@@ -106,7 +106,7 @@ public class victim_sendmessage extends AppCompatActivity {
                 if (local != null) {
                     // SEND LOCATION AS MESSAGE
 
-
+                    snd.setClickable(false);
                 } else {
                     // pop-up a TOAST
                     Context context = getApplicationContext();

@@ -98,19 +98,20 @@ def notifications(request, loc_no):
     ########################
     # some error chances bcoz i m considering last time of
     # or may be not
-    print(allnotfs)
     notfs = []
     for notf in allnotfs:
         if 'location' in notf and notf['location'] == notfLocation:
+            notf['date'] = notf['date'].strftime('%d/%m/%Y %H:%M:%S')
+            # date_time_obj = datetime. strptime(date_time_str, '%d/%m/%y %H:%M:%S')
             notfs.append(notf)
 
     if notfs != []:
         request.session['lastNotification'] = notfs[0]['date']
-        print(notfs[0]['date'])
     context = {
         'notifications' : notfs,
         'notfLocIndex' : loc_no
     }
+    print("#@!#@#@!#@!!#@#@#!@#@@!#@@!@#@!#!@@!#!@!@!@")
     return render(request , 'main/notification.html' , context)
 
 def get_new_notifications(request, loc_no):
@@ -128,6 +129,7 @@ def get_new_notifications(request, loc_no):
         newnotfs = []
         for notf in allnotfs:
             if 'location' in notf and notf['location'] == locName:
+                notf['date'] = notf['date'].strftime('%d/%m/%Y %H:%M:%S')
                 if notf['date'] != lastNotif:
                     ########### since ObjectId is not json serializable
                     notf['_id'] = 0

@@ -15,7 +15,27 @@
     animation-timing-function:ease-in-out;
     animation-direction: alternate;
   }
- </style>
+
+#searchbar{
+   padding:10px;
+}
+
+input[type=text] {
+    width: 30%;
+    -webkit-transition: width 0.15s ease-in-out;
+    transition: width 0.15s ease-in-out;
+}
+
+input[type=text]:focus {
+   width: 70%;
+}
+
+.disasters {
+  display: list-item;
+}
+
+</style>
+
 {% endblock %}
 
 
@@ -26,11 +46,29 @@
     <hr>
     <div class="col-6 align-left">
         <i id="search-icon" class="fas fa-search"></i>
-        <input id="user-input" placeholder="Search">
+        <input id="searchbar" onkeyup="search_disaster()" type="text" name="search" placeholder="Search disasters..">
+        <br><br>
     </div>
 
     <div id="replaceable-content" class="col-6">
-        {% include 'headquarters/disaster-results.html' %}
+        <ul id='list'>
+          {% for disaster in disasters_data %}
+            <li class="disasters">
+              <h4>
+                <label for="{{ disaster.id }}"> {{ disaster.name }}</label>
+                <input type="checkbox" class = "disasterClass" id="{{ disaster.id }}" name="{{ disaster.id }}"
+                value="{{ disaster.id }}" {% if disaster.isactive == 1 %} checked {% endif %}>
+              </h4>
+              <b>Locations:</b>
+              <p>
+              {% for loc in disaster.location %}
+                  {{loc}},
+              {% endfor %}
+              </p>
+              <hr>
+            </li>
+          {% endfor%}
+        </ul>
     </div>
 </div>
 
@@ -62,65 +100,22 @@ $(document).ready(function(){
     });
 });
 
-const user_input = $("#user-input")
-const search_icon = $('#search-icon')
-const disasters_div = $('#replaceable-content')
-const delay_by_in_ms = 200
-let scheduled_function = false
-const endpoint = "{% url 'main:search_disaster' %}"
-// Delay added to aoid flooding on each key press
+function search_disaster() {
+    let input = document.getElementById('searchbar').value
+    input = input.toLowerCase();
+    let x = document.getElementsByClassName('disasters');
 
-let ajax_call = function (endpoint, request_parameters) {
-    $.getJSON(endpoint, request_parameters)
-        .done(response => {
-            // fade out the artists_div, then:
-            disasters_div.fadeTo('fast', 0).promise().then(() => {
-                // replace the HTML contents
-                disasters_div.html(response['html_from_view'])
-                // fade-in the div with new contents
-                disasters_div.fadeTo('fast', 1)
-                // stop animating search icon
-                search_icon.removeClass('blink')
-            })
-        })
+    for (i = 0; i < x.length; i++) {
+        let disaster_name = x[i].children[0].children[0].innerHTML.toLowerCase();
+        let disaster_locs = x[i].children[2].innerHTML.toLowerCase();
+        if (disaster_name.includes(input) || disaster_locs.includes(input)) {
+            x[i].style.display = "list-item";
+        }
+        else {
+            x[i].style.display = "none";
+        }
+    }
 }
-
-$(document).ready(function(){
-    $('#user-input').keyup(function(){
-        var query = $(this).val();
-        search_icon.addClass('blink');
-        const request_parameters = {
-            'query': $(this).val() // value of user_input: the HTML element with ID user-input
-        }
-        // if scheduled_function is NOT false, cancel the execution of the function
-        if (scheduled_function) {
-            clearTimeout(scheduled_function)
-        }
-        // setTimeout returns the ID of the function to be executed
-        scheduled_function = setTimeout(ajax_call, delay_by_in_ms, endpoint, request_parameters)
-
-        // $.ajax({
-        //     type: 'GET',
-        //     url: "{% url 'main:search_disaster' %}",
-        //     data: {'query': query},
-        //     success: function(response){
-        //         console.log("Results after searching " + query + " in database :");
-        //         console.log(response);
-        //         disasters_div.fadeTo('slow', 0).promise().then(() => {
-        //         // replace the HTML contents
-        //             disasters_div.html(response['html_from_view'])
-        //             // fade-in the div with new contents
-        //             disasters_div.fadeTo('slow', 1)
-        //             // stop animating search icon
-        //             search_icon.removeClass('blink')
-        //         })
-        //     },
-        //     error: function (response) {
-        //         alert(response['error']);
-        //     }
-        // });
-    });
-});
 </script>
 
 {% endblock javascript %}

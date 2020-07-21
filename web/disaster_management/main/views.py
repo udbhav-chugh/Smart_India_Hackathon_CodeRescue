@@ -44,7 +44,8 @@ def index(request):
 # CREATING A DICTIONARY OF ALL DISASTER RELATED DATA
     data = {}
     for disaster in temp_data:
-        data[disaster["name"]] = disaster
+        if "name" in disaster:
+            data[disaster["name"]] = disaster
 
 # #WORKING ON CHARTS!!
 #
@@ -97,6 +98,7 @@ def notifications(request, loc_no):
     ########################
     # some error chances bcoz i m considering last time of
     # or may be not
+    print(allnotfs)
     notfs = []
     for notf in allnotfs:
         if 'location' in notf and notf['location'] == notfLocation:
@@ -121,6 +123,8 @@ def get_new_notifications(request, loc_no):
         print("Queried new notifications")
         data = db.find().sort("date", pymongo.DESCENDING)
         allnotfs = list(data)
+        # print(allnotfs)
+        # print(lastNotif)
         newnotfs = []
         for notf in allnotfs:
             if 'location' in notf and notf['location'] == locName:
@@ -134,6 +138,7 @@ def get_new_notifications(request, loc_no):
             request.session['lastNotification'] = newnotfs[0]['date']
             newnotfs.reverse()
         # so that last notification is picked first to add
+        # print(newnotfs)
         return JsonResponse({"new_notifications": newnotfs}, status=200)
     else:
         HttpResponseRedirect(reverse('main:index'))
@@ -244,33 +249,9 @@ def change_active_status(request):
         return JsonResponse({}, status=200)
     return JsonResponse({"error": "some error"}, status=400)
 
-def search_disaster(request):
-    if request.is_ajax and request.method == "GET":
-        query = request.GET.get("query")
-        print(query)
-        client = connect()
-        db = client.main.disaster
-        print("Connected")
-        data = db.find({"name" : {"$regex" : ".*" + query + ".*"}})
-        disasters = list(data)
-
-        disasters_data = []
-        for record in disasters:
-            temp = {}
-            temp['id'] = record['id']
-            temp['name'] = record['name']
-            temp['location'] = record['location']
-            temp['isactive'] = record['isactive']
-            disasters_data.append(temp)
-        #########################
-        # add those disasters whose location matches and case sensitivity
-        print(disasters_data)
-        html = render_to_string(
-            template_name = "headquarters/disaster-results.html",
-            context = {'disasters_data' : disasters_data}
-        )
-
-        data_dict = {"html_from_view": html}
-        return JsonResponse(data=data_dict, safe=False, status=200)
-
-    return JsonResponse({"error": "some error"}, status=400)
+def add_disaster(request):
+    if request.method == "GET":
+        return render(request, 'headquarters/add_disaster.html')
+    elif request.method == "POST":
+        print("From received");
+        return HttpResponseRedirect(reverse('main:all_disasters'))

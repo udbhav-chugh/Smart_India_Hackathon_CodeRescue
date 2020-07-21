@@ -252,6 +252,36 @@ def change_active_status(request):
 def add_disaster(request):
     if request.method == "GET":
         return render(request, 'headquarters/add_disaster.html')
+
     elif request.method == "POST":
         print("From received");
+        client = connect()
+        db = client.main.disaster
+        id = db.count() + 1
+        location = []
+        for loc in request.POST.getlist('location'):
+            if loc != '':
+                location.append(loc)
+
+        data = {
+            'id' : "unique_id_" + str(id),
+            'name' : request.POST['name'],
+            'isactive' : int(request.POST['activeStatus']),
+            'scale' : int(request.POST['scale']),
+            'coordinates' : {
+                'latitude' : request.POST['latitude'],
+                'longitude' : request.POST['longitude'],
+                'radius' : request.POST['radius']
+            },
+            'rescue_teams_usernames' : [],
+            'statistics' : {
+                'total' : {
+                    'affected' : 0,
+                    'deaths' : 0
+                }
+            },
+            'location' : location
+        }
+        print(data)
+        db.insert_one(data)
         return HttpResponseRedirect(reverse('main:all_disasters'))

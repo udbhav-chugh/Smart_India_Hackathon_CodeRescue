@@ -21,15 +21,15 @@
     {% csrf_token %}
     <div class="form-group">
         <label for="disasterName">Disaster Name</label>
-        <input type="text" class="form-control" id="inputName" placeholder="Enter disaster name">
+        <input type="text" class="form-control" id="inputName" placeholder="Enter disaster name" name="name">
     </div>
     <div class="form-group">
         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="radioActiveStatus" id="disasterActive" value="yes" checked>
+            <input class="form-check-input" type="radio" name="activeStatus" id="disasterActive" value="1" checked>
             <label class="form-check-label" for="disasterActive">Active</label>
         </div>
         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="radioActiveStatus" id="disasterInctive" value="no">
+            <input class="form-check-input" type="radio" name="activeStatus" id="disasterInctive" value="0">
             <label class="form-check-label" for="disasterInctive">Inactive</label>
         </div>
     </div>
@@ -45,16 +45,16 @@
     </div> -->
     <div class="form-group">
         <label for="disasterScale">Disaster on a scale of 1-10</label>
-        <input type="text" class="form-control" id="inputScale" placeholder="Enter disaster scale">
+        <input type="text" class="form-control" id="inputScale" placeholder="Enter disaster scale" name="scale">
     </div>
     <div class="form-group">
         <label for="disasterCoordinates">Disaster Coordinates: </label><br>
         <label for="disasterCoordinates">Latitude: </label>
-        <input type="text" class="form-control" id="inputLatitude" placeholder="Enter Latitude">
+        <input type="text" class="form-control" id="inputLatitude" placeholder="Enter Latitude" name="latitude">
         <label for="disasterCoordinates">Longitude: </label>
-        <input type="text" class="form-control" id="inputLongitude" placeholder="Enter Longitude">
+        <input type="text" class="form-control" id="inputLongitude" placeholder="Enter Longitude" name="longitude">
         <label for="disasterCoordinates">Radius: </label>
-        <input type="text" class="form-control" id="inputRadius" placeholder="Enter Radius">
+        <input type="text" class="form-control" id="inputRadius" placeholder="Enter Radius" name="radius">
     </div>
 
     <div class="col-xs-12">
@@ -64,7 +64,7 @@
                     <div id="field0">
                         <div class="form-group">
                             <div class="col-md-5">
-                                <input id="action_id" name="action_id" type="text" placeholder="" class="form-control input-md">
+                                <input id="location" name="location" type="text" placeholder="" class="form-control input-md">
                             </div>
                         </div>
                     </div>
@@ -92,7 +92,7 @@
             var addto = "#field" + next;
             var addRemove = "#field" + (next);
             next = next + 1;
-            var newIn = ' <div id="field'+ next +'" name="field'+ next +'"><div class="form-group"><div class="col-md-5"> <input id="action_id" name="action_id" type="text" placeholder="" class="form-control input-md"> </div></div></div>';
+            var newIn = ' <div id="field'+ next +'" name="field'+ next +'"><div class="form-group"><div class="col-md-5"> <input id="location" name="location" type="text" placeholder="" class="form-control input-md"> </div></div></div>';
             var newInput = $(newIn);
             var removeBtn = '<button id="remove' + (next - 1) + '" class="btn btn-danger remove-me" >Remove</button></div></div><div id="field">';
             var removeButton = $(removeBtn);

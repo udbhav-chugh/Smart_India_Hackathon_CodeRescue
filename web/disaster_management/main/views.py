@@ -44,7 +44,8 @@ def index(request):
 # CREATING A DICTIONARY OF ALL DISASTER RELATED DATA
     data = {}
     for disaster in temp_data:
-        data[disaster["name"]] = disaster
+        if "name" in disaster:
+            data[disaster["name"]] = disaster
 
 # #WORKING ON CHARTS!!
 #
@@ -247,3 +248,10 @@ def change_active_status(request):
         )
         return JsonResponse({}, status=200)
     return JsonResponse({"error": "some error"}, status=400)
+
+def add_disaster(request):
+    if request.method == "GET":
+        return render(request, 'headquarters/add_disaster.html')
+    elif request.method == "POST":
+        print("From received");
+        return HttpResponseRedirect(reverse('main:all_disasters'))

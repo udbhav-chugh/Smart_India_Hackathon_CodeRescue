@@ -45,6 +45,9 @@
         <button onclick="location.href='{% url 'main:notifications' locationIndex %}'"> Check Notifications </button>
     {% endif %}
 
+    <a href="{% url 'main:all_disasters' %}" class="btn btn-primary">View All Disasters</a>
+    <a href="{% url 'main:add_disaster' %}" class="btn btn-primary">Add Disaster</a>
+
     <!-- the drop down menu to take disaster name as input  -->
       <div id="disaster_wise_names">
         <label for="disaster_names">Disaster Name: </label><br>

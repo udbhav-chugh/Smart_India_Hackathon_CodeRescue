@@ -45,6 +45,7 @@ input[type=text]:focus {
     <h3>All Disasters</h3>
     <hr>
     <div class="col-6 align-left">
+        <a href="{% url 'main:add_disaster' %}" class="btn btn-primary">Add Disaster</a><br>
         <i id="search-icon" class="fas fa-search"></i>
         <input id="searchbar" onkeyup="search_disaster()" type="text" name="search" placeholder="Search disasters..">
         <br><br>

@@ -1,5 +1,10 @@
 {% extends "base_generic.html" %}
-
+{% block script %}
+    var lastNotification = "1";
+{% endblock %}
+{% block include_header %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js" type="text/javascript"></script>
+{% endblock %}
 {% block content %}
 <div class="container">
     <ul id = "notf_list">
@@ -8,10 +13,11 @@
         {% else %}
             {% for x in notifications %}
                 <li><h4>{{ x }}</h4></li>
-                <script>
-                    lastNotification = {{ x.date }};
-                </script>
             {% endfor %}
+            <script>
+                lastNotification = "{{ notifications.0.date }}";
+            </script>
+        
         {% endif %}
     </ul>
 </div>
@@ -19,23 +25,40 @@
 
 {% block javascript %}
 <script>
-
 // Global variable to store time-date of last notification displayed
-var lastNotification = "0";
 setInterval(function () {
         console.log('Called new notifications at : ' + new Date());
         $.ajax({
             type: 'GET',
             url: "{% url 'main:get_new_notifications' notfLocIndex %}",
             success: function (response) {
-                console.log(response);
-                console.log(lastNotification);
+                // console.log(response);
+                // console.log(lastNotification);
                 var newnotfs = response["new_notifications"];
                 console.log(newnotfs);
+                // var constantDate = new Date(lastNotification);
+                var constantDate = moment( lastNotification , 'DD-MM-YYYY HH:mm:ss').toDate();
+
                 for (notf in newnotfs) {
+                    // console.log(newnotfs[notf]['date']);
+                    // console.log(newnotfs[notf]);
+                    // var newDate = Date.parse(newnotfs[notf]['date'], "dd-MM-yyyy HH:mm:ss");
+                    var newDate = moment( newnotfs[notf]['date'] , 'DD-MM-YYYY HH:mm:ss').toDate();
+
+                    // var newDate = new Date(newnotfs[notf]['date']);
+                    console.log(lastNotification);
                     console.log(newnotfs[notf]['date']);
-                    console.log(newnotfs[notf]);
-                    if(newnotfs[notf]['date'] > lastNotification) {
+                    console.log(newDate);
+                    console.log(constantDate);
+                    var momentDate = moment('2015-01-16 22:15:00', 'YYYY-MM-DD HH:mm:ss');
+                    var jsDate = momentDate.toDate();
+                    console.log("hello");
+
+                    console.log(jsDate);
+
+
+
+                    if( newDate > constantDate ) {
                         $('#notf_list').prepend(
                             '<li><h4>'+ JSON.stringify(newnotfs[notf]) +'</h4></li>'
                         )
@@ -44,7 +67,9 @@ setInterval(function () {
                 }
             },
             error: function (response) {
-                console.log(response)
+                console.log("dsadsadsaasdsadsadsadasads!@!@!@!@!@!!@!@!");
+
+                //console.log(response)
             }
         })
     },10000);

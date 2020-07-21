@@ -149,7 +149,7 @@ def get_new_notifications(request, loc_no):
 def headquarters_dashboard(request):
     client = connect()
     success = 0
-    dt_string = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+    dt_string = datetime.now()
 
     if( request.method == 'POST' ):
         if( request.POST['is_disaster'] == "disaster_wise" ):

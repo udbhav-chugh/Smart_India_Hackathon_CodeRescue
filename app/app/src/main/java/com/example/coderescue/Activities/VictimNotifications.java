@@ -3,6 +3,8 @@ package com.example.coderescue.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -17,6 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.coderescue.Fragments.HomeFragment;
+import com.example.coderescue.NotificationAdapter;
+import com.example.coderescue.NotificationCardModel;
 import com.example.coderescue.R;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -37,22 +41,24 @@ import static com.mongodb.client.model.Filters.eq;
 
 public class VictimNotifications extends AppCompatActivity {
 
+    ArrayList<NotificationCardModel> models = new ArrayList<>();
+    NotificationCardModel m;
     public static RemoteMongoClient mongoClient;
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
     private TextView textLatLong;
     private TextView textState;
     private ProgressBar prog;
     public static String state;
+    RecyclerView mRecylcerView;
+    NotificationAdapter myAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_victim_notifications);
-
         textLatLong = findViewById(R.id.textViewLatLong);
         textState = findViewById(R.id.textViewAddress);
         prog=findViewById(R.id.progressBar);
-
         if (ContextCompat.checkSelfPermission(
                 getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION
         ) != PackageManager.PERMISSION_GRANTED) {
@@ -61,6 +67,16 @@ public class VictimNotifications extends AppCompatActivity {
         } else {
             getCurrentLocation();
         }
+        m = new NotificationCardModel();
+        m.setTitle("News Feed");
+        m.setDescription("This is hello feed description ..");
+        models.add(m);
+
+        mRecylcerView=findViewById(R.id.recylcerView);
+        mRecylcerView.setLayoutManager(new LinearLayoutManager(this));
+
+        myAdapter=new NotificationAdapter(this,models);
+        mRecylcerView.setAdapter(myAdapter);
 
     }
     @Override
@@ -141,8 +157,18 @@ public class VictimNotifications extends AppCompatActivity {
         RemoteFindIterable<Document> notifs = notifications.find();
 
         notifs.forEach(item -> {
-            if(item.getString("directed_from").equals("headquarters") && item.getInteger("is_disaster")==0 && item.getString("location").equals(state))
+            if(item.getString("directed_from").equals("headquarters") && item.getInteger("is_disaster")==0 && item.getString("location").equals(state)){
                 Log.d("app", String.format("successfully found:  %s", item.toString()));
+                m = new NotificationCardModel();
+                m.setTitle("News Feed");
+                m.setDescription("This is news feed description ..");
+                models.add(m);
+                System.out.println(models.size());
+//                myAdapter=new NotificationAdapter(this,models);
+//                myAdapter.notifyDataSetChanged();
+//                mRecylcerView.setAdapter(myAdapter);
+            }
+
             else if (item.getString("directed_from").equals("headquarters") && item.getInteger("is_disaster")==1)
             {
                 importantDisasters.forEach(itemDisaster -> {
@@ -151,10 +177,15 @@ public class VictimNotifications extends AppCompatActivity {
                         ArrayList<String> locArray = (ArrayList<String>) itemDisaster.get("location");
                         if(locArray.contains(state))
                             Log.d("app", String.format("successfully found:  %s", item.toString()));
+                            m = new NotificationCardModel();
+                            m.setTitle("News Feed");
+                            m.setDescription("This is news feed description lol..");
+                            models.add(m);
                     }
                 });
             }
         });
+        System.out.println("wow");
 
 
 

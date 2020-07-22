@@ -26,6 +26,8 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.mongodb.lang.NonNull;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteFindIterable;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
@@ -154,35 +156,47 @@ public class VictimNotifications extends AppCompatActivity {
         final RemoteMongoCollection<Document> notifications = mongoClient.getDatabase("main").getCollection("notification");
 
         RemoteFindIterable<Document> importantDisasters = disasters.find(eq("location",state));
-        RemoteFindIterable<Document> notifs = notifications.find();
 
-        notifs.forEach(item -> {
-            if(item.getString("directed_from").equals("headquarters") && item.getInteger("is_disaster")==0 && item.getString("location").equals(state)){
-                Log.d("app", String.format("successfully found:  %s", item.toString()));
-                m = new NotificationCardModel();
-                m.setTitle("News Feed");
-                m.setDescription("This is news feed description ..");
-                models.add(m);
-                System.out.println(models.size());
-//                myAdapter=new NotificationAdapter(this,models);
-//                myAdapter.notifyDataSetChanged();
-//                mRecylcerView.setAdapter(myAdapter);
-            }
+        RemoteFindIterable findResults = notifications.find();
+        Task<List<Document>> itemsTask = findResults.into(new ArrayList<Document>());
+        itemsTask.addOnCompleteListener(new OnCompleteListener<List<Document>>() {
+            @Override
+            public void onComplete(@androidx.annotation.NonNull Task<List<Document>> task) {
+                if (task.isSuccessful()) {
+                    List<Document> items = task.getResult();
+                        for(Document item: items){
+                            if(item.getString("directed_from").equals("headquarters") && item.getInteger("is_disaster")==0 && item.getString("location").equals(state)){
+                                Log.d("app", String.format("successfully found:  %s", item.toString()));
+                                m = new NotificationCardModel();
+                                m.setTitle("News Feed");
+                                m.setDescription("This is news feed description ..");
+                                models.add(m);
+                                System.out.println(models.size());
+//                                myAdapter=new NotificationAdapter(this,models);
+//                                myAdapter.notifyDataSetChanged();
+//                                mRecylcerView.setAdapter(myAdapter);
+                            }
 
-            else if (item.getString("directed_from").equals("headquarters") && item.getInteger("is_disaster")==1)
-            {
-                importantDisasters.forEach(itemDisaster -> {
-                    if( itemDisaster.getString("name").equals(item.getString("name")) )
-                    {
-                        ArrayList<String> locArray = (ArrayList<String>) itemDisaster.get("location");
-                        if(locArray.contains(state))
-                            Log.d("app", String.format("successfully found:  %s", item.toString()));
-                            m = new NotificationCardModel();
-                            m.setTitle("News Feed");
-                            m.setDescription("This is news feed description lol..");
-                            models.add(m);
-                    }
-                });
+                            else if (item.getString("directed_from").equals("headquarters") && item.getInteger("is_disaster")==1)
+                            {
+                                importantDisasters.forEach(itemDisaster -> {
+                                    if( itemDisaster.getString("name").equals(item.getString("name")) )
+                                    {
+                                        ArrayList<String> locArray = (ArrayList<String>) itemDisaster.get("location");
+                                        if(locArray.contains(state))
+                                            Log.d("app", String.format("successfully found:  %s", item.toString()));
+                                        m = new NotificationCardModel();
+                                        m.setTitle("News Feed");
+                                        m.setDescription("This is news feed description lol..");
+                                        models.add(m);
+                                    }
+                                });
+                            }
+                        }
+
+                } else {
+                    Log.e("app", "Failed to count documents with exception: ", task.getException());
+                }
             }
         });
         System.out.println("wow");

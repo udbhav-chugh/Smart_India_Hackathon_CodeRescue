@@ -14,10 +14,14 @@ import com.example.coderescue.Fragments.HomeFragment;
 import com.example.coderescue.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteFindIterable;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
 
 import org.bson.Document;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 import static com.mongodb.client.model.Filters.and;
@@ -27,6 +31,7 @@ import static com.mongodb.client.model.Filters.eq;
 public class RescueTeamLoginActivity extends AppCompatActivity {
 
     public static RemoteMongoClient mongoClient;
+    public static final String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,20 +58,23 @@ public class RescueTeamLoginActivity extends AppCompatActivity {
 //        int count=0;
 //        RemoteFindIterable docs= teams.find(and(eq("username", user), eq("password", pswd)));
 
-        teams.count(and(eq("username", user), eq("password", pswd))).addOnCompleteListener(new OnCompleteListener <Long> () {
+        RemoteFindIterable findResults = teams.find(and(eq("username", user), eq("password", pswd)));
+        Task <List<Document>> itemsTask = findResults.into(new ArrayList<Document>());
+        itemsTask.addOnCompleteListener(new OnCompleteListener <List<Document>> () {
             @Override
-            public void onComplete(@NonNull Task <Long> task) {
+            public void onComplete(@NonNull Task<List<Document>> task) {
                 if (task.isSuccessful()) {
-                    Long numDocs = task.getResult();
+                    List<Document> items = task.getResult();
+                    int numDocs = items.size();
                     if(numDocs==0){
                         Log.d("Incorrect Sign In", "Wrong username or password");
                     }
                     else{
+                        System.out.println(items.get(0));
                         Log.d("Correct Sign In", "Correct username and password");
-                        intent.putExtra(EXTRA_MESSAGE, user);
+                        intent.putExtra(EXTRA_MESSAGE, items.get(0).getString("disaster_id"));
                         startActivity(intent);
                     }
-                    Log.d("app", String.format("%s items have a review.", numDocs.toString()));
                 } else {
                     Log.e("app", "Failed to count documents with exception: ", task.getException());
                 }

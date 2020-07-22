@@ -8,6 +8,7 @@ from datetime import datetime
 from graphos.sources.simple import SimpleDataSource
 from graphos.renderers.gchart import LineChart
 from django.template.loader import render_to_string
+import requests
 
 locations = ["Andhra Pradesh","Arunachal Pradesh ","Assam","Bihar","Chhattisgarh","Goa","Gujarat",
 "Haryana","Himachal Pradesh","Jammu and Kashmir","Jharkhand","Karnataka","Kerala",
@@ -21,10 +22,11 @@ def connect():
     # client = MongoClient('mongodb+srv://user:user@sih-jhvxc.mongodb.net/test?retryWrites=true&w=majority')
     return client
 
-def index(request):
+def index(request , latitude='' , longitude=''):
     context = {}
     client = connect()
-
+    print(latitude)
+    print(longitude)
     if request.session.has_key('locationIndex'):
         context['locationIndex'] = request.session['locationIndex']
         print(context['locationIndex'])
@@ -41,39 +43,39 @@ def index(request):
     info = db.find({})
     temp_data = list(info)
 
-# CREATING A DICTIONARY OF ALL DISASTER RELATED DATA
     data = {}
     for disaster in temp_data:
         if "name" in disaster:
             data[disaster["name"]] = disaster
 
-# #WORKING ON CHARTS!!
-#
-#     charts_data = {}
-#
-#     for data in temp_data:
-#         chart = [['Day' , 'Affected' , 'Deaths']]
-#
-#
-#
-#
-#
-#
-#     data =  [
-#             ['Year', 'Sales', 'Expenses'],
-#             [2004, 1000, 400],
-#             [2005, 1170, 460],
-#             [2006, 660, 1120],
-#             [2007, 1030, 540]
-#         ]
-#     data_source = SimpleDataSource(data=data)
-#     chart = LineChart(data_source)
-#     context = {'chart': chart}
-#     return render(request, 'yourtemplate.html', context)
-#
-
-
     context['data'] = data
+    if latitude != '' and longitude != '' and request.session['locationName'] != '':
+        dataSafeHouses = list(client.main.safeHouses.find({}))
+        listSafeHousesInUserLocation = dataSafeHouses[0][request.session['locationName']]
+        print(listSafeHousesInUserLocation)
+        context['listSafeHouses'] = listSafeHousesInUserLocation
+        URL_BING_API = "https://dev.virtualearth.net/REST/v1/Routes/DistanceMatrix?origins="
+        URL_BING_API += latitude + "," + longitude + "&destinations="
+        for obj in listSafeHousesInUserLocation:
+            URL_BING_API += obj["latitude"] + "," + obj["longitude"] + ";"
+        URL_BING_API = URL_BING_API[:-1]
+
+        URL_BING_API += "&travelMode=driving&key=AvINDoc3SxM9iNoyy6FaioCFuKWu9qowxEk1U1EeY4oEut8puIbYP0W9gjZWeO7F"
+        # print(URL_BING_API)
+        r = requests.get(url = URL_BING_API)
+        r = r.json()
+        min = 100000
+        destinationIndex = -1
+        for safeHouseDistance in  r['resourceSets'][0]['resources'][0]['results']:
+            print(safeHouseDistance['travelDistance'])
+            if float(safeHouseDistance['travelDistance']) < min:
+                min = float(safeHouseDistance['travelDistance'])
+                destinationIndex = safeHouseDistance['destinationIndex']
+        context['nearest_safe_house'] = {
+            'latitude': listSafeHousesInUserLocation[destinationIndex]['latitude'] ,
+            'longitude': listSafeHousesInUserLocation[destinationIndex]['longitude']
+        }
+        print(context['nearest_safe_house'])
     return render(request , 'main/index.html' , context)
 
 def getUserLocation(request):

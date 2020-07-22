@@ -6,6 +6,7 @@ app_name = 'main'
 urlpatterns = [
     path('', views.index, name='index'),
     path('getlocation', views.getUserLocation, name = 'getUserLocation'),
+    path('<str:latitude>/<str:longitude>', views.index, name = 'find_safe_house'),
     path('notifications/<int:loc_no>', views.notifications, name = 'notifications'),
     path('get/ajax/notifications/new/<int:loc_no>', views.get_new_notifications, name = 'get_new_notifications'),
     path('headquarters_dashboard' , views.headquarters_dashboard , name='headquarters_dashboard'),

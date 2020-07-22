@@ -1,6 +1,6 @@
 {% extends "base_generic.html" %}
-
 {% block include_header %}
+    
 
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
@@ -11,15 +11,30 @@
     <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+    <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+    <!-- <script type="text/javascript">
+     var positionUser = { 'coords' : {'latitude':'1234' , 'longitude':'5678'} };
+     google.charts.load('current', {'packages':['line']});
+    </script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8"> -->
+    
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css" /> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script> -->
+    <!-- <script src="https://www.mapquestapi.com/sdk/leaflet/v2.2/mq-map.js?key=iGlsDrQ38nLRQ5FAGL4ekYShUv16vPPu"></script> -->
+    <!-- <script src="https://www.mapquestapi.com/sdk/leaflet/v2.2/mq-routing.js?key=iGlsDrQ38nLRQ5FAGL4ekYShUv16vPPu"></script> -->
 
 {% endblock%}
 
-
 {% block content %}
-    <!-- <p id="coord">Your coordinates: </p> -->
-    <!-- <button onclick="getLocation()">Locate Me</button> -->
-    <br><br>
 
+    <br/>
     <form id='locform' method = "POST" action = "{% url 'main:getUserLocation' %}">
         {% csrf_token %}
             <label>Current State :</label><br>
@@ -44,12 +59,9 @@
     {% if locationIndex %}
         <button onclick="location.href='{% url 'main:notifications' locationIndex %}'"> Check Notifications </button>
     {% endif %}
-
-    <a href="{% url 'main:all_disasters' %}" class="btn btn-primary">View All Disasters</a>
-    <a href="{% url 'main:add_disaster' %}" class="btn btn-primary">Add Disaster</a>
-
-    <!-- the drop down menu to take disaster name as input  -->
-      <div id="disaster_wise_names">
+    <a href="{% url 'main:find_safe_house' '1' '1' %}" id="nearest_safe_house_button" class="btn  btn-primary">Find Nearest Safe House</a>
+    
+    <div id="disaster_wise_names">
         <label for="disaster_names">Disaster Name: </label><br>
         <select id="disaster_names" onchange="changeMapInfo()" name="disaster_names">
           <option value = "all_disasters"> All</option>
@@ -58,40 +70,54 @@
           {% endfor %}
         </select>
         <br><br>
-
       </div>
 
-    <div style="height:800px;width:700px;" id="mapid"></div>
-    <div style="height:800px;width:700px;" id="line_top_x"></div>
-
+      <div style="height:800px;width:700px;" id="mapid"></div>
+      <div style="height:800px;width:700px;" id="line_top_x"></div>
+<div  style="width:500px; height:500px" id="nearestSafeHouseMap"></div>
     <script>
+      var positionUser;
+      navigator.geolocation.getCurrentPosition((position)=>{
+        positionUser = {
+          'latitude': position.coords.latitude,
+          'longitude': position.coords.longitude
+        };
+        var url_mask = "{% url 'main:find_safe_house' '12345' '6789' %}".replace(/12345/, position.coords.latitude.toString()).replace(/6789/, position.coords.longitude.toString());
+        document.getElementById("nearest_safe_house_button").setAttribute('href' , url_mask);
+        var map = L.map('nearestSafeHouseMap');
 
-      // var x = document.getElementById("coord");
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+        {% if nearest_safe_house %}
+        L.Routing.control({
+            waypoints: [
+                L.latLng(positionUser.latitude,positionUser.longitude ),
+                L.latLng({{nearest_safe_house.latitude}},  {{nearest_safe_house.longitude}})
+            ],
+            routeWhileDragging: true
+        }).addTo(map);
+        {% endif %}
+      
+      
+      });
+      // {% if disaster_values.isactive == 1 %}
+//    {%endif%}
+
       function getLocation() {
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(showPosition);
         } else {
-          // x.innerHTML = "Geolocation is not supported by this browser.";
           alert("Geolocation is not supported by this browser. Try selecting manually.")
         }
       }
 
       function showPosition(position) {
         console.log("Position received");
-        // x.innerHTML = "Latitude: " + position.coords.latitude +
-        // "<br>Longitude: " + position.coords.longitude;
+        positionUser = position;
         let lat = position.coords.latitude;
         let long = position.coords.longitude;
         var querystr = lat + long;
-
-        // $("input[name='lat']").val(lat);
-        // $("input[name='lat']").val(long);
-        // let url_str = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+long+'&key=AIzaSyB8sd6nmQXMsXjEoEHWIT1xX3iH2tR81wg'
-        // $.getJSON(url_str, function(data) {
-        //     console.log(data);
-        //     //here you get the location data, like street address, city and pass it to inputs and submit the form to save it.
-        // });
-
         $.get('https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat='+lat+'&lon='+long , function(data){
             console.log(data.address);
             var state = data.address.state;
@@ -99,11 +125,6 @@
             $('#location').val(state).change();
             $('#locform').submit();
         });
-
-        // const provider = new OpenStreetMapProvider();
-        // provider.search({ query: querystr }).then((results) => {
-        //     console.log(results);
-        // });
       }
 
       window.onload = function() {
@@ -115,9 +136,8 @@
 
         center = [0, 0];
         center =[21.853283,81.079102];
-
-        //create the map
-        var disaster_data ={} ;
+         //create the map
+         var disaster_data ={} ;
         {% for disaster_key,disaster_values in data.items %}
           disaster_data.{{disaster_values.id}} = {};
           disaster_data.{{disaster_values.id}}.name = "{{disaster_values.name}}";
@@ -182,7 +202,7 @@
           for (let [disaster_key, disaster_values] of Object.entries(disaster_data)) {
               if( disaster_name == "all_disasters" || ( disaster_name!="all_disasters" && disaster_name == disaster_values.id  )  )
               {
-                center = [  disaster_values.coordinates.latitude  ,  disaster_values.coordinates.longitude  ]
+                center = {lat: disaster_values.coordinates.latitude,  lng: disaster_values.coordinates.longitude  }
                 console.log(center);
                 eval( 'var circle_' + disaster_values.id + '= ' +
                 ' L.circle(center, {' +
@@ -242,16 +262,9 @@
       var chart = new google.charts.Line(document.getElementById('line_top_x'));
       chart.draw(data_for_chart, google.charts.Line.convertOptions(options));
       return;
-
     }
+   
     </script>
-
-
-{% endblock %}
-
-{% block script %}
-
-<!-- import { OpenStreetMapProvider } from 'leaflet-geosearch'; -->
 
 {% endblock %}
 

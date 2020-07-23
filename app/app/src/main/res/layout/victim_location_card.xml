@@ -29,14 +29,14 @@
             android:id="@+id/descriptionTv2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/titleTv2"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="9dp"
             android:text="Description"
-            android:textSize="18sp"
             android:textColor="#a9a9a9"
-            android:textStyle="bold"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_below="@id/titleTv"
-            />
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
 
     </RelativeLayout>

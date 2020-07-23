@@ -31,7 +31,6 @@ import static com.mongodb.client.model.Filters.eq;
 public class RescueTeamLoginActivity extends AppCompatActivity {
 
     public static RemoteMongoClient mongoClient;
-    public static final String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +71,8 @@ public class RescueTeamLoginActivity extends AppCompatActivity {
                     else{
                         System.out.println(items.get(0));
                         Log.d("Correct Sign In", "Correct username and password");
-                        intent.putExtra(EXTRA_MESSAGE, items.get(0).getString("disaster_id"));
+                        intent.putExtra("username", user);
+                        intent.putExtra("disaster_id", items.get(0).getString("disaster_id"));
                         startActivity(intent);
                     }
                 } else {

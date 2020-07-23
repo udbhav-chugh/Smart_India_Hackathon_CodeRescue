@@ -36,6 +36,7 @@ public class VictimLocationAdapter extends RecyclerView.Adapter<VictimLocationHo
     public void onBindViewHolder(@NonNull VictimLocationHolder myHolder, int i) {
         String lat = models.get(i).getTitle();
         String longi = models.get(i).getDescription();
+        String username = models.get(i).getRescueUsername();
         myHolder.mTitle.setText(models.get(i).getTitle());
         myHolder.mDes.setText(models.get(i).getDescription());
         System.out.println("jai shree ram2");
@@ -51,6 +52,7 @@ public class VictimLocationAdapter extends RecyclerView.Adapter<VictimLocationHo
                 //ADD DATA TO OUR INTENT
                 iii.putExtra("latitude",lat);
                 iii.putExtra("longitude",longi);
+                iii.putExtra("username", username);
                 //START DETAIL ACTIVITY
                 c.startActivity(iii);
 

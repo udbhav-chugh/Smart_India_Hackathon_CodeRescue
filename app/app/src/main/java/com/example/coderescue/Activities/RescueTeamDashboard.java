@@ -35,7 +35,8 @@ import static com.mongodb.client.model.Filters.eq;
 public class RescueTeamDashboard extends AppCompatActivity {
 
     public static RemoteMongoClient mongoClient;
-    String message;
+    String disaster_id;
+    String username;
     RecyclerView mRecylcerView;
     VictimLocationAdapter myAdapter;
     Context c;
@@ -51,7 +52,8 @@ public class RescueTeamDashboard extends AppCompatActivity {
 
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
-        message = intent.getStringExtra(RescueTeamLoginActivity.EXTRA_MESSAGE);
+        disaster_id = intent.getExtras().getString("disaster_id");
+        username = intent.getExtras().getString("username");
         prog=findViewById(R.id.progressBar2);
 
         // Capture the layout's TextView and set the string as its text
@@ -67,7 +69,7 @@ public class RescueTeamDashboard extends AppCompatActivity {
         mongoClient = HomeFragment.client.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
         final RemoteMongoCollection<Document> disasters = mongoClient.getDatabase("main").getCollection("victimNeedHelp");
 
-        RemoteFindIterable findResults = disasters.find(eq("disaster_id", message));
+        RemoteFindIterable findResults = disasters.find(eq("disaster_id", disaster_id));
         Task<List<Document>> itemsTask = findResults.into(new ArrayList<Document>());
         itemsTask.addOnCompleteListener(new OnCompleteListener<List<Document>>() {
             @Override
@@ -90,6 +92,7 @@ public class RescueTeamDashboard extends AppCompatActivity {
 //                                textView.append(i.getString("longitude"));
                                 m = new VictimLocationCardModel();
                                 m.setTitle(i.getString("latitude"));
+                                m.setRescueUsername(username);
                                 m.setDescription(i.getString("longitude"));
                                 models.add(m);
                                 System.out.println(i);

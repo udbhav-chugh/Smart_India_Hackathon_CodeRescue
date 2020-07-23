@@ -3,6 +3,7 @@ package com.example.coderescue;
 public class VictimLocationCardModel {
 
     private String title, description;
+    private String rescueUsername;
 //    private  String latitude, longitude;
 //    private double distance;
     private int img;
@@ -22,6 +23,10 @@ public class VictimLocationCardModel {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public String getRescueUsername() {return rescueUsername; }
+
+    public void setRescueUsername(String rescueUsername) { this.rescueUsername = rescueUsername; }
 
 //    public String getLatitude(){ return latitude; }
 //

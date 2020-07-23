@@ -191,7 +191,6 @@ public class VictimNotifications extends AppCompatActivity {
                                     }
                                 }
                                 myAdapter=new NotificationAdapter(c,models);
-                                myAdapter.notifyDataSetChanged();
                                 mRecylcerView.setAdapter(myAdapter);
                                 prog.setVisibility(View.GONE);
 

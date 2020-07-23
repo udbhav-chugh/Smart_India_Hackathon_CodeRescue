@@ -28,11 +28,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationHolder
 
         return new NotificationHolder(view);
     }
-    public void updateData(ArrayList<NotificationCardModel> viewModels) {
-        models.clear();
-        models.addAll(viewModels);
-        notifyDataSetChanged();
-    }
 
     @Override
     public void onBindViewHolder(@NonNull NotificationHolder myHolder, int i) {

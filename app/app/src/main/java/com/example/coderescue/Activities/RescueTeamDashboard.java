@@ -14,8 +14,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.coderescue.Fragments.HomeFragment;
-import com.example.coderescue.NotificationAdapter;
-import com.example.coderescue.NotificationCardModel;
+import com.example.coderescue.VictimLocationAdapter;
+import com.example.coderescue.VictimLocationCardModel;
 import com.example.coderescue.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -37,10 +37,10 @@ public class RescueTeamDashboard extends AppCompatActivity {
     public static RemoteMongoClient mongoClient;
     String message;
     RecyclerView mRecylcerView;
-    NotificationAdapter myAdapter;
+    VictimLocationAdapter myAdapter;
     Context c;
-    ArrayList<NotificationCardModel> models = new ArrayList<>();
-    NotificationCardModel m;
+    ArrayList<VictimLocationCardModel> models = new ArrayList<>();
+    VictimLocationCardModel m;
     private ProgressBar prog;
 
 
@@ -88,15 +88,14 @@ public class RescueTeamDashboard extends AppCompatActivity {
                             if(i.getInteger("isactive")==1){
 //                                textView.append(i.getString("latitude"));
 //                                textView.append(i.getString("longitude"));
-                                m = new NotificationCardModel();
-                                m.setTitle("Victim Information");
-                                m.setDescription("Latitude: " + i.getString("latitude") + "\n" + "Longitude: " + i.getString("longitude"));
+                                m = new VictimLocationCardModel();
+                                m.setTitle(i.getString("latitude"));
+                                m.setDescription(i.getString("longitude"));
                                 models.add(m);
                                 System.out.println(i);
                             }
                         }
-                        myAdapter=new NotificationAdapter(c,models);
-                        myAdapter.notifyDataSetChanged();
+                        myAdapter=new VictimLocationAdapter(c,models);
                         mRecylcerView.setAdapter(myAdapter);
                         prog.setVisibility(View.GONE);
 

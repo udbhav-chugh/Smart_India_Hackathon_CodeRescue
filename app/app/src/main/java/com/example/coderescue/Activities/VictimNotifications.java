@@ -38,6 +38,7 @@ import org.bson.Document;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import android.content.Context;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -53,6 +54,7 @@ public class VictimNotifications extends AppCompatActivity {
     public static String state;
     RecyclerView mRecylcerView;
     NotificationAdapter myAdapter;
+    Context c;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,16 +71,10 @@ public class VictimNotifications extends AppCompatActivity {
         } else {
             getCurrentLocation();
         }
-        m = new NotificationCardModel();
-        m.setTitle("News Feed");
-        m.setDescription("This is hello feed description ..");
-        models.add(m);
 
         mRecylcerView=findViewById(R.id.recylcerView);
+        c = this;
         mRecylcerView.setLayoutManager(new LinearLayoutManager(this));
-
-        myAdapter=new NotificationAdapter(this,models);
-        mRecylcerView.setAdapter(myAdapter);
 
     }
     @Override
@@ -112,9 +108,9 @@ public class VictimNotifications extends AppCompatActivity {
                             double latitude = locationResult.getLocations().get(latestLocationIndex).getLatitude();
                             double longitude = locationResult.getLocations().get(latestLocationIndex).getLongitude();
                             textLatLong.setText(
-                                    String.format(
-                                            "Latitude %s\n Longitude %s",
-                                            latitude, longitude
+                                    String.format(""
+//                                            "Latitude %s\n Longitude %s",
+//                                            latitude, longitude
                                     )
                             );
 
@@ -132,11 +128,11 @@ public class VictimNotifications extends AppCompatActivity {
 //                                    String postalCode = addresses.get(0).getPostalCode();
 //                                    String knownName = addresses.get(0).getFeatureName();
                                     state = addresses.get(0).getAdminArea();
-                                    textState.setText(
-                                            String.format(
-                                                    "State: %s",
-                                                    state
-                                            )
+                                    textState.setText(""
+//                                            String.format(
+//                                                    "State: %s",
+//                                                    state
+//                                            )
                                     );
                                     getNotifications();
                                 }
@@ -145,7 +141,6 @@ public class VictimNotifications extends AppCompatActivity {
                                 e.printStackTrace();
                             }
                         }
-                        prog.setVisibility(View.GONE);
                     }
                 }, Looper.getMainLooper());
     }
@@ -155,54 +150,56 @@ public class VictimNotifications extends AppCompatActivity {
         final RemoteMongoCollection<Document> disasters = mongoClient.getDatabase("main").getCollection("disaster");
         final RemoteMongoCollection<Document> notifications = mongoClient.getDatabase("main").getCollection("notification");
 
-        RemoteFindIterable<Document> importantDisasters = disasters.find(eq("location",state));
-
+        RemoteFindIterable importantDisasters = disasters.find();
         RemoteFindIterable findResults = notifications.find();
+
         Task<List<Document>> itemsTask = findResults.into(new ArrayList<Document>());
+        Task<List<Document>> itemsTask2 = importantDisasters.into(new ArrayList<Document>());
+
         itemsTask.addOnCompleteListener(new OnCompleteListener<List<Document>>() {
             @Override
             public void onComplete(@androidx.annotation.NonNull Task<List<Document>> task) {
                 if (task.isSuccessful()) {
-                    List<Document> items = task.getResult();
-                        for(Document item: items){
-                            if(item.getString("directed_from").equals("headquarters") && item.getInteger("is_disaster")==0 && item.getString("location").equals(state)){
-                                Log.d("app", String.format("successfully found:  %s", item.toString()));
-                                m = new NotificationCardModel();
-                                m.setTitle("News Feed");
-                                m.setDescription("This is news feed description ..");
-                                models.add(m);
-                                System.out.println(models.size());
-//                                myAdapter=new NotificationAdapter(this,models);
-//                                myAdapter.notifyDataSetChanged();
-//                                mRecylcerView.setAdapter(myAdapter);
-                            }
-
-                            else if (item.getString("directed_from").equals("headquarters") && item.getInteger("is_disaster")==1)
-                            {
-                                importantDisasters.forEach(itemDisaster -> {
-                                    if( itemDisaster.getString("name").equals(item.getString("name")) )
-                                    {
-                                        ArrayList<String> locArray = (ArrayList<String>) itemDisaster.get("location");
-                                        if(locArray.contains(state))
-                                            Log.d("app", String.format("successfully found:  %s", item.toString()));
+                    itemsTask2.addOnCompleteListener(new OnCompleteListener<List<Document>>() {
+                        @Override
+                        public void onComplete(@androidx.annotation.NonNull Task<List<Document>> task2) {
+                            if (task2.isSuccessful()) {
+                                List<Document> items = task.getResult();
+                                List<Document> items2 = task2.getResult();
+                                for(Document item: items){
+                                    if(item.getString("directed_from").equals("headquarters") && item.getInteger("is_disaster")==0 && item.getString("location").equals(state)){
                                         m = new NotificationCardModel();
-                                        m.setTitle("News Feed");
-                                        m.setDescription("This is news feed description lol..");
+                                        m.setTitle(state + " Notification!");
+                                        m.setDescription(item.getString("message"));
                                         models.add(m);
                                     }
-                                });
+
+                                    else if (item.getString("directed_from").equals("headquarters") && item.getInteger("is_disaster")==1)
+                                    {
+                                        for(Document itemDisaster: items2) {
+                                            if( itemDisaster.getString("name").equals(item.getString("name")) )
+                                            {
+                                                ArrayList<String> locArray = (ArrayList<String>) itemDisaster.get("location");
+                                                if(locArray.contains(state)){
+                                                    m = new NotificationCardModel();
+                                                    m.setTitle(item.getString("name") + " Notification!");
+                                                    m.setDescription(item.getString("message"));
+                                                    models.add(m);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                myAdapter=new NotificationAdapter(c,models);
+                                myAdapter.notifyDataSetChanged();
+                                mRecylcerView.setAdapter(myAdapter);
+                                prog.setVisibility(View.GONE);
+
                             }
                         }
-
-                } else {
-                    Log.e("app", "Failed to count documents with exception: ", task.getException());
+                    });
                 }
             }
         });
-        System.out.println("wow");
-
-
-
-
     }
 }

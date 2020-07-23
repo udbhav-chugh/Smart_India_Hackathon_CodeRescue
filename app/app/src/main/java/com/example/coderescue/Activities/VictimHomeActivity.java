@@ -147,7 +147,7 @@ public class VictimHomeActivity extends AppCompatActivity {
         importantDisasters.forEach(item -> {
                 Log.d("app", String.format("successfully found:  %s", item.toString()));
         });
-        final RemoteMongoCollection<Document> victimneedhelp = mongoClient.getDatabase("main").getCollection("victimNeedHelp");
+        final RemoteMongoCollection<Document> victimneedhelp = mongoClient.getDatabase("main").getCollection("victimsneedhelp");
         Document newItem = new Document()
                 .append("disaster_id", "unique_id_3")
                 .append("victims", Arrays.asList(

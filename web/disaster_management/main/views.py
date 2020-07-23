@@ -66,16 +66,17 @@ def index(request , latitude='' , longitude=''):
         r = r.json()
         min = 100000
         destinationIndex = -1
-        for safeHouseDistance in  r['resourceSets'][0]['resources'][0]['results']:
-            print(safeHouseDistance['travelDistance'])
-            if float(safeHouseDistance['travelDistance']) < min:
-                min = float(safeHouseDistance['travelDistance'])
-                destinationIndex = safeHouseDistance['destinationIndex']
-        context['nearest_safe_house'] = {
-            'latitude': listSafeHousesInUserLocation[destinationIndex]['latitude'] ,
-            'longitude': listSafeHousesInUserLocation[destinationIndex]['longitude']
-        }
-        print(context['nearest_safe_house'])
+        if len(r['resourceSets']) > 0:
+            for safeHouseDistance in  r['resourceSets'][0]['resources'][0]['results']:
+                print(safeHouseDistance['travelDistance'])
+                if float(safeHouseDistance['travelDistance']) < min:
+                    min = float(safeHouseDistance['travelDistance'])
+                    destinationIndex = safeHouseDistance['destinationIndex']
+            context['nearest_safe_house'] = {
+                'latitude': listSafeHousesInUserLocation[destinationIndex]['latitude'] ,
+                'longitude': listSafeHousesInUserLocation[destinationIndex]['longitude']
+            }
+            print(context['nearest_safe_house'])
     return render(request , 'main/index.html' , context)
 
 def getUserLocation(request):

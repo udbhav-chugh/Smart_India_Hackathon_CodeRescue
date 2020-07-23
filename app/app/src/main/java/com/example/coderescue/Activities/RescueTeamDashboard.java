@@ -2,13 +2,19 @@ package com.example.coderescue.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.coderescue.Fragments.HomeFragment;
+import com.example.coderescue.NotificationAdapter;
 import com.example.coderescue.NotificationCardModel;
 import com.example.coderescue.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -30,6 +36,13 @@ public class RescueTeamDashboard extends AppCompatActivity {
 
     public static RemoteMongoClient mongoClient;
     String message;
+    RecyclerView mRecylcerView;
+    NotificationAdapter myAdapter;
+    Context c;
+    ArrayList<NotificationCardModel> models = new ArrayList<>();
+    NotificationCardModel m;
+    private ProgressBar prog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +52,15 @@ public class RescueTeamDashboard extends AppCompatActivity {
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
         message = intent.getStringExtra(RescueTeamLoginActivity.EXTRA_MESSAGE);
+        prog=findViewById(R.id.progressBar2);
 
         // Capture the layout's TextView and set the string as its text
-        TextView textView = findViewById(R.id.textView3);
-        textView.setText(message);
+//        TextView textView = findViewById(R.id.textView3);
+//        textView.setText(message);
+        mRecylcerView=findViewById(R.id.recylcerView2);
+        c = this;
+        mRecylcerView.setLayoutManager(new LinearLayoutManager(this));
+        prog.setVisibility(View.VISIBLE);
         getVictims();
     }
     public void getVictims(){
@@ -63,16 +81,24 @@ public class RescueTeamDashboard extends AppCompatActivity {
                     else{
                         System.out.println(items.get(0));
                         Log.d("Correct", "Correct disaster_id");
-                        TextView textView = findViewById(R.id.textView3);
+//                        TextView textView = findViewById(R.id.textView3);
                         Document first = items.get(0);
                         List<Document> temp = (List<Document>)first.get("victims");
                         for(Document i: temp){
                             if(i.getInteger("isactive")==1){
-                                textView.append(i.getString("latitude"));
-                                textView.append(i.getString("longitude"));
+//                                textView.append(i.getString("latitude"));
+//                                textView.append(i.getString("longitude"));
+                                m = new NotificationCardModel();
+                                m.setTitle("Victim Information");
+                                m.setDescription("Latitude: " + i.getString("latitude") + "\n" + "Longitude: " + i.getString("longitude"));
+                                models.add(m);
                                 System.out.println(i);
                             }
                         }
+                        myAdapter=new NotificationAdapter(c,models);
+                        myAdapter.notifyDataSetChanged();
+                        mRecylcerView.setAdapter(myAdapter);
+                        prog.setVisibility(View.GONE);
 
                     }
                 } else {

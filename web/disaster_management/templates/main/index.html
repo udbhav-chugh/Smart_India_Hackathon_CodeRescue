@@ -6,6 +6,7 @@
     <script type="text/javascript">
      google.charts.load('current', {'packages':['line']});
     </script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js" type="text/javascript"></script>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
@@ -33,7 +34,8 @@
 {% endblock%}
 
 {% block content %}
-
+<ul id = "notf_list">
+</ul>
     <br/>
     <form id='locform' method = "POST" action = "{% url 'main:getUserLocation' %}">
         {% csrf_token %}
@@ -263,7 +265,58 @@
       chart.draw(data_for_chart, google.charts.Line.convertOptions(options));
       return;
     }
-   
+    setInterval(function () {
+        let lastNotification = new Date();
+        lastNotification = lastNotification.getDate() + "/" + (lastNotification.getMonth()+1).toString()
+        + "/" + lastNotification.getYear() + " " + lastNotification.getHours() + ":" + 
+        lastNotification.getMinutes() + ":" + lastNotification.getSeconds();
+        console.log('Called new notifications at : ' + new Date());
+        $.ajax({
+            type: 'GET',
+            url: "{% url 'main:get_new_notifications' locationIndex %}",
+            success: function (response) {
+                // console.log(response);
+                // console.log(lastNotification);
+                var newnotfs = response["new_notifications"];
+                console.log(newnotfs);
+                // var constantDate = new Date(lastNotification);
+                var constantDate = moment( lastNotification , 'DD-MM-YYYY HH:mm:ss').toDate();
+
+                for (notf in newnotfs) {
+                    // console.log(newnotfs[notf]['date']);
+                    // console.log(newnotfs[notf]);
+                    // var newDate = Date.parse(newnotfs[notf]['date'], "dd-MM-yyyy HH:mm:ss");
+                    var newDate = moment( newnotfs[notf]['date'] , 'DD-MM-YYYY HH:mm:ss').toDate();
+
+                    // var newDate = new Date(newnotfs[notf]['date']);
+                    console.log(lastNotification);
+                    console.log(newnotfs[notf]['date']);
+                    console.log(newDate);
+                    console.log(constantDate);
+                    var momentDate = moment('2015-01-16 22:15:00', 'YYYY-MM-DD HH:mm:ss');
+                    var jsDate = momentDate.toDate();
+                    console.log("hello");
+
+                    console.log(jsDate);
+
+
+
+                    if( newDate > constantDate ) {
+                        $('#notf_list').prepend(
+                            '<li><h4>'+ JSON.stringify(newnotfs[notf]) +'</h4></li>'
+                        )
+                        lastNotification = newnotfs[notf]['date'];
+                    }
+                }
+            },
+            error: function (response) {
+                console.log("dsadsadsaasdsadsadsadasads!@!@!@!@!@!!@!@!");
+
+                //console.log(response)
+            }
+        })
+    },10000);
+
     </script>
 
 {% endblock %}

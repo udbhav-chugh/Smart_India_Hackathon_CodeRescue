@@ -120,7 +120,19 @@ def notifications(request, loc_no):
 def get_new_notifications(request, loc_no):
     if request.is_ajax and request.method == "GET":
         lastNotif = request.session['lastNotification']
-        # get locName from url and not session
+        if(lastNotif == ''):
+            client = connect()
+            db = client.main.notification
+            data = db.find().sort("date", pymongo.DESCENDING)
+            allnotfs = list(data)
+            notfs = []
+            for notf in allnotfs:
+                if 'location' in notf and notf['location'] == notfLocation:
+                    notf['date'] = notf['date'].strftime('%d/%m/%Y %H:%M:%S')
+                    notfs.append(notf)
+            if notfs != []:
+                request.session['lastNotification'] = notfs[0]['date']
+
         locName = locations[loc_no]
         client = connect()
         db = client.main.notification
@@ -129,6 +141,7 @@ def get_new_notifications(request, loc_no):
         allnotfs = list(data)
         # print(allnotfs)
         # print(lastNotif)
+        print(lastNotif)
         newnotfs = []
         for notf in allnotfs:
             if 'location' in notf and notf['location'] == locName:

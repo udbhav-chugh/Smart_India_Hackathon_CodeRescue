@@ -141,7 +141,6 @@ def get_new_notifications(request, loc_no):
         allnotfs = list(data)
         # print(allnotfs)
         # print(lastNotif)
-        print(lastNotif)
         newnotfs = []
         for notf in allnotfs:
             if 'location' in notf and notf['location'] == locName:

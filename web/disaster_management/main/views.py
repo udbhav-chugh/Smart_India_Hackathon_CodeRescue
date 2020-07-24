@@ -114,7 +114,6 @@ def notifications(request, loc_no):
         'notifications' : notfs,
         'notfLocIndex' : loc_no
     }
-    print("#@!#@#@!#@!!#@#@#!@#@@!#@@!@#@!#!@@!#!@!@!@")
     return render(request , 'main/notification.html' , context)
 
 def get_new_notifications(request, loc_no):
@@ -295,6 +294,10 @@ def add_disaster(request):
                 'total' : {
                     'affected' : 0,
                     'deaths' : 0
+                },
+                'day_0' : {
+                    'affected' : 0,
+                    'deaths' : 0
                 }
             },
             'location' : location
@@ -302,3 +305,77 @@ def add_disaster(request):
         print(data)
         db.insert_one(data)
         return HttpResponseRedirect(reverse('main:all_disasters'))
+
+def update_statistics(request, disaster_id):
+    if request.method == "GET":
+        client = connect()
+        db = client.main.disaster
+        disaster = list(db.find({ "id" : disaster_id }))[0]
+        stats = {}
+        if 'statistics' in disaster:
+            stats = disaster['statistics']
+        total_stats = {
+            'affected' : 0,
+            'deaths' : 0
+        }
+
+        daily_stats = []
+        for key, value in stats.items():
+            if key == 'total':
+                total_stats = stats['total']
+            else:
+                daily_stats.append(value)
+
+        if not daily_stats:
+            daily_stats = [
+                {
+                    'affected' : 0,
+                    'deaths' : 0
+                }
+            ]
+
+        print(daily_stats)
+        context = {
+            "disaster_id" : disaster_id,
+            "disaster_name" : disaster['name'],
+            "location" : disaster['location'],
+            "total_stats" : total_stats,
+            "daily_stats" : daily_stats
+        }
+        return render(request, 'headquarters/update_statistics.html', context)
+
+    elif request.method == "POST":
+        affected_stats = request.POST.getlist('affected_stats')
+        deaths_stats = request.POST.getlist('deaths_stats')
+
+        total_stats = {
+            'affected' : 0,
+            'deaths' : 0
+        }
+
+        for stat in affected_stats:
+            total_stats['affected'] += int(stat)
+        for stat in deaths_stats:
+            total_stats['deaths'] += int(stat)
+
+        stats = {
+            "total" : total_stats
+        }
+
+        for x in range(len(affected_stats)):
+            day_no = "day_" + str(x)
+            day_stats = {
+                'affected' : int(affected_stats[x]),
+                'deaths' : int(deaths_stats[x])
+            }
+            stats[day_no] = day_stats
+
+        print(stats)
+        client = connect()
+        db = client.main.disaster
+        db.update_one(
+            { "id" : disaster_id },
+            { "$set": { "statistics" : stats } }
+        )
+
+        return HttpResponseRedirect(reverse('main:headquarters_dashboard'))

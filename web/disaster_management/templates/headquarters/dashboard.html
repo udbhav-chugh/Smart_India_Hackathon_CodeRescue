@@ -94,9 +94,10 @@
       {% for loc in disaster.location %}
           {{loc}},
       {% endfor %}
+      <a href="{% url 'main:update_statistics' disaster.id %}" class="btn btn-primary">Update Statistics</a>
       <br>
       <hr>
   {% endfor%}
 
-  <a href='{% url 'main:all_disasters' %}'> See all disasters and change their status </a>
+  <a href="{% url 'main:all_disasters' %}"> See all disasters and change their status </a>
 {% endblock %}

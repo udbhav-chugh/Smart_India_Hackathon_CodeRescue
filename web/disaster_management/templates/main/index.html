@@ -21,27 +21,45 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
     <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
-    <!-- <script type="text/javascript">
-     var positionUser = { 'coords' : {'latitude':'1234' , 'longitude':'5678'} };
-     google.charts.load('current', {'packages':['line']});
-    </script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-    <meta charset="utf-8"> -->
     
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css" /> -->
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script> -->
-    <!-- <script src="https://www.mapquestapi.com/sdk/leaflet/v2.2/mq-map.js?key=iGlsDrQ38nLRQ5FAGL4ekYShUv16vPPu"></script> -->
-    <!-- <script src="https://www.mapquestapi.com/sdk/leaflet/v2.2/mq-routing.js?key=iGlsDrQ38nLRQ5FAGL4ekYShUv16vPPu"></script> -->
-
 {% endblock%}
+
+{% block css %}
+<style>
+  .modal-dialog{
+    min-width:1000px;
+    /* background-color: yellow; */
+  }
+</style>
+{% endblock %}
 
 {% block content %}
 
 <div id = "notf_list">
 </div>
     <br/>
+<button style="display: none;" id="launchModalButton" type="button" class="btn btn-primary" data-toggle="modal" data-target="#nearestSafeHouseModal">
+  Launch demo modal
+</button>
+<div  class="modal fade" id="nearestSafeHouseModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Nearest Safe House from your location</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div  style="width:100%; height:500px" id="nearestSafeHouseMap"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close Directions</button>
+      </div>
+    </div>
+  </div>
+</div>
+
     <form id='locform' method = "POST" action = "{% url 'main:getUserLocation' %}">
         {% csrf_token %}
             <label>Current State :</label><br>
@@ -81,7 +99,6 @@
 
       <div style="height:800px;width:700px;" id="mapid"></div>
       <div style="height:800px;width:700px;" id="line_top_x"></div>
-<div  style="width:500px; height:500px" id="nearestSafeHouseMap"></div>
     <script>
       // $(document).ready(function(){
       // });
@@ -91,23 +108,27 @@
           'latitude': position.coords.latitude,
           'longitude': position.coords.longitude
         };
-        var url_mask = "{% url 'main:find_safe_house' '12345' '6789' %}".replace(/12345/, position.coords.latitude.toString()).replace(/6789/, position.coords.longitude.toString());
-        document.getElementById("nearest_safe_house_button").setAttribute('href' , url_mask);
-        var map = L.map('nearestSafeHouseMap');
+      var url_mask = "{% url 'main:find_safe_house' '12345' '6789' %}".replace(/12345/, position.coords.latitude.toString()).replace(/6789/, position.coords.longitude.toString());
+      document.getElementById("nearest_safe_house_button").setAttribute('href' , url_mask);
+          
+      function loadMapNearestSafeHouse(){
+          var map = L.map('nearestSafeHouseMap');
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
-        {% if nearest_safe_house %}
-        L.Routing.control({
-            waypoints: [
-                L.latLng(positionUser.latitude,positionUser.longitude ),
-                L.latLng({{nearest_safe_house.latitude}},  {{nearest_safe_house.longitude}})
-            ],
-            routeWhileDragging: true
-        }).addTo(map);
-        {% endif %}
-      
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+              attribution: '© OpenStreetMap contributors'
+          }).addTo(map);
+          {% if nearest_safe_house %}
+          console.log(positionUser.latitude + " ## " +positionUser.longitude);
+          console.log({{nearest_safe_house.latitude}} + " %% "+   {{nearest_safe_house.longitude}});
+          L.Routing.control({
+              waypoints: [
+                  L.latLng(positionUser.latitude,positionUser.longitude ),
+                  L.latLng({{nearest_safe_house.latitude}},  {{nearest_safe_house.longitude}})
+              ],
+              routeWhileDragging: true
+          }).addTo(map);
+          {% endif %}
+      };
       
       });
       // {% if disaster_values.isactive == 1 %}
@@ -327,7 +348,30 @@
                 //console.log(response)
             }
         })
-    },1000);
+    },10000);
+    $(window).on('shown.bs.modal', function() { 
+    $('#code').modal('show');
+    var map = L.map('nearestSafeHouseMap');
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+    {% if nearest_safe_house %}
+    console.log(positionUser.latitude + " ## " +positionUser.longitude);
+    console.log({{nearest_safe_house.latitude}} + " %% "+   {{nearest_safe_house.longitude}});
+    L.Routing.control({
+        waypoints: [
+            L.latLng(positionUser.latitude,positionUser.longitude ),
+            L.latLng({{nearest_safe_house.latitude}},  {{nearest_safe_house.longitude}})
+        ],
+        routeWhileDragging: true
+    }).addTo(map);
+    {% endif %}
+    }); 
+    {% if nearest_safe_house %}
+    setTimeout(function () {
+      $( "#launchModalButton" ).click();},1000);
+    {% endif %}
 
     </script>
 

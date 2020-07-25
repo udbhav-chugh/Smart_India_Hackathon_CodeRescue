@@ -234,7 +234,8 @@ def all_disasters(request):
     print("Connected")
     info = db.find({})
     data = list(info)
-
+    data.reverse()
+    
     disasters_data = []
     for record in data:
         temp = {}
@@ -300,7 +301,8 @@ def add_disaster(request):
                     'deaths' : 0
                 }
             },
-            'location' : location
+            'location' : location,
+            'starting_date' : str(datetime.now().date())
         }
         print(data)
         db.insert_one(data)

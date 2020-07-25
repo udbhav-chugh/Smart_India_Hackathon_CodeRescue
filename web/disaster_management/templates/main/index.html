@@ -369,7 +369,8 @@
     {% endif %}
     }); 
     {% if nearest_safe_house %}
-      $( "#launchModalButton" ).click();
+    setTimeout(function () {
+      $( "#launchModalButton" ).click();},1000);
     {% endif %}
 
     </script>

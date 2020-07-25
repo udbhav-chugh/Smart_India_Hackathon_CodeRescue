@@ -6,13 +6,14 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.telephony.SmsManager;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-public class MessageUtility {
+public class SendMessageUtility {
+
+    public static final int REQUEST_CODE_SEND_MESSAGE_PERMISSION = 1000;
 
     public static String HELPLINE = "7663934068";
 
@@ -22,7 +23,7 @@ public class MessageUtility {
 
     public static void setHELPLINE(String HELPLINE) {
         Log.i("message util", "HELPLINE updated");
-        MessageUtility.HELPLINE = HELPLINE;
+        SendMessageUtility.HELPLINE = HELPLINE;
     }
 
     //option to send message to specific phone number
@@ -44,8 +45,8 @@ public class MessageUtility {
             Log.i("message util", "sendTextMessage called");
         }
         else{
-            Log.i("message util", "Requesting SMS permissions");
-            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.SEND_SMS}, 0);
+            Log.i("message util", "Requesting SMS send permissions");
+            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.SEND_SMS}, REQUEST_CODE_SEND_MESSAGE_PERMISSION);
         }
     }
 
@@ -63,8 +64,8 @@ public class MessageUtility {
             Log.i("message util", "sendTextMessage called");
         }
         else{
-            Log.i("message util", "Requesting SMS permissions");
-            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.SEND_SMS}, 0);
+            Log.i("message util", "Requesting SMS send permissions");
+            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.SEND_SMS}, REQUEST_CODE_SEND_MESSAGE_PERMISSION);
         }
     }
 

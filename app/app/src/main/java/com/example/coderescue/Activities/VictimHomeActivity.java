@@ -13,6 +13,8 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
@@ -22,6 +24,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.coderescue.Classes.NetworkConnectivity;
 import com.example.coderescue.Classes.victimNeedHelp;
 import com.example.coderescue.Fragments.HomeFragment;
 import com.example.coderescue.NotificationCardModel;
@@ -80,16 +83,24 @@ public class VictimHomeActivity extends AppCompatActivity {
         mRecylcerView=findViewById(R.id.recylcerView5);
         c = this;
         mRecylcerView.setLayoutManager(new LinearLayoutManager(this));
-        if (ContextCompat.checkSelfPermission(
-                getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION
-        ) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(VictimHomeActivity.this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION_PERMISSION);
-        } else {
-            getCurrentLocation();
-        }
+
+        String toastText = "No internet";
+        if(NetworkConnectivity.isInternetAvailable(getApplicationContext())) toastText = "Internet Available";
+
+        Toast.makeText(this, toastText, Toast.LENGTH_SHORT).show();
+
+//        if (ContextCompat.checkSelfPermission(
+//                getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION
+//        ) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(VictimHomeActivity.this,
+//                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION_PERMISSION);
+//        } else {
+//            getCurrentLocation();
+//        }
 
     }
+
+
 
     private void getCurrentLocation(){
         prog.setVisibility(View.VISIBLE);

@@ -3,6 +3,8 @@ package com.example.coderescue.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.Context;
@@ -24,6 +26,10 @@ import com.example.coderescue.Classes.victimNeedHelp;
 import com.example.coderescue.Fragments.HomeFragment;
 import com.example.coderescue.NotificationCardModel;
 import com.example.coderescue.R;
+import com.example.coderescue.VictimHomeAdapter;
+import com.example.coderescue.VictimHomeCardModel;
+import com.example.coderescue.VictimLocationAdapter;
+import com.example.coderescue.VictimLocationCardModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -54,21 +60,26 @@ import static com.mongodb.client.model.Filters.eq;
 
 public class VictimHomeActivity extends AppCompatActivity {
     private Button snd;
+
+    ArrayList<VictimHomeCardModel> models = new ArrayList<>();
+    VictimHomeCardModel m;
     public static RemoteMongoClient mongoClient;
+    public String lat,longi;
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
-    private TextView textLatLong;
-    private TextView textState;
     private ProgressBar prog;
     public static String state;
+    RecyclerView mRecylcerView;
+    VictimHomeAdapter myAdapter;
+    Context c;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_victim_home);
-
-        textLatLong = findViewById(R.id.textViewLatLong2);
-        textState = findViewById(R.id.textViewAddress2);
         prog=findViewById(R.id.progressBar2);
+        mRecylcerView=findViewById(R.id.recylcerView5);
+        c = this;
+        mRecylcerView.setLayoutManager(new LinearLayoutManager(this));
         if (ContextCompat.checkSelfPermission(
                 getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION
         ) != PackageManager.PERMISSION_GRANTED) {
@@ -77,6 +88,7 @@ public class VictimHomeActivity extends AppCompatActivity {
         } else {
             getCurrentLocation();
         }
+
     }
 
     private void getCurrentLocation(){
@@ -97,12 +109,8 @@ public class VictimHomeActivity extends AppCompatActivity {
                             int latestLocationIndex = locationResult.getLocations().size() - 1;
                             double latitude = locationResult.getLocations().get(latestLocationIndex).getLatitude();
                             double longitude = locationResult.getLocations().get(latestLocationIndex).getLongitude();
-                            textLatLong.setText(
-                                    String.format(
-                                            "Latitude %s\n Longitude %s",
-                                            latitude, longitude
-                                    )
-                            );
+                            lat = Double.toString(latitude);
+                            longi = Double.toString(longitude);
 
                             Geocoder gcd = new Geocoder(getBaseContext(),
                                     Locale.getDefault());
@@ -118,12 +126,6 @@ public class VictimHomeActivity extends AppCompatActivity {
 //                                    String postalCode = addresses.get(0).getPostalCode();
 //                                    String knownName = addresses.get(0).getFeatureName();
                                     state = addresses.get(0).getAdminArea();
-                                    textState.setText(
-                                            String.format(
-                                                    "State: %s",
-                                                    state
-                                            )
-                                    );
                                     getDisasters();
                                 }
 
@@ -141,35 +143,34 @@ public class VictimHomeActivity extends AppCompatActivity {
         final RemoteMongoCollection<Document> disasters = mongoClient.getDatabase("main").getCollection("disaster");
 //        final RemoteMongoCollection<Document> notifications = mongoClient.getDatabase("main").getCollection("notification");
 
-        RemoteFindIterable<Document> importantDisasters = disasters.find(and(eq("location", state), eq("isactive", 1)));
-//        RemoteFindIterable<Document> notifs = notifications.find();
-
-        importantDisasters.forEach(item -> {
-                Log.d("app", String.format("successfully found:  %s", item.toString()));
-        });
-        final RemoteMongoCollection<Document> victimneedhelp = mongoClient.getDatabase("main").getCollection("victimsneedhelp");
-        Document newItem = new Document()
-                .append("disaster_id", "unique_id_3")
-                .append("victims", Arrays.asList(
-                        new Document()
-                                .append("latitude", 1.1)
-                                .append("longitude", 2.2)
-                                .append("isactive", 1)
-                ));
-
-
-        final Task<RemoteInsertOneResult> insertTask = victimneedhelp.insertOne(newItem);
-        insertTask.addOnCompleteListener(new OnCompleteListener<RemoteInsertOneResult>() {
+        RemoteFindIterable findResults = disasters.find(and(eq("location", state), eq("isactive", 1)));
+        Task<List<Document>> itemsTask = findResults.into(new ArrayList<Document>());
+        itemsTask.addOnCompleteListener(new OnCompleteListener<List<Document>>() {
             @Override
-            public void onComplete(@NonNull Task <RemoteInsertOneResult> task) {
+            public void onComplete(@androidx.annotation.NonNull Task<List<Document>> task) {
                 if (task.isSuccessful()) {
-                    Log.d("app", String.format("successfully inserted item with id %s",
-                            task.getResult().getInsertedId()));
+                    List<Document> items = task.getResult();
+                    for(Document i: items){
+                        String dis_name = i.getString("name");
+                        String dis_id = i.getString("id");
+                            m = new VictimHomeCardModel();
+                            m.setTitle(dis_name);
+                            m.setDescription(dis_id);
+                            m.setLatitude(lat);
+                            m.setLongitude(longi);
+                            models.add(m);
+                            System.out.println(i);
+                    }
+                    myAdapter=new VictimHomeAdapter(c,models);
+                    mRecylcerView.setAdapter(myAdapter);
+                    prog.setVisibility(View.GONE);
                 } else {
-                    Log.e("app", "failed to insert document with: ", task.getException());
+                    Log.e("app", "Failed to count documents with exception: ", task.getException());
                 }
             }
         });
+
+
 
         System.out.println("wow2");
     }

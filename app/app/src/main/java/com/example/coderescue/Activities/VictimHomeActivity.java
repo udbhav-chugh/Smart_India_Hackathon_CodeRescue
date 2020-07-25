@@ -1,5 +1,6 @@
 package com.example.coderescue.Activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -11,50 +12,33 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.coderescue.Classes.MessageUtility;
 import com.example.coderescue.Classes.NetworkConnectivity;
-import com.example.coderescue.Classes.victimNeedHelp;
 import com.example.coderescue.Fragments.HomeFragment;
-import com.example.coderescue.NotificationCardModel;
 import com.example.coderescue.R;
 import com.example.coderescue.VictimHomeAdapter;
 import com.example.coderescue.VictimHomeCardModel;
-import com.example.coderescue.VictimLocationAdapter;
-import com.example.coderescue.VictimLocationCardModel;
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.mongodb.lang.NonNull;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteFindIterable;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
-import com.mongodb.stitch.core.services.mongodb.remote.RemoteInsertOneResult;
 
-import org.bson.BsonArray;
-import org.bson.BsonDocument;
-import org.bson.BsonObjectId;
 import org.bson.Document;
-import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -71,7 +55,7 @@ public class VictimHomeActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
     private ProgressBar prog;
     public static String state;
-    RecyclerView mRecylcerView;
+    RecyclerView mRecyclerView;
     VictimHomeAdapter myAdapter;
     Context c;
 
@@ -80,27 +64,46 @@ public class VictimHomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_victim_home);
         prog=findViewById(R.id.progressBar2);
-        mRecylcerView=findViewById(R.id.recylcerView5);
+        mRecyclerView =findViewById(R.id.recylcerView5);
         c = this;
-        mRecylcerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         String toastText = "No internet";
         if(NetworkConnectivity.isInternetAvailable(getApplicationContext())) toastText = "Internet Available";
-
         Toast.makeText(this, toastText, Toast.LENGTH_SHORT).show();
 
-//        if (ContextCompat.checkSelfPermission(
-//                getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION
-//        ) != PackageManager.PERMISSION_GRANTED) {
-//            ActivityCompat.requestPermissions(VictimHomeActivity.this,
-//                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION_PERMISSION);
-//        } else {
-//            getCurrentLocation();
-//        }
-
+        if(!NetworkConnectivity.isInternetAvailable(getApplicationContext())){
+            MessageUtility.sendMessage(getApplicationContext(), VictimHomeActivity.this, "testing send message");
+        }
+        else{
+            if (ContextCompat.checkSelfPermission(
+                getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(VictimHomeActivity.this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION_PERMISSION);
+            } else {
+                getCurrentLocation();
+            }
+        }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
 
+            //code 0 is given for text message permission in MessageUtility
+            case 0:
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    if(!NetworkConnectivity.isInternetAvailable(getApplicationContext())){
+                        MessageUtility.sendMessage(getApplicationContext(), VictimHomeActivity.this, "testing send message");
+                    }
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "You don't have the required permissions for sending text message", Toast.LENGTH_SHORT).show();
+                }
+
+        }
+    }
 
     private void getCurrentLocation(){
         prog.setVisibility(View.VISIBLE);
@@ -173,7 +176,7 @@ public class VictimHomeActivity extends AppCompatActivity {
                             System.out.println(i);
                     }
                     myAdapter=new VictimHomeAdapter(c,models);
-                    mRecylcerView.setAdapter(myAdapter);
+                    mRecyclerView.setAdapter(myAdapter);
                     prog.setVisibility(View.GONE);
                 } else {
                     Log.e("app", "Failed to count documents with exception: ", task.getException());

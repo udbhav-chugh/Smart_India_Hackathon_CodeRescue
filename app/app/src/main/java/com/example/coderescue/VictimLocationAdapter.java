@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.coderescue.Activities.MapsActivity;
 import com.example.coderescue.Activities.PathToVictimActivity;
 
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ public class VictimLocationAdapter extends RecyclerView.Adapter<VictimLocationHo
             public void onItemClick(View v, int pos) {
 
                 //INTENT OBJ
-                Intent iii=new Intent(c, PathToVictimActivity.class);
+                Intent iii=new Intent(c, MapsActivity.class);
                 System.out.println("jai shree ram");
                 //ADD DATA TO OUR INTENT
                 iii.putExtra("latitude",lat);

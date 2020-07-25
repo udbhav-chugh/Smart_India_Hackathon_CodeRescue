@@ -67,7 +67,7 @@ public class RescueTeamDashboard extends AppCompatActivity {
     }
     public void getVictims(){
         mongoClient = HomeFragment.client.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
-        final RemoteMongoCollection<Document> disasters = mongoClient.getDatabase("main").getCollection("victimNeedHelp");
+        final RemoteMongoCollection<Document> disasters = mongoClient.getDatabase("main").getCollection("victimsneedhelp");
 
         RemoteFindIterable findResults = disasters.find(eq("disaster_id", disaster_id));
         Task<List<Document>> itemsTask = findResults.into(new ArrayList<Document>());

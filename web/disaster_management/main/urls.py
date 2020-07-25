@@ -13,5 +13,6 @@ urlpatterns = [
     path('rescue_team_dashboard' , views.rescue_team_dashboard , name='rescue_team_dashboard'),
     path('headquarters/dashboard/add_disaster', views.add_disaster, name = 'add_disaster'),
     path('headquarters/dashboard/all_disasters', views.all_disasters, name = 'all_disasters'),
-    path('headquarters/dashboard/all_disasters/change_active_status', views.change_active_status, name='change_active_status')
+    path('headquarters/dashboard/all_disasters/change_active_status', views.change_active_status, name='change_active_status'),
+    path('headquarters/dashboard/disaster/<str:disaster_id>/update_statistics', views.update_statistics, name='update_statistics')
 ]

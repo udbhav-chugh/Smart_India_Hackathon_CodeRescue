@@ -68,7 +68,11 @@ public class VictimHomeActivity extends AppCompatActivity {
         mRecyclerView =findViewById(R.id.recylcerView5);
         c = this;
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        snd = findViewById(R.id.snd_msg);
 
+    }
+
+    public void button_click(View view){
         String toastText = "No internet";
         if(NetworkConnectivity.isInternetAvailable(getApplicationContext())) toastText = "Internet Available";
         Toast.makeText(this, toastText, Toast.LENGTH_SHORT).show();
@@ -78,7 +82,7 @@ public class VictimHomeActivity extends AppCompatActivity {
         }
         else{
             if (ContextCompat.checkSelfPermission(
-                getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION
+                    getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(VictimHomeActivity.this,
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION_PERMISSION);
@@ -87,7 +91,6 @@ public class VictimHomeActivity extends AppCompatActivity {
             }
         }
         ReceiveMessageUtility.checkPermissions(getApplicationContext(), VictimHomeActivity.this);
-
     }
 
     @Override
@@ -195,4 +198,5 @@ public class VictimHomeActivity extends AppCompatActivity {
 
         System.out.println("wow2");
     }
+
 }

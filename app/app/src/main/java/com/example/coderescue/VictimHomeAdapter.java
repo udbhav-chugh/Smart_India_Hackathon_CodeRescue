@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -133,6 +134,13 @@ public class VictimHomeAdapter extends RecyclerView.Adapter<VictimHomeHolder>{
                                     }
                                 });
                             }
+                            Context context = c
+                                    .getApplicationContext();
+                            CharSequence text = "Request Sent. Rescue Team Will Arrive as soon as possible!";
+                            int duration = Toast.LENGTH_LONG;
+
+                            Toast toast = Toast.makeText(context, text, duration);
+                            toast.show();
                         } else {
                             Log.e("app", "Failed to count documents with exception: ", task.getException());
                         }

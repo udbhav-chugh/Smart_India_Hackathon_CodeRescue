@@ -37,8 +37,8 @@ public class VictimLocationAdapter extends RecyclerView.Adapter<VictimLocationHo
 
     @Override
     public void onBindViewHolder(@NonNull VictimLocationHolder myHolder, int i) {
-        String lat = models.get(i).getTitle();
-        String longi = models.get(i).getDescription();
+        String lat = models.get(i).getLatitude();
+        String longi = models.get(i).getLongitude();
         String username = models.get(i).getRescueUsername();
         myHolder.mTitle.setText(models.get(i).getTitle());
         myHolder.mDes.setText(models.get(i).getDescription());

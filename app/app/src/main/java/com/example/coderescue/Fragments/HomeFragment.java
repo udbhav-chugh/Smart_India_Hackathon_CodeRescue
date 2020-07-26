@@ -11,6 +11,8 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.example.coderescue.Activities.CameraWithGoogleMapsActivity;
+import com.example.coderescue.Activities.GoogleMapActivity;
 import com.example.coderescue.Activities.MainDashboardActivity;
 import com.example.coderescue.Activities.RescueTeamLoginActivity;
 import com.example.coderescue.Activities.UpdateInfoActivity;
@@ -28,7 +30,7 @@ import com.mongodb.stitch.core.auth.providers.userpassword.UserPasswordCredentia
 public class HomeFragment extends Fragment {
 
     public static StitchAppClient client;
-    Button button_helper, button_victim, button_victim_notif, button_dashboard, button_update_info;
+    Button button_helper, button_victim, button_victim_notif, button_dashboard, button_update_info, button_ar_map, button_ar_camera;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -38,6 +40,8 @@ public class HomeFragment extends Fragment {
         button_victim_notif = root.findViewById(R.id.button_victim_notif);
         button_dashboard = root.findViewById(R.id.button_dashboard);
         button_update_info = root.findViewById(R.id.button_update_info);
+        button_ar_map = root.findViewById(R.id.button_ar_map);
+        button_ar_camera = root.findViewById(R.id.button_ar_camera);
 
         button_helper.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +75,20 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), UpdateInfoActivity.class);
+                startActivity(intent);
+            }
+        });
+        button_ar_map.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), GoogleMapActivity.class);
+                startActivity(intent);
+            }
+        });
+        button_ar_camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), CameraWithGoogleMapsActivity.class);
                 startActivity(intent);
             }
         });

@@ -6,6 +6,7 @@ public class VictimLocationCardModel {
     private String rescueUsername;
     private  String latitude, longitude;
     private double distance;
+    private String disaster_id;
     private int img;
 
     public String getTitle() {
@@ -39,5 +40,9 @@ public class VictimLocationCardModel {
     public double getDistance() { return distance;}
 
     public void setDistance(double distance) {this.distance = distance; }
+
+    public String getDisaster_id(){ return disaster_id; }
+
+    public void setDisaster_id(String disaster_id){ this.disaster_id = disaster_id; }
 
 }

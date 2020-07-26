@@ -36,6 +36,7 @@ import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
 import org.bson.Document;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import android.content.Context;
@@ -190,6 +191,7 @@ public class VictimNotifications extends AppCompatActivity {
                                         }
                                     }
                                 }
+                                Collections.reverse(models);
                                 myAdapter=new NotificationAdapter(c,models);
                                 mRecylcerView.setAdapter(myAdapter);
                                 prog.setVisibility(View.GONE);

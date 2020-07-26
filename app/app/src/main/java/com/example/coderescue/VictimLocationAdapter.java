@@ -2,6 +2,7 @@ package com.example.coderescue;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import com.example.coderescue.Activities.MapsActivity;
 import com.example.coderescue.Activities.PathToVictimActivity;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class VictimLocationAdapter extends RecyclerView.Adapter<VictimLocationHolder>{
 
@@ -47,15 +49,22 @@ public class VictimLocationAdapter extends RecyclerView.Adapter<VictimLocationHo
             @Override
             public void onItemClick(View v, int pos) {
 
-                //INTENT OBJ
-                Intent iii=new Intent(c, MapsActivity.class);
                 System.out.println("jai shree ram");
+//                String uri = String.format(Locale.ENGLISH, "geo:%f,%f", lat, longi);
+                String geoUri = "http://maps.google.com/maps?q=loc:" + lat + "," + longi + " (" + "label temp" + ")";
+
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
+                c.startActivity(intent);
+                //INTENT OBJ
+
+//                Intent iii=new Intent(c, MapsActivity.class);
+
                 //ADD DATA TO OUR INTENT
-                iii.putExtra("latitude",lat);
-                iii.putExtra("longitude",longi);
-                iii.putExtra("username", username);
+//                iii.putExtra("latitude",lat);
+//                iii.putExtra("longitude",longi);
+//                iii.putExtra("username", username);
                 //START DETAIL ACTIVITY
-                c.startActivity(iii);
+//                c.startActivity(iii);
 
             }
         });

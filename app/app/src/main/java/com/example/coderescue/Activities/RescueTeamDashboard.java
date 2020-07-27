@@ -95,7 +95,7 @@ public class RescueTeamDashboard extends AppCompatActivity {
         Toast.makeText(this, toastText, Toast.LENGTH_SHORT).show();
 
         if(!NetworkConnectivity.isInternetAvailable(getApplicationContext())){
-            SendMessageUtility.sendMessage(getApplicationContext(), RescueTeamDashboard.this, "testing send message");
+//            SendMessageUtility.sendMessage(getApplicationContext(), RescueTeamDashboard.this, "testing send message");
         }
         else{
             if (ContextCompat.checkSelfPermission(

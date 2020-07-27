@@ -19,6 +19,16 @@ tools:context=".Fragments.HomeFragment">
         android:layout_alignParentRight="true"
         android:background="@drawable/round_button"
         />
+    <ImageButton
+        android:id="@+id/voiceBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_mic"
+        android:scaleType="fitCenter"
+        android:layout_alignParentLeft="true"
+        android:background="@null"
+        />
+
     <de.hdodenhof.circleimageview.CircleImageView
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_centerHorizontal="true"
@@ -65,7 +75,7 @@ tools:context=".Fragments.HomeFragment">
             android:background="@drawable/round_button"
             android:layout_below="@+id/button_victim"
             android:layout_margin="10dp"
-            android:text="I want to help"/>
+            android:text="Rescue Team Login"/>
 
         <Button
             android:id="@+id/button_victim_notif"

@@ -2,13 +2,17 @@ package com.example.coderescue.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.coderescue.Activities.CameraWithGoogleMapsActivity;
@@ -27,10 +31,16 @@ import com.mongodb.stitch.android.core.auth.StitchUser;
 import com.mongodb.stitch.core.auth.providers.anonymous.AnonymousCredential;
 import com.mongodb.stitch.core.auth.providers.userpassword.UserPasswordCredential;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Locale;
+
 public class HomeFragment extends Fragment {
 
     public static StitchAppClient client;
     Button button_helper, button_victim, button_victim_notif, button_dashboard, button_update_info, button_ar_map, button_ar_camera;
+    ImageButton button_voice;
+    private static final int REQUEST_CODE_SPEECH_INPUT = 1000;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -42,6 +52,7 @@ public class HomeFragment extends Fragment {
         button_update_info = root.findViewById(R.id.button_update_info);
         button_ar_map = root.findViewById(R.id.button_ar_map);
         button_ar_camera = root.findViewById(R.id.button_ar_camera);
+        button_voice = root.findViewById(R.id.voiceBtn);
 
         button_helper.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,8 +103,51 @@ public class HomeFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
         enableAnonymousAuth();
+
+        button_voice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                speak();
+            }
+        });
+
         return root;
+    }
+
+    private void speak(){
+
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Hi speak something");
+
+        try {
+            startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT);
+        }
+        catch (Exception e){
+            Toast.makeText(getActivity(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case REQUEST_CODE_SPEECH_INPUT:{
+                if (resultCode == -1 && null!=data){
+                    ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    String spoken = result.get(0);
+                    if(spoken.contains("help")){
+                        Intent intent = new Intent(getActivity(), VictimHomeActivity.class);
+                        startActivity(intent);
+                    }
+                }
+            }
+        }
     }
 
     private void enableAnonymousAuth(){

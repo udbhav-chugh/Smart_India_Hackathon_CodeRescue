@@ -155,6 +155,10 @@ public class HomeFragment extends Fragment {
                         Intent intent = new Intent(getActivity(), VictimHomeActivity.class);
                         startActivity(intent);
                     }
+                    if(spoken.contains("message")){
+                        Intent intent = new Intent(getActivity(), SendMessageActivity.class);
+                        startActivity(intent);
+                    }
                 }
             }
         }

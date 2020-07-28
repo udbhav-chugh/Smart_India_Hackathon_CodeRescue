@@ -90,20 +90,23 @@ public class VictimLocationAdapter extends RecyclerView.Adapter<VictimLocationHo
                                 List<Document> temp = (List<Document>)first.get("victims");
                                 List<Document> temp2 = new ArrayList<Document>();
                                 int count=0;
+                                System.out.println(lat);
+                                System.out.println(longi);
                                 for(Document doc: temp){
-                                    if(count!=i)
+                                    System.out.println(count + " " + doc.getString("latitude") + " " + doc.getString("longitude"));
+                                    if(count==1 || !doc.getString("latitude").equals(lat) || !doc.getString("longitude").equals(longi))
                                     {
                                         temp2.add(doc);
                                     }
                                     else
                                     {
+                                        count=1;
                                         Document notactive = new Document()
                                                 .append("latitude", lat)
                                                 .append("longitude", longi)
                                                 .append("isactive", 0);
                                         temp2.add(notactive);
                                     }
-                                    count++;
                                 }
                                 Log.d("Exists", "update");
                                 Document filterDoc = new Document().append("disaster_id", dis_id);

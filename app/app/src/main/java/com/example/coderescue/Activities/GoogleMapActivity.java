@@ -34,7 +34,7 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
         supportMapFragment.getMapAsync(this);
 
     }
-
+//
 //    @Override
 //    public boolean onMarkerClick(Marker marker) {
 //        // To get the GeoObject that owns the marker we use the following

@@ -152,6 +152,8 @@ public class BeyondARWorld {
 //         Create an object with an image in the app resources.
         GeoObject go1 = new GeoObject(1l);
         go1.setGeoPosition(41.90523339794433d, 2.565036406654116d);
+        go1.setGeoPosition(28.6319541d, 77.0950067d);
+
         go1.setImageResource(R.drawable.creature_1);
         go1.setName("Creature 1");
 
@@ -167,16 +169,22 @@ public class BeyondARWorld {
         GeoObject go5 = new GeoObject(5l);
         go5.setGeoPosition(41.90553066234138d, 2.565777906882577d);
         go5.setImageResource(R.drawable.creature_5);
+        go5.setGeoPosition(28.6319541d, 77.0950067d);
+
         go5.setName("Creature 5");
 
         GeoObject go6 = new GeoObject(6l);
         go6.setGeoPosition(41.90596218466268d, 2.565250806050688d);
         go6.setImageResource(R.drawable.creature_6);
+        go6.setGeoPosition(28.6319541d, 77.0950067d);
+
         go6.setName("Creature 6");
 
         GeoObject go7 = new GeoObject(7l);
         go7.setGeoPosition(41.90581776104766d, 2.565932313852319d);
         go7.setImageResource(R.drawable.creature_2);
+        go7.setGeoPosition(28.6319541d, 77.0950067d);
+
         go7.setName("Creature 2");
 
         GeoObject go8 = new GeoObject(8l);
@@ -195,14 +203,14 @@ public class BeyondARWorld {
         go10.setName("Far away");
 
         // Add the GeoObjects to the world
-//        sharedWorld.addBeyondarObject(go1);
+        sharedWorld.addBeyondarObject(go1);
         sharedWorld.addBeyondarObject(go2, LIST_TYPE_EXAMPLE_1);
-//        sharedWorld.addBeyondarObject(go5);
-//        sharedWorld.addBeyondarObject(go6);
-//        sharedWorld.addBeyondarObject(go7);
-//        sharedWorld.addBeyondarObject(go8);
-//        sharedWorld.addBeyondarObject(go9);
-//        sharedWorld.addBeyondarObject(go10);
+        sharedWorld.addBeyondarObject(go5);
+        sharedWorld.addBeyondarObject(go6);
+        sharedWorld.addBeyondarObject(go7);
+        sharedWorld.addBeyondarObject(go8);
+        sharedWorld.addBeyondarObject(go9);
+        sharedWorld.addBeyondarObject(go10);
 //        for( GeoObject temp : listVictims  ){
 //            sharedWorld.addBeyondarObject(temp,LIST_TYPE_EXAMPLE_1);
 //            Log.d("Correct", "h" + listVictims.size());

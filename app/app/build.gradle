@@ -60,5 +60,4 @@ dependencies {
     implementation 'com.github.sshadkany:Android_neumorphic:1.2.0'
     implementation 'com.github.zcweng:switch-button:0.0.3@aar'
     implementation 'com.github.fornewid:neumorphism:0.1.11'
->>>>>>> 1d9e54f8656f9b4751f17ba336b07d7cfecb701a
 }

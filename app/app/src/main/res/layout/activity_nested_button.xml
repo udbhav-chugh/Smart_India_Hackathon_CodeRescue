@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".NestedButtonActivity"
+    android:id="@+id/backgroundLayout">
+
+
+    <com.github.sshadkany.shapes.PolygonView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:shape_polygon_shadow_type="big_inner_shadow"
+        app:shape_polygon_side="4">
+
+
+        <com.github.sshadkany.PolygonButton
+            android:id="@+id/polygon_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="16dp"
+            app:shape_polygon_side="4">
+
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:padding="60dp"
+                android:tint="#000000"
+                app:srcCompat="@drawable/abc_vector_test" />
+        </com.github.sshadkany.PolygonButton>
+
+    </com.github.sshadkany.shapes.PolygonView>
+</androidx.constraintlayout.widget.ConstraintLayout>

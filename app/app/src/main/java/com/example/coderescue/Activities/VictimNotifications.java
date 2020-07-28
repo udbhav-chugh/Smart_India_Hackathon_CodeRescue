@@ -49,8 +49,7 @@ public class VictimNotifications extends AppCompatActivity {
     NotificationCardModel m;
     public static RemoteMongoClient mongoClient;
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
-    private TextView textLatLong;
-    private TextView textState;
+
     private ProgressBar prog;
     public static String state;
     RecyclerView mRecylcerView;
@@ -61,8 +60,7 @@ public class VictimNotifications extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_victim_notifications);
-        textLatLong = findViewById(R.id.textViewLatLong);
-        textState = findViewById(R.id.textViewAddress);
+
         prog=findViewById(R.id.progressBar);
         if (ContextCompat.checkSelfPermission(
                 getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION
@@ -108,12 +106,6 @@ public class VictimNotifications extends AppCompatActivity {
                             int latestLocationIndex = locationResult.getLocations().size() - 1;
                             double latitude = locationResult.getLocations().get(latestLocationIndex).getLatitude();
                             double longitude = locationResult.getLocations().get(latestLocationIndex).getLongitude();
-                            textLatLong.setText(
-                                    String.format(""
-//                                            "Latitude %s\n Longitude %s",
-//                                            latitude, longitude
-                                    )
-                            );
 
                             Geocoder gcd = new Geocoder(getBaseContext(),
                                     Locale.getDefault());
@@ -129,12 +121,6 @@ public class VictimNotifications extends AppCompatActivity {
 //                                    String postalCode = addresses.get(0).getPostalCode();
 //                                    String knownName = addresses.get(0).getFeatureName();
                                     state = addresses.get(0).getAdminArea();
-                                    textState.setText(""
-//                                            String.format(
-//                                                    "State: %s",
-//                                                    state
-//                                            )
-                                    );
                                     getNotifications();
                                 }
 
@@ -167,6 +153,7 @@ public class VictimNotifications extends AppCompatActivity {
                             if (task2.isSuccessful()) {
                                 List<Document> items = task.getResult();
                                 List<Document> items2 = task2.getResult();
+                                models.clear();
                                 for(Document item: items){
                                     if(item.getString("directed_from").equals("headquarters") && item.getInteger("is_disaster")==0 && item.getString("location").equals(state)){
                                         m = new NotificationCardModel();

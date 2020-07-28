@@ -198,6 +198,7 @@ public class RescueTeamDashboard extends AppCompatActivity {
 //                        TextView textView = findViewById(R.id.textView3);
                         Document first = items.get(0);
                         List<Document> temp = (List<Document>)first.get("victims");
+                        models.clear();
                         for(Document i: temp){
                             if(i.getInteger("isactive")==1){
 //                                textView.append(i.getString("latitude"));

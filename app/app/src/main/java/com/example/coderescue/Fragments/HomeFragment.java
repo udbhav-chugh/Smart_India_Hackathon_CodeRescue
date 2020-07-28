@@ -19,6 +19,7 @@ import com.example.coderescue.Activities.CameraWithGoogleMapsActivity;
 import com.example.coderescue.Activities.GoogleMapActivity;
 import com.example.coderescue.Activities.MainDashboardActivity;
 import com.example.coderescue.Activities.RescueTeamLoginActivity;
+import com.example.coderescue.Activities.SendMessageActivity;
 import com.example.coderescue.Activities.UpdateInfoActivity;
 import com.example.coderescue.Activities.VictimHomeActivity;
 import com.example.coderescue.Activities.VictimNotifications;
@@ -38,7 +39,7 @@ import java.util.Locale;
 public class HomeFragment extends Fragment {
 
     public static StitchAppClient client;
-    Button button_helper, button_victim, button_victim_notif, button_dashboard, button_update_info, button_ar_map, button_ar_camera;
+    Button button_helper, button_victim, button_victim_notif, button_dashboard, button_update_info, button_ar_map, button_ar_camera, button_send_msg;
     ImageButton button_voice;
     private static final int REQUEST_CODE_SPEECH_INPUT = 1000;
 
@@ -53,6 +54,7 @@ public class HomeFragment extends Fragment {
         button_ar_map = root.findViewById(R.id.button_ar_map);
         button_ar_camera = root.findViewById(R.id.button_ar_camera);
         button_voice = root.findViewById(R.id.voiceBtn);
+        button_send_msg = root.findViewById(R.id.button_send_msg);
 
         button_helper.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +102,14 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), CameraWithGoogleMapsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        button_send_msg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), SendMessageActivity.class);
                 startActivity(intent);
             }
         });

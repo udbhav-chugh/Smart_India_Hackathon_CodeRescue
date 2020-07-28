@@ -15,7 +15,7 @@ public class SendMessageUtility {
 
     public static final int REQUEST_CODE_SEND_MESSAGE_PERMISSION = 1000;
 
-    public static String HELPLINE = "7663934068";
+    public static String HELPLINE = "8402028442";
 
     public static String getHELPLINE() {
         return HELPLINE;

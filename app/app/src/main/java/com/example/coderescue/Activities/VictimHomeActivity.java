@@ -176,6 +176,7 @@ public class VictimHomeActivity extends AppCompatActivity {
             public void onComplete(@androidx.annotation.NonNull Task<List<Document>> task) {
                 if (task.isSuccessful()) {
                     List<Document> items = task.getResult();
+                    models.clear();
                     for(Document i: items){
                         String dis_name = i.getString("name");
                         String dis_id = i.getString("id");

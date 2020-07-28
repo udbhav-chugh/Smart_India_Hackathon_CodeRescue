@@ -153,6 +153,7 @@ public class VictimNotifications extends AppCompatActivity {
                             if (task2.isSuccessful()) {
                                 List<Document> items = task.getResult();
                                 List<Document> items2 = task2.getResult();
+                                models.clear();
                                 for(Document item: items){
                                     if(item.getString("directed_from").equals("headquarters") && item.getInteger("is_disaster")==0 && item.getString("location").equals(state)){
                                         m = new NotificationCardModel();

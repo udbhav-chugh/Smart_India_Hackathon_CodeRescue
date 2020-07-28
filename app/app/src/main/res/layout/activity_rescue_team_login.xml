@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
@@ -7,8 +7,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#eef0f5"
+    android:padding="10dp"
     tools:context=".Activities.RescueTeamLoginActivity">
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
     <ProgressBar
         android:id="@+id/loading"
         android:layout_width="wrap_content"
@@ -20,127 +24,99 @@
         android:layout_marginBottom="64dp"
         android:visibility="gone" />
 
-    <LinearLayout
-        android:id="@+id/username_container"
+
+    <soup.neumorphism.NeumorphCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/Widget.Neumorph.CardView"
         android:layout_marginTop="100dp"
-        android:orientation="horizontal">
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="20dp"
-            android:src="@drawable/ic_outline_face_24"
-            />
-        <com.github.sshadkany.shapes.RoundRectView
+        app:neumorph_shapeType="pressed">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="139dp"
-            android:paddingStart="50dp"
-            android:paddingEnd="50dp"
-            android:layout_marginStart="-20dp"
-            android:layout_marginEnd="-10dp"
-            app:shape_roundRect_backgroundColor="#eeeeee"
-            app:shape_roundRect_dark_color="#a6b4cb"
-            app:shape_roundRect_shadow_type="small_inner_shadow"
+            android:layout_height="wrap_content"
+            android:paddingVertical="5dp"
+            android:paddingHorizontal="5dp"
+            android:orientation="horizontal">
 
-            app:shape_roundRect_topLeftRadius="5dp"
-            app:shape_roundRect_topRightRadius="5dp"
-            app:shape_roundRect_bottomLeftRadius="5dp"
-            app:shape_roundRect_bottomRightRadius="5dp">
-            <EditText
-                android:id="@+id/username"
-                android:layout_width="match_parent"
+            <soup.neumorphism.NeumorphCardView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:hint="@string/prompt_username"
-                android:inputType="text"
-                android:selectAllOnFocus="true"
-                />
-        </com.github.sshadkany.shapes.RoundRectView>
-    </LinearLayout>
+                style="@style/Widget.Neumorph.CardView"
+                app:neumorph_shapeType="flat">
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="9dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_outline_face_24"
+                    />
+            </soup.neumorphism.NeumorphCardView>
 
-    <LinearLayout
-        android:id="@+id/password_container"
+            <soup.neumorphism.NeumorphCardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                style="@style/Widget.Neumorph.CardView"
+                app:neumorph_shapeType="basin">
+                <EditText
+                    android:id="@+id/username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="17dp"
+                    android:hint="@string/prompt_username"
+                    android:inputType="text"
+                    android:selectAllOnFocus="true"
+                    />
+            </soup.neumorphism.NeumorphCardView>
+        </LinearLayout>
+    </soup.neumorphism.NeumorphCardView>
+    <soup.neumorphism.NeumorphCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-55dp"
-        android:orientation="horizontal">
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="20dp"
-            android:src="@drawable/ic_outline_vpn_key_24"
-            />
-        <com.github.sshadkany.shapes.RoundRectView
+        style="@style/Widget.Neumorph.CardView"
+        app:neumorph_shapeType="pressed">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="139dp"
-            android:paddingStart="50dp"
-            android:paddingEnd="50dp"
-            android:layout_marginStart="-20dp"
-            android:layout_marginEnd="-10dp"
-            app:shape_roundRect_backgroundColor="#eeeeee"
-            app:shape_roundRect_dark_color="#a6b4cb"
-            app:shape_roundRect_bottomLeftRadius="12dp"
-            app:shape_roundRect_bottomRightRadius="12dp"
-            app:shape_roundRect_topLeftRadius="12dp"
-            app:shape_roundRect_topRightRadius="12dp"
-            app:shape_roundRect_shadow_type="small_inner_shadow"
-            >
-<!--ECF0F3-->
-            <EditText
-                android:id="@+id/password"
-                android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="5dp"
+            android:paddingHorizontal="5dp"
+            android:orientation="horizontal">
+
+            <soup.neumorphism.NeumorphCardView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:hint="@string/prompt_password"
-                android:imeActionLabel="@string/action_sign_in_short"
-                android:imeOptions="actionDone"
-                android:inputType="textPassword"
-                android:selectAllOnFocus="true" />
-        </com.github.sshadkany.shapes.RoundRectView>
+                style="@style/Widget.Neumorph.CardView"
+                app:neumorph_shapeType="flat">
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="9dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_outline_vpn_key_24"
+                    />
+            </soup.neumorphism.NeumorphCardView>
 
-    </LinearLayout>
-<!--    <com.github.sshadkany.shapes.RoundRectView-->
-<!--        android:id="@+id/btn3"-->
-<!--        android:layout_width="300dp"-->
-<!--        android:layout_height="300dp"-->
-<!--        android:layout_margin="5dp"-->
-<!--        app:layout_constraintStart_toStartOf="@id/btn2"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/btn2"-->
-<!--        app:shape_roundRect_backgroundColor="#eef0f5"-->
-<!--        app:shape_roundRect_bottomLeftRadius="12dp"-->
-<!--        app:shape_roundRect_bottomRightRadius="12dp"-->
-<!--        app:shape_roundRect_shadow_type="drop_shadow"-->
-<!--        app:shape_roundRect_topLeftRadius="12dp"-->
-<!--        app:shape_roundRect_topRightRadius="12dp">-->
-
-<!--        <com.github.sshadkany.shapes.RoundRectView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_margin="5dp"-->
-<!--            app:shape_roundRect_backgroundColor="#eef0f5"-->
-<!--            app:shape_roundRect_bottomLeftRadius="12dp"-->
-<!--            app:shape_roundRect_bottomRightRadius="12dp"-->
-<!--            app:shape_roundRect_shadow_type="small_inner_shadow"-->
-<!--            app:shape_roundRect_topLeftRadius="12dp"-->
-<!--            app:shape_roundRect_topRightRadius="12dp">-->
-<!--        </com.github.sshadkany.shapes.RoundRectView>-->
-<!--    </com.github.sshadkany.shapes.RoundRectView>-->
-
-<!--    <soup.neumorphism.NeumorphCardView-->
-<!--        android:layout_width="250dp"-->
-<!--        android:layout_height="250dp"-->
-<!--    app:neumorph_shadowElevation="6dp"-->
-<!--    app:neumorph_shadowColorLight="#fff"-->
-<!--    app:neumorph_shadowColorDark="#a6b4cb"-->
-
-<!--    app:neumorph_shapeType="basin"-->
+            <soup.neumorphism.NeumorphCardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                style="@style/Widget.Neumorph.CardView"
+                app:neumorph_shapeType="basin">
+                <EditText
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="17dp"
+                    android:hint="@string/prompt_password"
+                    android:imeActionLabel="@string/action_sign_in_short"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword"
+                    android:selectAllOnFocus="true" />
+            </soup.neumorphism.NeumorphCardView>
+        </LinearLayout>
+    </soup.neumorphism.NeumorphCardView>
 
 
-<!--    android:padding="12dp"/>-->
-<!--        />-->
 
 <!--    <com.suke.widget.SwitchButton-->
 <!--        android:id="@+id/switch_button"-->
@@ -150,27 +126,18 @@
 <!--        android:layout_marginEnd="30dp"-->
 <!--        app:sb_uncheckcircle_radius="20dp"/>-->
 
-    <com.github.sshadkany.RectButton
+
+    <soup.neumorphism.NeumorphButton
         android:id="@+id/button2"
-        android:layout_width="250dp"
-        android:layout_height="125dp"
+        android:layout_width="150dp"
+        android:layout_height="80dp"
         android:layout_gravity="center"
         android:onClick="loginaction"
-        app:shape_roundRect_dark_color="#a6b4cb"
-        app:shape_roundRect_backgroundColor="#eeeeee"
-        app:shape_roundRect_bottomLeftRadius="12dp"
-        app:shape_roundRect_bottomRightRadius="12dp"
-        app:shape_roundRect_shadow_type="drop_shadow"
-        app:shape_roundRect_topLeftRadius="12dp"
-        app:shape_roundRect_topRightRadius="12dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Log In" />
-    </com.github.sshadkany.RectButton>
-
-</LinearLayout>
+        app:neumorph_shapeType="flat"
+        android:layout_marginTop="100dp"
+        android:text="Log In"
+        style="@style/Widget.Neumorph.Button"/>
+    </LinearLayout>
+</ScrollView>
 
 

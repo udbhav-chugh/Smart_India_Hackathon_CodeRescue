@@ -56,4 +56,7 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:1.1.0"
     implementation "androidx.cardview:cardview:1.0.0"
     implementation "androidx.recyclerview:recyclerview-selection:1.1.0-rc01"
+    implementation 'com.github.sshadkany:Android_neumorphic:1.2.0'
+    implementation 'com.github.zcweng:switch-button:0.0.3@aar'
+    implementation 'com.github.fornewid:neumorphism:0.1.11'
 }

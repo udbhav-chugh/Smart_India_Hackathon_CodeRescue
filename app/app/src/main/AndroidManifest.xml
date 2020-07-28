@@ -66,7 +66,7 @@
         </activity>
         <activity android:name=".Activities.VictimNotifications" />
         <activity android:name=".Activities.RescueTeamDashboard" />
-        <activity android:name=".Activities.RescueTeamLoginActivity" />
+        <activity android:name=".Activities.RescueTeamLoginActivity" android:theme="@style/AppTheme.NoActionBar"/>
 
         <receiver android:name=".Classes.ReceiveMessageUtility">
             <intent-filter>
@@ -76,6 +76,13 @@
 
         <activity android:name=".Activities.GoogleMapActivity" />
         <activity android:name=".Activities.CameraWithGoogleMapsActivity" />
+        <activity android:name=".Activities.UISamples.MainActivity">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+        </activity>
     </application>
 
 </manifest>

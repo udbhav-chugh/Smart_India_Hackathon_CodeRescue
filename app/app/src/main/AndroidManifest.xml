@@ -12,13 +12,9 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.SEND_SMS" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
-
-    <!--    Permissions for Beyond AR    -->
+    <uses-permission android:name="android.permission.RECEIVE_SMS" /> <!-- Permissions for Beyond AR -->
     <!-- Minimum permissions for Beyondar -->
-    <uses-permission android:name="android.permission.CAMERA" />
-
-    <!--  BeyondAR needs the following features-->
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- BeyondAR needs the following features -->
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.sensor.accelerometer" />
     <uses-feature android:name="android.hardware.sensor.compass" />
@@ -32,7 +28,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".Activities.UpdateInfoActivity"></activity>
+        <activity android:name=".Activities.SendMessageActivity"></activity>
+        <activity android:name=".Activities.UpdateInfoActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -66,7 +63,9 @@
         </activity>
         <activity android:name=".Activities.VictimNotifications" />
         <activity android:name=".Activities.RescueTeamDashboard" />
-        <activity android:name=".Activities.RescueTeamLoginActivity" android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".Activities.RescueTeamLoginActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <receiver android:name=".Classes.ReceiveMessageUtility">
             <intent-filter>
@@ -77,11 +76,13 @@
         <activity android:name=".Activities.GoogleMapActivity" />
         <activity android:name=".Activities.CameraWithGoogleMapsActivity" />
         <activity android:name=".Activities.UISamples.MainActivity">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
     </application>
 

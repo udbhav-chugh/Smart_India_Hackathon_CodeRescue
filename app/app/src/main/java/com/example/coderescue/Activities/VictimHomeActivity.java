@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -73,12 +74,13 @@ public class VictimHomeActivity extends AppCompatActivity {
     }
 
     public void button_click(View view){
-        String toastText = "No internet";
+        String toastText = "No internet. Send a message to the helpline instead instead.";
         if(NetworkConnectivity.isInternetAvailable(getApplicationContext())) toastText = "Internet Available";
         Toast.makeText(this, toastText, Toast.LENGTH_SHORT).show();
 
         if(!NetworkConnectivity.isInternetAvailable(getApplicationContext())){
-            SendMessageUtility.sendMessage(getApplicationContext(), VictimHomeActivity.this, "testing send message");
+            Intent intent = new Intent(VictimHomeActivity.this, SendMessageActivity.class);
+            startActivity(intent);
         }
         else{
             if (ContextCompat.checkSelfPermission(

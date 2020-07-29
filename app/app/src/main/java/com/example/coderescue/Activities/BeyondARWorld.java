@@ -147,6 +147,8 @@ public class BeyondARWorld {
         // User position (you can change it using the GPS listeners form Android
         // API)
         sharedWorld.setGeoPosition(41.90533734214473d, 2.565848038959814d);
+        sharedWorld.setGeoPosition(28.6318541d, 77.0950067d);
+
 //        List<GeoObject> listVictims = getVictims();
 
 //         Create an object with an image in the app resources.
@@ -160,8 +162,7 @@ public class BeyondARWorld {
         // Is it also possible to load the image asynchronously form internet
         GeoObject go2 = new GeoObject(2l);
         go2.setGeoPosition(41.90518966360719d, 2.56582424468222d);
-        go2.setGeoPosition(28.6319541d, 77.0950067d);
-
+        go2.setGeoPosition(28.6317541d, 77.0952067d);
         go2.setImageUri("http://beyondar.github.io/beyondar/images/logo_512.png");
         go2.setImageUri("https://d2c7ipcroan06u.cloudfront.net/wp-content/uploads/2020/05/tanmay-bhat-2-edited-696x392.jpg");
         go2.setName("Online image");
@@ -169,22 +170,19 @@ public class BeyondARWorld {
         GeoObject go5 = new GeoObject(5l);
         go5.setGeoPosition(41.90553066234138d, 2.565777906882577d);
         go5.setImageResource(R.drawable.creature_5);
-        go5.setGeoPosition(28.6319541d, 77.0950067d);
-
+        go5.setGeoPosition(28.6318541d, 77.0951067d);
         go5.setName("Creature 5");
 
         GeoObject go6 = new GeoObject(6l);
         go6.setGeoPosition(41.90596218466268d, 2.565250806050688d);
         go6.setImageResource(R.drawable.creature_6);
-        go6.setGeoPosition(28.6319541d, 77.0950067d);
-
+        go6.setGeoPosition(28.6318641d, 77.0951167d);
         go6.setName("Creature 6");
 
         GeoObject go7 = new GeoObject(7l);
         go7.setGeoPosition(41.90581776104766d, 2.565932313852319d);
         go7.setImageResource(R.drawable.creature_2);
-        go7.setGeoPosition(28.6319541d, 77.0950067d);
-
+        go7.setGeoPosition(28.6319341d, 77.0954067d);
         go7.setName("Creature 2");
 
         GeoObject go8 = new GeoObject(8l);
@@ -203,18 +201,18 @@ public class BeyondARWorld {
         go10.setName("Far away");
 
         // Add the GeoObjects to the world
-        sharedWorld.addBeyondarObject(go1);
-        sharedWorld.addBeyondarObject(go2, LIST_TYPE_EXAMPLE_1);
-        sharedWorld.addBeyondarObject(go5);
-        sharedWorld.addBeyondarObject(go6);
-        sharedWorld.addBeyondarObject(go7);
-        sharedWorld.addBeyondarObject(go8);
-        sharedWorld.addBeyondarObject(go9);
-        sharedWorld.addBeyondarObject(go10);
-//        for( GeoObject temp : listVictims  ){
-//            sharedWorld.addBeyondarObject(temp,LIST_TYPE_EXAMPLE_1);
-//            Log.d("Correct", "h" + listVictims.size());
-//        }
+//        sharedWorld.addBeyondarObject(go1);
+//        sharedWorld.addBeyondarObject(go2, LIST_TYPE_EXAMPLE_1);
+//        sharedWorld.addBeyondarObject(go5);
+//        sharedWorld.addBeyondarObject(go6);
+//        sharedWorld.addBeyondarObject(go7);
+//        sharedWorld.addBeyondarObject(go8);
+//        sharedWorld.addBeyondarObject(go9);
+//        sharedWorld.addBeyondarObject(go10);
+        for( GeoObject temp : listVictims  ){
+            sharedWorld.addBeyondarObject(temp,LIST_TYPE_EXAMPLE_1);
+            Log.d("Correct", "h" + listVictims.size());
+        }
 
 
         return sharedWorld;

@@ -25,6 +25,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationHolder
     public NotificationHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
 
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.notification_card, null);
+        view.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT));
 
         return new NotificationHolder(view);
     }

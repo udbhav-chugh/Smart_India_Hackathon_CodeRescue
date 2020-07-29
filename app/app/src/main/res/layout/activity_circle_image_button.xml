@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#E0E5Ec"
-    tools:context="com.github.sshadkany.android_neumorphic_test_app.CircleImageButtonActivity">
+    tools:context=".Activities.UISamples.CircleImageButtonActivity">
 
     <com.github.sshadkany.CircleButton
         android:id="@+id/circle_image_button"
@@ -40,3 +40,5 @@
     </com.github.sshadkany.CircleButton>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--No need of UI-->

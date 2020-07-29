@@ -93,3 +93,5 @@
         </com.github.sshadkany.shapes.RoundRectView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--No need of UI-->

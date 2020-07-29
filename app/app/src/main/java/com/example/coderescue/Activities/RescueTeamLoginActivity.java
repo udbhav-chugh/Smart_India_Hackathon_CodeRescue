@@ -8,7 +8,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Switch;
 
 import com.example.coderescue.Fragments.HomeFragment;
 import com.example.coderescue.R;
@@ -31,20 +33,30 @@ import static com.mongodb.client.model.Filters.eq;
 public class RescueTeamLoginActivity extends AppCompatActivity {
 
     public static RemoteMongoClient mongoClient;
+    Switch show_password_switch;
+    EditText username,password;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_rescue_team_login);
+        show_password_switch = findViewById(R.id.show_password_switch);
+        username = findViewById(R.id.username);
+        password = findViewById(R.id.password);
 
+        show_password_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                password.setInputType();
+            }
+        });
     }
 
 
     public void loginaction(View view) {
         Intent intent = new Intent(this, RescueTeamDashboard.class);
-        EditText username,password;
-        username = (EditText) findViewById(R.id.username);
-        password = (EditText) findViewById(R.id.password);
+
         String user = username.getText().toString();
         String pswd = password.getText().toString();
         // 1. Instantiate the Stitch client

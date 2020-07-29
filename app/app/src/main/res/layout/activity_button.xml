@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ECF0F3"
-    tools:context="com.github.sshadkany.android_neumorphic_test_app.ActivityButton">
+    tools:context=".Activities.UISamples.ActivityButton">
 
     <com.github.sshadkany.shapes.CircleView
         android:id="@+id/my_button"
@@ -29,3 +29,5 @@
     </com.github.sshadkany.shapes.CircleView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--No need of UI-->

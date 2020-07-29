@@ -1,43 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardCornerRadius="3dp"
-    app:cardElevation="3dp"
-    app:cardUseCompatPadding="true"
-    >
+    android:orientation="vertical"
+    android:backgroundTint="@android:color/transparent"
+    android:layout_gravity="center_horizontal">
 
-
-    <RelativeLayout
+    <soup.neumorphism.NeumorphCardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp">
+        android:padding="15dp"
+        style="@style/Widget.Neumorph.CardView"
+        app:neumorph_shapeType="flat">
 
-        <TextView
-            android:id="@+id/titleTv2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Title"
-            android:textSize="22sp"
-            android:textColor="#000"
-            android:textStyle="bold"
-            android:layout_marginStart="10dp"/>
+         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:backgroundTint="@android:color/transparent"
+            android:padding="16dp">
 
-        <TextView
-            android:id="@+id/descriptionTv2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/titleTv2"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="9dp"
-            android:text="Description"
-            android:textColor="#a9a9a9"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+             <LinearLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:orientation="horizontal"
+
+                 android:layout_marginStart="10dp"
+                 android:layout_marginEnd="10dp">
+                 <TextView
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:text="Distance"
+                     android:textSize="22sp"
+                     android:fontFamily="@font/poiretone_regular"
+                     android:textStyle="bold"/>
+                 <LinearLayout
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:gravity="end">
+                    <TextView
+                        android:id="@+id/titleTv2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="Distance"
+                        android:textSize="22sp"
+                        android:fontFamily="@font/poiretone_regular"
+                        android:textStyle="bold"/>
+                 </LinearLayout>
+             </LinearLayout>
+             <LinearLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_marginHorizontal="25dp"
+                 android:layout_marginTop="15dp"
+                 android:orientation="horizontal">
+
+                 <TextView
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:text="Latitude"
+                     android:fontFamily="@font/montserrat_medium"
+                     android:textColor="#a9a9a9"
+                     android:textSize="15sp"
+                     android:gravity="start"
+                     />
+
+                 <LinearLayout
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:gravity="end">
+                     <TextView
+                         android:id="@+id/latitude"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:hint="Latitude"
+                         android:fontFamily="@font/montserrat_medium"
+                         android:textColor="#a9a9a9"
+                         android:textSize="15sp"
+                         android:gravity="end"
+                         />
+                 </LinearLayout>
+             </LinearLayout>
+
+             <LinearLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_marginHorizontal="25dp"
+                 android:layout_marginTop="15dp"
+                 android:orientation="horizontal">
+
+                 <TextView
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:text="Longitude"
+                     android:fontFamily="@font/montserrat_medium"
+                     android:textColor="#a9a9a9"
+                     android:textSize="15sp"
+                     android:gravity="start"
+                     />
+
+                 <LinearLayout
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:gravity="right">
+                     <TextView
+                         android:id="@+id/longitude"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:hint="Longitude"
+                         android:fontFamily="@font/montserrat_medium"
+                         android:textColor="#a9a9a9"
+                         android:textSize="15sp"
+                         />
+                 </LinearLayout>
+
+             </LinearLayout>
+
+         </LinearLayout>
+
+    </soup.neumorphism.NeumorphCardView>
+
+</LinearLayout>
 
 
-    </RelativeLayout>
-</androidx.cardview.widget.CardView>
+<!--TODO: now-->

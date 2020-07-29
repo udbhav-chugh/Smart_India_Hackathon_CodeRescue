@@ -5,7 +5,7 @@
     android:id="@+id/backgroundLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.github.sshadkany.android_neumorphic_test_app.NeoTextActivity">
+    tools:context=".Activities.UISamples.NeoTextActivity">
 
     <TextView
         android:id="@+id/textView"
@@ -61,3 +61,5 @@
     </com.github.sshadkany.neoText>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--No need of UI-->

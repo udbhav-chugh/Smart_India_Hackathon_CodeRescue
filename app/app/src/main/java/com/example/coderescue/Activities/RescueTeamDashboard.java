@@ -235,7 +235,7 @@ public class RescueTeamDashboard extends AppCompatActivity {
                                 m.setLatitude(i.getString("latitude"));
                                 m.setLongitude(i.getString("longitude"));
                                 m.setDistance(results[0]);
-                                m.setTitle("Distance: " + results[0] + " m");
+                                m.setTitle(results[0] + " m");
                                 m.setRescueUsername(username);
                                 m.setDescription("Latitude: " + latvic + "\n" + "Longitude: "+ longivic);
                                 m.setDisaster_id(disaster_id);

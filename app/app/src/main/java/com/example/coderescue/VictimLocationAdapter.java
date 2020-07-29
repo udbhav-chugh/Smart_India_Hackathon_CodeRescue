@@ -48,7 +48,8 @@ public class VictimLocationAdapter extends RecyclerView.Adapter<VictimLocationHo
     @Override
     public VictimLocationHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
 
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.victim_location_card, null);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.victim_location_card ,null);
+        view.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT));
 
         return new VictimLocationHolder(view);
     }
@@ -60,7 +61,8 @@ public class VictimLocationAdapter extends RecyclerView.Adapter<VictimLocationHo
         String username = models.get(i).getRescueUsername();
         String dis_id = models.get(i).getDisaster_id();
         myHolder.mTitle.setText(models.get(i).getTitle());
-        myHolder.mDes.setText(models.get(i).getDescription());
+        myHolder.mLat.setText(lat);
+        myHolder.mLong.setText(longi);
         System.out.println("jai shree ram2");
 
         //WHEN ITEM IS CLICKED

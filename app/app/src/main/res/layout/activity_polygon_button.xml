@@ -5,7 +5,7 @@
     android:id="@+id/backgroundLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PolygonButtonActivity">
+    tools:context=".Activities.UISamples.PolygonButtonActivity">
 
     <!-- if you do not like basin effect -> remove below polygonView and use only polygonButton -->
     <com.github.sshadkany.shapes.PolygonView
@@ -36,3 +36,5 @@
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--No need of UI-->

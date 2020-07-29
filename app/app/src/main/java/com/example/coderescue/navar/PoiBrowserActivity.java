@@ -37,11 +37,15 @@ import com.beyondar.android.view.OnClickBeyondarObjectListener;
 import com.beyondar.android.world.BeyondarObject;
 import com.beyondar.android.world.GeoObject;
 import com.beyondar.android.world.World;
+import com.example.coderescue.Activities.BeyondARWorld;
+import com.example.coderescue.Activities.CameraWithGoogleMapsActivity;
 import com.example.coderescue.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.maps.android.SphericalUtil;
 import com.example.coderescue.navar.ar.ArBeyondarGLSurfaceView;
@@ -177,40 +181,58 @@ public class PoiBrowserActivity extends FragmentActivity implements GoogleApiCli
 
     void Poi_list_call(int radius){
         poi_browser_progress.setVisibility(View.VISIBLE);
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(getResources().getString(R.string.directions_base_url))
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        RetrofitInterface apiService =
-                retrofit.create(RetrofitInterface.class);
-
-        final Call<PoiResponse> call = apiService.listPOI(String.valueOf(mLastLocation.getLatitude())+","+
-                String.valueOf(mLastLocation.getLongitude()),radius,
-                getResources().getString(R.string.google_maps_key));
-
-        call.enqueue(new Callback<PoiResponse>() {
+        Task task =  BeyondARWorld.getVictims();
+        task.addOnCompleteListener( (new OnCompleteListener<Object>() {
             @Override
-            public void onResponse(Call<PoiResponse> call, Response<PoiResponse> response) {
+            public void onComplete(@NonNull Task task) {
+                if (task.isSuccessful()) {
+                    Log.d("Correct", "yayy yayy yayya yayy");
 
-                poi_browser_progress.setVisibility(View.GONE);
-                seekbar_cardview.setVisibility(View.VISIBLE);
+                    poi_browser_progress.setVisibility(View.GONE);
+                    seekbar_cardview.setVisibility(View.VISIBLE);
 
-                List<Result> poiResult=response.body().getResults();
-
-                Configure_AR(poiResult);
+                    List<GeoObject> poiResult=BeyondARWorld.listVictims;
+                    Configure_AR(poiResult);
+                }
             }
+        }));
 
-            @Override
-            public void onFailure(Call<PoiResponse> call, Throwable t) {
-                poi_browser_progress.setVisibility(View.GONE);
-            }
-        });
+
+//        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+//        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+//        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+//
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(getResources().getString(R.string.directions_base_url))
+//                .client(client)
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//
+//        RetrofitInterface apiService =
+//                retrofit.create(RetrofitInterface.class);
+//
+//        final Call<PoiResponse> call = apiService.listPOI(String.valueOf(mLastLocation.getLatitude())+","+
+//                String.valueOf(mLastLocation.getLongitude()),radius,
+//                getResources().getString(R.string.google_maps_key));
+//
+//        call.enqueue(new Callback<PoiResponse>() {
+//            @Override
+//            public void onResponse(Call<PoiResponse> call, Response<PoiResponse> response) {
+//
+//                poi_browser_progress.setVisibility(View.GONE);
+//                seekbar_cardview.setVisibility(View.VISIBLE);
+//
+//                List<Result> poiResult=response.body().getResults();
+//
+//                Configure_AR(poiResult);
+//            }
+//
+//            @Override
+//            public void onFailure(Call<PoiResponse> call, Throwable t) {
+//                poi_browser_progress.setVisibility(View.GONE);
+//            }
+//        });
 
     }
 
@@ -341,7 +363,7 @@ public class PoiBrowserActivity extends FragmentActivity implements GoogleApiCli
         }
     }
 
-    private void Configure_AR(List<Result> pois){
+    private void Configure_AR(List<GeoObject> pois){
 
         layoutInflater=getLayoutInflater();
 
@@ -355,12 +377,10 @@ public class PoiBrowserActivity extends FragmentActivity implements GoogleApiCli
 
         for(int i=0;i<pois.size();i++) {
             GeoObject poiGeoObj=new GeoObject(1000*(i+1));
-            //ArObject2 poiGeoObj=new ArObject2(1000*(i+1));
-
-//            poiGeoObj.setImageUri(getImageUri(this,textAsBitmap(pois.get(i).getName(),10.0f, Color.WHITE)));
-            poiGeoObj.setGeoPosition(pois.get(i).getGeometry().getLocation().getLat(),
-                    pois.get(i).getGeometry().getLocation().getLng());
-            poiGeoObj.setName(pois.get(i).getPlaceId());
+            poiGeoObj = pois.get(i);
+//            poiGeoObj.setGeoPosition(pois.get(i).getGeometry().getLocation().getLat(),
+//                    pois.get(i).getGeometry().getLocation().getLng());
+            poiGeoObj.setName("Custom Name");
             //poiGeoObj.setPlaceId(pois.get(0).getPlaceId());
 
             //Bitmap bitmap=textAsBitmap(pois.get(i).getName(),30.0f,Color.WHITE);
@@ -374,12 +394,12 @@ public class PoiBrowserActivity extends FragmentActivity implements GoogleApiCli
             name.setText(pois.get(i).getName());
             String distance=String.valueOf((SphericalUtil.computeDistanceBetween(
                     new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude()),
-                    new LatLng(pois.get(i).getGeometry().getLocation().getLat(),
-                            pois.get(i).getGeometry().getLocation().getLng())))/1000);
+                    new LatLng(pois.get(i).getLatitude() ,
+                            pois.get(i).getLongitude())))/1000);
             String d=distance+" KM";
             dist.setText(d);
 
-            String type=pois.get(i).getTypes().get(0);
+            String type=getResources().getString(R.string.logding);
             Log.d(TAG, "Configure_AR: TYPE:"+type + "LODGING:"+R.string.logding);
             if(type.equals(getResources().getString(R.string.restaurant))){
                 icon.setImageResource(R.drawable.food_fork_drink);

@@ -24,6 +24,7 @@ import com.example.coderescue.Activities.UpdateInfoActivity;
 import com.example.coderescue.Activities.VictimHomeActivity;
 import com.example.coderescue.Activities.VictimNotifications;
 import com.example.coderescue.R;
+import com.example.coderescue.navar.MapsActivity;
 import com.example.coderescue.navar.NavActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -102,7 +103,7 @@ public class HomeFragment extends Fragment {
         button_ar_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), NavActivity.class);
+                Intent intent = new Intent(getActivity(), MapsActivity.class);
                 startActivity(intent);
             }
         });

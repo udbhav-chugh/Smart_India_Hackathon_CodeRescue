@@ -95,6 +95,11 @@
         </activity>
         <activity android:name=".navar.ArCamActivity" />
         <activity android:name=".navar.NavActivity" />
+        <activity android:name=".navar.MapsActivity" />
+        <activity android:name=".navar.PoiBrowserActivity" />
+        <activity android:name=".navar.AboutActivity" />
+
+
     </application>
 
 </manifest>

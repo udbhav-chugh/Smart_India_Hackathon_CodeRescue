@@ -97,11 +97,11 @@ public class BeyondARWorld {
                                         latvic, longivic,
                                         results);
                                 System.out.println(results[0]);
-                                GeoObject go2 = new GeoObject(2l);
-                                go2.setGeoPosition(41.90518966360719d, 2.56582424468222d);
-                                go2.setImageUri("http://beyondar.github.io/beyondar/images/logo_512.png");
-                                go2.setImageUri("https://d2c7ipcroan06u.cloudfront.net/wp-content/uploads/2020/05/tanmay-bhat-2-edited-696x392.jpg");
-                                go2.setName("Online image");
+//                                GeoObject go2 = new GeoObject(1000*(i+1));
+//                                go2.setGeoPosition(41.90518966360719d, 2.56582424468222d);
+//                                go2.setImageUri("http://beyondar.github.io/beyondar/images/logo_512.png");
+//                                go2.setImageUri("https://d2c7ipcroan06u.cloudfront.net/wp-content/uploads/2020/05/tanmay-bhat-2-edited-696x392.jpg");
+//                                go2.setName("Online image");
 
                                 GeoObject go = new GeoObject(2l);
                                 go.setGeoPosition( 0+latvic , 0+longivic);

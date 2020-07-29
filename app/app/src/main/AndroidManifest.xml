@@ -99,6 +99,8 @@
         <activity android:name=".navar.PoiBrowserActivity" />
         <activity android:name=".navar.AboutActivity" />
 
+        <activity android:name=".navar.onboarding.DefaultIntro"
+            android:theme="@style/FullScreen"/>
 
     </application>
 

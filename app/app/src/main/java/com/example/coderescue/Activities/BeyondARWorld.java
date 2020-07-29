@@ -216,7 +216,6 @@ public class BeyondARWorld {
 //            Log.d("Correct", "h" + listVictims.size());
 //        }
 
-
         return sharedWorld;
     }
 

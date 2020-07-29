@@ -26,6 +26,7 @@ import com.example.coderescue.Activities.VictimNotifications;
 import com.example.coderescue.R;
 import com.example.coderescue.navar.MapsActivity;
 import com.example.coderescue.navar.NavActivity;
+import com.example.coderescue.navar.PoiBrowserActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.mongodb.stitch.android.core.Stitch;
@@ -103,7 +104,7 @@ public class HomeFragment extends Fragment {
         button_ar_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MapsActivity.class);
+                Intent intent = new Intent(getActivity(), PoiBrowserActivity.class);
                 startActivity(intent);
             }
         });

@@ -1,6 +1,7 @@
 package com.example.coderescue.Activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -14,11 +15,14 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
+import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,15 +44,18 @@ import com.mongodb.stitch.android.core.StitchAppClient;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteFindIterable;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
+import com.mongodb.stitch.core.services.mongodb.remote.RemoteUpdateResult;
 
 import org.bson.Document;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.mod;
 
 public class RescueTeamDashboard extends AppCompatActivity {
 
@@ -59,12 +66,17 @@ public class RescueTeamDashboard extends AppCompatActivity {
     RecyclerView mRecylcerView;
     VictimLocationAdapter myAdapter;
     Context c;
+    double latvic,longivic;
+    String latvics,longivics;
     ArrayList<VictimLocationCardModel> models = new ArrayList<>();
     VictimLocationCardModel m;
     private ProgressBar prog;
+    ImageButton speak_msg;
+    int flag;
 
     public String lat,longi;
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
+    private static final int REQUEST_CODE_SPEECH_INPUT = 1000;
     public static String state;
 
 
@@ -72,12 +84,15 @@ public class RescueTeamDashboard extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rescue_team_dashboard);
+        speak_msg = findViewById(R.id.voiceBtn3);
+        flag=0;
 
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
         disaster_id = intent.getExtras().getString("disaster_id");
         username = intent.getExtras().getString("username");
         prog=findViewById(R.id.progressBar2);
+
 
         // Capture the layout's TextView and set the string as its text
 //        TextView textView = findViewById(R.id.textView3);
@@ -86,6 +101,12 @@ public class RescueTeamDashboard extends AppCompatActivity {
         c = this;
         mRecylcerView.setLayoutManager(new LinearLayoutManager(this));
         snd2=findViewById(R.id.snd_msg2);
+        speak_msg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                speak();
+            }
+        });
     }
 
 
@@ -107,7 +128,6 @@ public class RescueTeamDashboard extends AppCompatActivity {
                 getCurrentLocation();
             }
         }
-        ReceiveMessageUtility.checkPermissions(getApplicationContext(), RescueTeamDashboard.this);
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -204,8 +224,9 @@ public class RescueTeamDashboard extends AppCompatActivity {
 //                                textView.append(i.getString("latitude"));
 //                                textView.append(i.getString("longitude"));
                                 float[] results = new float[1];
-                                double latvic = Double.parseDouble(i.getString("latitude"));
-                                double longivic = Double.parseDouble(i.getString("longitude"));
+                                latvic = Double.parseDouble(i.getString("latitude"));
+                                longivic = Double.parseDouble(i.getString("longitude"));
+
                                 Location.distanceBetween(Double.parseDouble(lat), Double.parseDouble(longi),
                                         latvic, longivic,
                                         results);
@@ -214,7 +235,7 @@ public class RescueTeamDashboard extends AppCompatActivity {
                                 m.setLatitude(i.getString("latitude"));
                                 m.setLongitude(i.getString("longitude"));
                                 m.setDistance(results[0]);
-                                m.setTitle("Distance: " + results[0] + " m");
+                                m.setTitle(results[0] + " m");
                                 m.setRescueUsername(username);
                                 m.setDescription("Latitude: " + latvic + "\n" + "Longitude: "+ longivic);
                                 m.setDisaster_id(disaster_id);
@@ -222,9 +243,98 @@ public class RescueTeamDashboard extends AppCompatActivity {
                                 System.out.println(i);
                             }
                         }
-                        myAdapter=new VictimLocationAdapter(c,models);
-                        mRecylcerView.setAdapter(myAdapter);
-                        prog.setVisibility(View.GONE);
+                        Collections.sort(models, VictimLocationCardModel.DistSort);
+                        latvics = models.get(0).getLatitude();
+                        longivics = models.get(0).getLongitude();
+                        latvic = Double.parseDouble(latvics);
+                        longivic = Double.parseDouble(longivics);
+                        if(flag==1){
+                            flag=0;
+
+                            final RemoteMongoCollection<Document> teams = mongoClient.getDatabase("main").getCollection("victimsneedhelp");
+
+                            RemoteFindIterable findResults = teams.find(eq("disaster_id", disaster_id));
+                            Task <List<Document>> itemsTask = findResults.into(new ArrayList<Document>());
+                            itemsTask.addOnCompleteListener(new OnCompleteListener <List<Document>> () {
+                                @Override
+                                public void onComplete(@NonNull Task<List<Document>> task) {
+                                    if (task.isSuccessful()) {
+                                        List<Document> items = task.getResult();
+                                        int numDocs = items.size();
+                                        if(numDocs==0){
+                                            Log.d("Doesn't exist", "Should not happen");
+                                        }
+                                        else{
+                                            System.out.println(items.get(0));
+                                            Document first = items.get(0);
+                                            final RemoteMongoCollection<Document> victimneedhelp = mongoClient.getDatabase("main").getCollection("victimsneedhelp");
+                                            List<Document> temp = (List<Document>)first.get("victims");
+                                            List<Document> temp2 = new ArrayList<Document>();
+                                            int count=0;
+                                            for(Document doc: temp){
+                                                if(count==1 || !doc.getString("latitude").equals(latvics) || !doc.getString("longitude").equals(longivics))
+                                                {
+                                                    temp2.add(doc);
+                                                }
+                                                else
+                                                {
+                                                    count=1;
+                                                    Document notactive = new Document()
+                                                            .append("latitude", latvics)
+                                                            .append("longitude", longivics)
+                                                            .append("isactive", 0);
+                                                    temp2.add(notactive);
+                                                }
+                                            }
+                                            Log.d("Exists", "update");
+                                            Document filterDoc = new Document().append("disaster_id", disaster_id);
+                                            Document updateDoc = new Document().append("$set",
+                                                    new Document()
+                                                            .append("disaster_id", disaster_id)
+                                                            .append("victims", temp2)
+                                            );
+
+                                            final Task<RemoteUpdateResult> updateTask =
+                                                    victimneedhelp.updateOne(filterDoc, updateDoc);
+                                            updateTask.addOnCompleteListener(new OnCompleteListener <RemoteUpdateResult> () {
+                                                @Override
+                                                public void onComplete(@NonNull Task <RemoteUpdateResult> task) {
+                                                    if (task.isSuccessful()) {
+                                                        long numMatched = task.getResult().getMatchedCount();
+                                                        long numModified = task.getResult().getModifiedCount();
+                                                        Log.d("app", String.format("successfully matched %d and modified %d documents",
+                                                                numMatched, numModified));
+                                                    } else {
+                                                        Log.e("app", "failed to update document with: ", task.getException());
+                                                    }
+                                                }
+                                            });
+                                        }
+                                        Context context = c
+                                                .getApplicationContext();
+                                        CharSequence text = "Request Sent. Rescue Team Will Arrive as soon as possible!";
+                                        int duration = Toast.LENGTH_LONG;
+
+                                        Toast toast = Toast.makeText(context, text, duration);
+                                        toast.show();
+                                    } else {
+                                        Log.e("app", "Failed to count documents with exception: ", task.getException());
+                                    }
+                                }
+                            });
+                            System.out.println("jai shree ram");
+//                String uri = String.format(Locale.ENGLISH, "geo:%f,%f", lat, longi);
+                            String geoUri = "http://maps.google.com/maps?q=loc:" + latvic + "," + longivic + " (" + "label temp" + ")";
+
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
+                            c.startActivity(intent);
+                            prog.setVisibility(View.GONE);
+                        }
+                        else{
+                            myAdapter=new VictimLocationAdapter(c,models);
+                            mRecylcerView.setAdapter(myAdapter);
+                            prog.setVisibility(View.GONE);
+                        }
 
                     }
                 } else {
@@ -232,6 +342,40 @@ public class RescueTeamDashboard extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void speak(){
+
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Hi speak something");
+
+        try {
+            startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT);
+        }
+        catch (Exception e){
+            Toast.makeText(RescueTeamDashboard.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case REQUEST_CODE_SPEECH_INPUT:{
+                if (resultCode == -1 && null!=data){
+                    ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    String spoken = result.get(0);
+                    if(spoken.contains("near")){
+                        flag=1;
+                        snd2.performClick();
+                    }
+                }
+            }
+        }
     }
 
 }

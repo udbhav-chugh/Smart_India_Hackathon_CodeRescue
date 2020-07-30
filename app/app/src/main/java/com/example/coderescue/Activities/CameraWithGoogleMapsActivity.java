@@ -8,11 +8,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
 import com.beyondar.android.fragment.BeyondarFragmentSupport;
+import com.beyondar.android.view.OnClickBeyondarObjectListener;
+import com.beyondar.android.world.BeyondarObject;
 import com.beyondar.android.world.World;
 
 import com.example.coderescue.R;
@@ -27,7 +30,7 @@ import java.util.List;
 
 import static com.mongodb.client.model.Filters.eq;
 
-public class CameraWithGoogleMapsActivity extends FragmentActivity implements OnClickListener {
+public class CameraWithGoogleMapsActivity extends FragmentActivity implements OnClickListener, OnClickBeyondarObjectListener {
 
     private BeyondarFragmentSupport mBeyondarFragment;
     private World mWorld;
@@ -60,10 +63,12 @@ public class CameraWithGoogleMapsActivity extends FragmentActivity implements On
                         e.printStackTrace();
                     }
                     mBeyondarFragment.setWorld(mWorld);
+                    mBeyondarFragment.setOnClickBeyondarObjectListener(CameraWithGoogleMapsActivity.this);
 
                 }
             }
         }));
+
 //
 //        try {
 //            mWorld = BeyondARWorld.generateObjects(this);
@@ -82,7 +87,11 @@ public class CameraWithGoogleMapsActivity extends FragmentActivity implements On
         mShowMap = (Button) findViewById(R.id.showMapButton);
         mShowMap.setOnClickListener(this);
     }
-
+    @Override
+    public void onClickBeyondarObject(ArrayList<BeyondarObject> beyondarObjects) {
+        // The first element in the array belongs to the closest BeyondarObject
+        Toast.makeText(this, "Clicked on: " + beyondarObjects.get(0).getName(), Toast.LENGTH_LONG).show();
+    }
     @Override
     public void onClick(View v) {
         if (v == mShowMap) {
@@ -91,4 +100,8 @@ public class CameraWithGoogleMapsActivity extends FragmentActivity implements On
         }
     }
 
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
+    }
 }

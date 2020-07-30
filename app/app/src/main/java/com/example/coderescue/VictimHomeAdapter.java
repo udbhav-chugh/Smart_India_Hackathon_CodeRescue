@@ -46,6 +46,7 @@ public class VictimHomeAdapter extends RecyclerView.Adapter<VictimHomeHolder>{
     public VictimHomeHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
 
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.victim_home_card, null);
+        view.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT));
 
         return new VictimHomeHolder(view);
     }

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ECF0F3"
-    tools:context="com.github.sshadkany.android_neumorphic_test_app.Activity3">
+    tools:context=".Activities.UISamples.Activity3">
 
     <com.github.sshadkany.shapes.RoundRectView
         android:id="@+id/btn3"
@@ -50,3 +50,6 @@
     </com.github.sshadkany.shapes.RoundRectView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+<!--No need of UI-->

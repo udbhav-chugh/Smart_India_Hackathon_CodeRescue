@@ -1,0 +1,123 @@
+{% extends "base_generic.html" %}
+
+{% block css %}
+<style>
+* {
+  .border-radius(0) !important;
+}
+
+#field {
+    margin-bottom:20px;
+}
+</style>
+{% endblock %}
+{% block script %}
+
+{% endblock %}
+{% block include_header %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+{% endblock %}
+
+
+{% block content%}
+
+<form action="{% url 'main:add_disaster' %}" method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="disasterName">Disaster Name</label>
+        <input type="text" class="form-control" id="inputName" placeholder="Enter disaster name" name="name">
+    </div>
+    <div class="form-group">
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="activeStatus" id="disasterActive" value="1" checked>
+            <label class="form-check-label" for="disasterActive">Active</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="activeStatus" id="disasterInctive" value="0">
+            <label class="form-check-label" for="disasterInctive">Inactive</label>
+        </div>
+    </div>
+    <!-- <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownScale" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Disaster Scale
+        </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="#">1</a>
+            <a class="dropdown-item" href="#">2</a>
+            <a class="dropdown-item" href="#">3</a>
+        </div>
+    </div> -->
+    <div class="form-group">
+        <label for="disasterScale">Disaster on a scale of 1-10</label>
+        <input type="text" class="form-control" id="inputScale" placeholder="Enter disaster scale" name="scale">
+    </div>
+    <div class="form-group">
+        <label for="disasterCoordinates">Disaster Coordinates: </label><br>
+        <label for="disasterCoordinates">Latitude: </label>
+        <input type="text" class="form-control" id="inputLatitude" placeholder="Enter Latitude" name="latitude">
+        <label for="disasterCoordinates">Longitude: </label>
+        <input type="text" class="form-control" id="inputLongitude" placeholder="Enter Longitude" name="longitude">
+        <label for="disasterCoordinates">Radius: </label>
+        <input type="text" class="form-control" id="inputRadius" placeholder="Enter Radius" name="radius">
+    </div>
+
+    <div class="col-xs-12">
+           <div class="col-md-12" >
+                <h3> Locations Affected: </h3>
+                <div id="field">
+                    <div id="field0">
+                        <div class="form-group">
+                            <div class="col-md-5">
+                                <input id="location" name="location" type="text" placeholder="" class="form-control input-md">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-4">
+                        <button id="add-more" name="add-more" class="btn btn-primary">Add More</button>
+                    </div>
+                </div>
+                <br><br>
+        </div>
+   </div>
+
+   <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+    $(document).ready(function () {
+        var next = 0;
+        $("#add-more").click(function(e){
+            e.preventDefault();
+            var addto = "#field" + next;
+            var addRemove = "#field" + (next);
+            next = next + 1;
+            var newIn = ' <div id="field'+ next +'" name="field'+ next +'"><div class="form-group"><div class="col-md-5"> <input id="location" name="location" type="text" placeholder="" class="form-control input-md"> </div></div></div>';
+            var newInput = $(newIn);
+            var removeBtn = '<button id="remove' + (next - 1) + '" class="btn btn-danger remove-me" >Remove</button></div></div><div id="field">';
+            var removeButton = $(removeBtn);
+            $(addto).after(newInput);
+            $(addRemove).after(removeButton);
+            $("#field" + next).attr('data-source',$(addto).attr('data-source'));
+            $("#count").val(next);
+
+            $('.remove-me').click(function(e){
+                e.preventDefault();
+                var fieldNum = this.id.charAt(this.id.length-1);
+                var fieldID = "#field" + fieldNum;
+                $(this).remove();
+                $(fieldID).remove();
+            });
+        });
+    });
+</script>
+
+{% endblock javascript %}

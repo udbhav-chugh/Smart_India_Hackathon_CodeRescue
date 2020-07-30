@@ -9,14 +9,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class VictimLocationHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-    TextView mTitle, mDes;
+    TextView mTitle, mLat, mLong;
     private ItemClickListener itemClickListener;
 
     public VictimLocationHolder (@NonNull View itemView){
         super(itemView);
 
         this.mTitle = itemView.findViewById(R.id.titleTv2);
-        this.mDes = itemView.findViewById(R.id.descriptionTv2);
+        this.mLat = itemView.findViewById(R.id.latitude);
+        this.mLong = itemView.findViewById(R.id.longitude);
         itemView.setOnClickListener(this);
     }
 

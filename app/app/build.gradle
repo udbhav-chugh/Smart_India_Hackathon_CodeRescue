@@ -87,4 +87,6 @@ dependencies {
 
     compileOnly 'org.glassfish:javax.annotation:10.0-b28'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+    implementation 'com.google.android.libraries.places:places:2.3.0'
+
 }

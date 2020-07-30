@@ -48,7 +48,8 @@ public class VictimLocationAdapter extends RecyclerView.Adapter<VictimLocationHo
     @Override
     public VictimLocationHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
 
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.victim_location_card, null);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.victim_location_card ,null);
+        view.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT));
 
         return new VictimLocationHolder(view);
     }
@@ -60,7 +61,8 @@ public class VictimLocationAdapter extends RecyclerView.Adapter<VictimLocationHo
         String username = models.get(i).getRescueUsername();
         String dis_id = models.get(i).getDisaster_id();
         myHolder.mTitle.setText(models.get(i).getTitle());
-        myHolder.mDes.setText(models.get(i).getDescription());
+        myHolder.mLat.setText(lat);
+        myHolder.mLong.setText(longi);
         System.out.println("jai shree ram2");
 
         //WHEN ITEM IS CLICKED
@@ -90,20 +92,23 @@ public class VictimLocationAdapter extends RecyclerView.Adapter<VictimLocationHo
                                 List<Document> temp = (List<Document>)first.get("victims");
                                 List<Document> temp2 = new ArrayList<Document>();
                                 int count=0;
+                                System.out.println(lat);
+                                System.out.println(longi);
                                 for(Document doc: temp){
-                                    if(count!=i)
+                                    System.out.println(count + " " + doc.getString("latitude") + " " + doc.getString("longitude"));
+                                    if(count==1 || !doc.getString("latitude").equals(lat) || !doc.getString("longitude").equals(longi))
                                     {
                                         temp2.add(doc);
                                     }
                                     else
                                     {
+                                        count=1;
                                         Document notactive = new Document()
                                                 .append("latitude", lat)
                                                 .append("longitude", longi)
                                                 .append("isactive", 0);
                                         temp2.add(notactive);
                                     }
-                                    count++;
                                 }
                                 Log.d("Exists", "update");
                                 Document filterDoc = new Document().append("disaster_id", dis_id);

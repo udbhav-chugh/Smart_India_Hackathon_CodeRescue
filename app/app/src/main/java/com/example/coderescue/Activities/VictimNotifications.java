@@ -49,6 +49,7 @@ public class VictimNotifications extends AppCompatActivity {
     NotificationCardModel m;
     public static RemoteMongoClient mongoClient;
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
+    private static final int REQUEST_CODE_READ_PHONE_STATE_PERMISSION = 2;
 
     private ProgressBar prog;
     public static String state;
@@ -86,6 +87,14 @@ public class VictimNotifications extends AppCompatActivity {
                 Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
             }
         }
+
+//        if (requestCode == REQUEST_CODE_READ_PHONE_STATE_PERMISSION && grantResults.length > 0){
+//            if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+//                getCurrentLocation();
+//            }else {
+//                Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
+//            }
+//        }
     }
 
     private void getCurrentLocation(){

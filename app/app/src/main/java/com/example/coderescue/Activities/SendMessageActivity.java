@@ -1,5 +1,6 @@
 package com.example.coderescue.Activities;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -11,9 +12,11 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.os.Looper;
+import android.speech.RecognizerIntent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.coderescue.Classes.NetworkConnectivity;
@@ -25,17 +28,19 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.mongodb.lang.NonNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class SendMessageActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
+    private static final int REQUEST_CODE_SPEECH_INPUT = 1000;
     double latitude, longitude;
     String state;
     EditText msg_input;
     Button send_msg;
-
+    ImageButton speak_msg;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +49,7 @@ public class SendMessageActivity extends AppCompatActivity {
         longitude = -1;
         msg_input = findViewById(R.id.msg_input);
         send_msg = findViewById(R.id.send_msg);
+        speak_msg = findViewById(R.id.voiceBtn2);
         if (ContextCompat.checkSelfPermission(
                 getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION
         ) != PackageManager.PERMISSION_GRANTED) {
@@ -52,6 +58,13 @@ public class SendMessageActivity extends AppCompatActivity {
         } else {
             getCurrentLocation();
         }
+
+        speak_msg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                speak();
+            }
+        });
 
         send_msg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,5 +135,37 @@ public class SendMessageActivity extends AppCompatActivity {
                         }
                     }
                 }, Looper.getMainLooper());
+    }
+
+    private void speak(){
+
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Hi speak something");
+
+        try {
+            startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT);
+        }
+        catch (Exception e){
+            Toast.makeText(SendMessageActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case REQUEST_CODE_SPEECH_INPUT:{
+                if (resultCode == -1 && null!=data){
+                    ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    String spoken = result.get(0);
+                    msg_input.setText(spoken);
+                    send_msg.performClick();
+                }
+            }
+        }
     }
 }

@@ -1,5 +1,7 @@
 package com.example.coderescue;
 
+import java.util.Comparator;
+
 public class VictimLocationCardModel {
 
     private String title, description;
@@ -44,5 +46,17 @@ public class VictimLocationCardModel {
     public String getDisaster_id(){ return disaster_id; }
 
     public void setDisaster_id(String disaster_id){ this.disaster_id = disaster_id; }
+
+    public static Comparator<VictimLocationCardModel> DistSort = new Comparator<VictimLocationCardModel>() {
+
+        public int compare(VictimLocationCardModel s1, VictimLocationCardModel s2) {
+
+            double dist1 = s1.getDistance();
+            double dist2 = s2.getDistance();
+
+            /*For ascending order*/
+            return (int)(dist1-dist2);
+        }};
+
 
 }

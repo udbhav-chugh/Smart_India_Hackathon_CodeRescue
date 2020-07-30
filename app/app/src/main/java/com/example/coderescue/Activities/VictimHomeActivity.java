@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+import android.telephony.TelephonyManager;
 
 import com.example.coderescue.Classes.ReceiveMessageUtility;
 import com.example.coderescue.Classes.SendMessageUtility;
@@ -53,23 +54,37 @@ public class VictimHomeActivity extends AppCompatActivity {
     ArrayList<VictimHomeCardModel> models = new ArrayList<>();
     VictimHomeCardModel m;
     public static RemoteMongoClient mongoClient;
-    public String lat,longi;
+    public String lat, longi;
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
+    public String deviceid;
     private ProgressBar prog;
     public static String state;
     RecyclerView mRecyclerView;
     VictimHomeAdapter myAdapter;
     Context c;
+//    TelephonyManager telephonyManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_victim_home);
-        prog=findViewById(R.id.progressBar2);
-        mRecyclerView =findViewById(R.id.recylcerView5);
+        prog = findViewById(R.id.progressBar2);
+        deviceid="temp";
+        mRecyclerView = findViewById(R.id.recylcerView5);
         c = this;
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         snd = findViewById(R.id.snd_msg);
+//        telephonyManager = (TelephonyManager) getSystemService(Context.x
+//                TELEPHONY_SERVICE);
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(VictimHomeActivity.this,
+//                    new String[]{Manifest.permission.READ_PHONE_STATE}, 2);
+//        }
+//        else{
+//            deviceid = telephonyManager.getDeviceId();
+//            System.out.println("deviceid");
+//            System.out.println(deviceid);
+//        }
 
     }
 

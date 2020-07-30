@@ -260,6 +260,10 @@ public class PoiBrowserActivity extends FragmentActivity implements GoogleApiCli
 //        call.enqueue(new Callback<PlaceResponse>() {
 //            @Override
 //            public void onResponse(Call<PlaceResponse> call, Response<PlaceResponse> response) {
+                String[] arrOfStr = placeid.split("_");
+                String victimLatitude = arrOfStr[0];
+                String victimLongitude = arrOfStr[1];
+//            String victimLatitude = arrOfStr[0];
 
                 seekbar_cardview.setVisibility(View.GONE);
                 poi_cardview.setVisibility(View.VISIBLE);
@@ -267,8 +271,8 @@ public class PoiBrowserActivity extends FragmentActivity implements GoogleApiCli
 
 //                final com.example.coderescue.navar.network.place.Result result=response.body().getResult();
 
-                poi_place_name.setText("hello");
-                poi_place_addr.setText("new delhi");
+                poi_place_name.setText("HELP");
+                poi_place_addr.setText(victimLatitude + " " + victimLongitude);
 Log.d(TAG, placeid);
 //                try {
 //                    HttpUrl url = new HttpUrl.Builder()
@@ -286,10 +290,6 @@ Log.d(TAG, placeid);
 //                    Log.d(TAG, "onResponse: "+e.getMessage());
 //                    Toast.makeText(PoiBrowserActivity.this, "No image available", Toast.LENGTH_SHORT).show();
 //                }
-            String[] arrOfStr = placeid.split("_");
-            String victimLatitude = arrOfStr[0];
-            String victimLongitude = arrOfStr[1];
-//            String victimLatitude = arrOfStr[0];
 
 
             poi_place_maps_btn.setOnClickListener(new View.OnClickListener() {
@@ -377,7 +377,7 @@ Log.d(TAG, placeid);
         world.setGeoPosition(mLastLocation.getLatitude(),mLastLocation.getLongitude());
         world.setDefaultImage(R.drawable.ar_sphere_default);
 
-        arFragmentSupport.getGLSurfaceView().setPullCloserDistance(25);
+        arFragmentSupport.getGLSurfaceView().setPullCloserDistance(0);
 
         GeoObject geoObjects[]=new GeoObject[pois.size()];
 
@@ -401,13 +401,12 @@ Log.d(TAG, placeid);
                             pois.get(i).getLongitude()))) / 1000);
             String d = distance + " KM";
             dist.setText(d);
+            Log.d(TAG, "hey bunny " + d);
 
             String type = getResources().getString(R.string.restaurant);
-            if (type.equals(getResources().getString(R.string.restaurant))) {
-                icon.setImageResource(R.drawable.food);
-            }
+            icon.setImageResource(R.drawable.map_icon);
 
-            view.setDrawingCacheEnabled(true);
+            view.setDrawingCacheEnabled(false);
             view.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
             try {
                 //  Paint paint = new Paint(ANTI_ALIAS_FLAG);
@@ -424,13 +423,10 @@ Log.d(TAG, placeid);
                 Canvas canvas = new Canvas(snapshot);
                 view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
                 view.draw(canvas);
-                Thread.sleep(100);
 
                 //canvas.drawBitmap(snapshot);
                 //snapshot = Bitmap.createBitmap(view.getDrawingCache(),10,10,200,100); // You can tell how to crop the snapshot and whatever in this method
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } finally {
+            }  finally {
                 view.setDrawingCacheEnabled(false);
             }
 
@@ -441,6 +437,8 @@ Log.d(TAG, placeid);
             Log.d(TAG, "hello honey bunny " + i + " " + poiGeoObj.getId());
 
         }
+
+                Log.d(TAG, "no of objects in the world "  + mLastLocation.getLatitude()+ " " + mLastLocation.getLongitude());
         Log.d(TAG, "no of objects in the world "  + world.getBeyondarObjectLists().size());
         Log.d(TAG, "no of objects also in the world "  + world.getBeyondarObjectLists().get(0).size() );
         for( BeyondarObject i1 : world.getBeyondarObjectLists().get(0)){

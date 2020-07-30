@@ -103,7 +103,8 @@ public class BeyondARWorld {
 //                                go2.setImageUri("https://d2c7ipcroan06u.cloudfront.net/wp-content/uploads/2020/05/tanmay-bhat-2-edited-696x392.jpg");
 //                                go2.setName("Online image");
 
-                                GeoObject go = new GeoObject(2l);
+                                GeoObject go = new GeoObject(1000*(ctr+1));
+                                ctr++;
                                 go.setGeoPosition( 0+latvic , 0+longivic);
 //                                go.setGeoPosition( 21.32 , longivic);
                                 go.setImageUri("https://d2c7ipcroan06u.cloudfront.net/wp-content/uploads/2020/05/tanmay-bhat-2-edited-696x392.jpg");

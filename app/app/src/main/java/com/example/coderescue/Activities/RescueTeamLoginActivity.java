@@ -6,8 +6,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
@@ -25,6 +29,8 @@ import org.bson.Document;
 import java.util.ArrayList;
 import java.util.List;
 
+import soup.neumorphism.ShapeType;
+
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
@@ -33,22 +39,39 @@ import static com.mongodb.client.model.Filters.eq;
 public class RescueTeamLoginActivity extends AppCompatActivity {
 
     public static RemoteMongoClient mongoClient;
-    Switch show_password_switch;
     EditText username,password;
+    soup.neumorphism.NeumorphImageButton showPassword;
+    soup.neumorphism.NeumorphButton submit;
+
+    private boolean password_notvisible = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_rescue_team_login);
-        show_password_switch = findViewById(R.id.show_password_switch);
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
+        showPassword = findViewById(R.id.show_password);
+        submit = findViewById(R.id.submit);
 
-        show_password_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        getWindow().setBackgroundDrawable(getDrawable(R.drawable.image));
+        showPassword.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                password.setInputType();
+            public void onClick(View v) {
+                if(password_notvisible) {
+                    showPassword.setShapeType(ShapeType.PRESSED);
+                    password_notvisible = false;
+                    password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    password.setSelection(password.getText().length());
+                }
+                else{
+                    showPassword.setShapeType(ShapeType.FLAT);
+                    password_notvisible = true;
+                    password.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    password.setSelection(password.getText().length());
+                }
             }
         });
     }
@@ -56,6 +79,8 @@ public class RescueTeamLoginActivity extends AppCompatActivity {
 
     public void loginaction(View view) {
         Intent intent = new Intent(this, RescueTeamDashboard.class);
+        submit.setShapeType(ShapeType.PRESSED);
+        submit.setEnabled(false);
 
         String user = username.getText().toString();
         String pswd = password.getText().toString();
@@ -86,6 +111,7 @@ public class RescueTeamLoginActivity extends AppCompatActivity {
                         intent.putExtra("username", user);
                         intent.putExtra("disaster_id", items.get(0).getString("disaster_id"));
                         startActivity(intent);
+                        finish();
                     }
                 } else {
                     Log.e("app", "Failed to count documents with exception: ", task.getException());

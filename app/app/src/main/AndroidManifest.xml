@@ -7,11 +7,10 @@
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the 'MyLocation' functionality.
     -->
-<!-- for NavAR  -->
+    <!-- for NavAR -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -35,7 +34,14 @@
         android:theme="@style/AppTheme.NoActionBar"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".Activities.SendMessageActivity"></activity>
+        <activity android:name=".Activities.FragmentHome2">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+        </activity>
+        <activity android:name=".Activities.SendMessageActivity" />
         <activity android:name=".Activities.UpdateInfoActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -94,15 +100,18 @@
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
         </activity>
-        <activity android:name=".navar.ArCamActivity" android:screenOrientation="landscape"/>
+        <activity
+            android:name=".navar.ArCamActivity"
+            android:screenOrientation="landscape" />
         <activity android:name=".navar.NavActivity" />
         <activity android:name=".navar.MapsActivity" />
-        <activity android:name=".navar.PoiBrowserActivity" android:screenOrientation="landscape"/>
+        <activity
+            android:name=".navar.PoiBrowserActivity"
+            android:screenOrientation="landscape" />
         <activity android:name=".navar.AboutActivity" />
-
-        <activity android:name=".navar.onboarding.DefaultIntro"
-            android:theme="@style/FullScreen"/>
-
+        <activity
+            android:name=".navar.onboarding.DefaultIntro"
+            android:theme="@style/FullScreen" />
     </application>
 
 </manifest>

@@ -16,6 +16,7 @@
     <color name="white">#FFF</color>
     <color name="black_overlay">#66000000</color>
 
+    <color name="neumorph_background">#f6f7fa</color>
     <color name="colorPrimary">#eef0f5</color>
     <color name="colorPrimaryDark">#eef0f5</color>
     <color name="colorAccent">#eef0f5</color>

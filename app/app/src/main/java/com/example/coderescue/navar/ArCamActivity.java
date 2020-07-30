@@ -12,6 +12,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
@@ -30,8 +31,10 @@ import com.beyondar.android.world.World;
 import com.example.coderescue.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.PolyUtil;
@@ -45,6 +48,7 @@ import com.example.coderescue.navar.network.model.Step;
 import com.example.coderescue.navar.utils.LocationCalc;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -81,6 +85,14 @@ public class ArCamActivity extends FragmentActivity implements GoogleApiClient.C
     private World world;
 
     private Intent intent;
+
+    private String visibility = "LOW";
+    private ArrayList<Pair<String, Integer>> visi_options = new ArrayList<>(
+            Arrays.asList(
+                    new Pair<>("LOW", 3),
+                    new Pair<>("MEDIUM", 5),
+                    new Pair<>("HIGH", 8)
+            ));
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -205,8 +217,17 @@ public class ArCamActivity extends FragmentActivity implements GoogleApiClient.C
                         // intended , here it is (3*2)=6 .
                         if (dist > 6) {
 
+                            int visibility_level=0;
+                            for(int i=0; i<visi_options.size(); i++) {
+                                if(visi_options.get(i).first.equals(visibility)) {
+                                    visibility_level = i;
+                                }
+                            }
+
+                            // parameter to set count of ar objects to be added
+                            int para = visi_options.get(visibility_level).second;
                             //Initialize count of ar objects to be added
-                            int arObj_count = ((int) dist / 3) - 1;
+                            int arObj_count = ((int) dist / para) - 1;
 
                             //Log.d(TAG, "Configure_AR: Dist:" + dist + " # No of Objects: " + arObj_count + "\n --------");
 

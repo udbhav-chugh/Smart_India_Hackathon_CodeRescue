@@ -441,6 +441,12 @@ Log.d(TAG, placeid);
             Log.d(TAG, "hello honey bunny " + i + " " + poiGeoObj.getId());
 
         }
+        Log.d(TAG, "no of objects in the world "  + world.getBeyondarObjectLists().size());
+        Log.d(TAG, "no of objects also in the world "  + world.getBeyondarObjectLists().get(0).size() );
+        for( BeyondarObject i1 : world.getBeyondarObjectLists().get(0)){
+            Log.d(TAG, "hurray  "  +  i1.getName() );
+
+        }
 
         textView.setVisibility(View.INVISIBLE);
 

@@ -22,6 +22,8 @@ out/
 build/
 .idea/
 
+__pycache__/
+
 # Local configuration file (sdk path, etc)
 local.properties
 

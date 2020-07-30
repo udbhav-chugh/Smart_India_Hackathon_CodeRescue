@@ -36,6 +36,16 @@
         <input type="password" class="form-control" id="rescueConfirmPassword" placeholder="Enter Password" name="rescueConfirmPassword">
     </div>
 
+    <div id="disaster_wise_names">
+      <label for="all_disasters">Disaster Name: </label><br>
+      <select id="selectedDisaster" name="selectedDisaster">
+        {% for disaster in all_disasters %}
+          <option value = "{{disaster.id}}"> {{disaster.name}}</option>
+        {% endfor %}
+      </select>
+      <br><br>
+    </div>
+
    <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 </div>
@@ -43,5 +53,4 @@
 {% endblock %}
 
 {% block javascript %}
-
 {% endblock javascript %}

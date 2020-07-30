@@ -7,6 +7,11 @@
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the 'MyLocation' functionality.
     -->
+<!-- for NavAR  -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -19,6 +24,7 @@
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.sensor.accelerometer" />
     <uses-feature android:name="android.hardware.sensor.compass" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application
         android:allowBackup="true"
@@ -42,6 +48,9 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
         <activity
             android:name=".Activities.MapsActivity"
@@ -85,6 +94,15 @@
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
         </activity>
+        <activity android:name=".navar.ArCamActivity" android:screenOrientation="landscape"/>
+        <activity android:name=".navar.NavActivity" />
+        <activity android:name=".navar.MapsActivity" />
+        <activity android:name=".navar.PoiBrowserActivity" android:screenOrientation="landscape"/>
+        <activity android:name=".navar.AboutActivity" />
+
+        <activity android:name=".navar.onboarding.DefaultIntro"
+            android:theme="@style/FullScreen"/>
+
     </application>
 
 </manifest>

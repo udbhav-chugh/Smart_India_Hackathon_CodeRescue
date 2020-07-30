@@ -97,17 +97,18 @@ public class BeyondARWorld {
                                         latvic, longivic,
                                         results);
                                 System.out.println(results[0]);
-                                GeoObject go2 = new GeoObject(2l);
-                                go2.setGeoPosition(41.90518966360719d, 2.56582424468222d);
-                                go2.setImageUri("http://beyondar.github.io/beyondar/images/logo_512.png");
-                                go2.setImageUri("https://d2c7ipcroan06u.cloudfront.net/wp-content/uploads/2020/05/tanmay-bhat-2-edited-696x392.jpg");
-                                go2.setName("Online image");
+//                                GeoObject go2 = new GeoObject(1000*(i+1));
+//                                go2.setGeoPosition(41.90518966360719d, 2.56582424468222d);
+//                                go2.setImageUri("http://beyondar.github.io/beyondar/images/logo_512.png");
+//                                go2.setImageUri("https://d2c7ipcroan06u.cloudfront.net/wp-content/uploads/2020/05/tanmay-bhat-2-edited-696x392.jpg");
+//                                go2.setName("Online image");
 
-                                GeoObject go = new GeoObject(2l);
+                                GeoObject go = new GeoObject(1000*(ctr+1));
+                                ctr++;
                                 go.setGeoPosition( 0+latvic , 0+longivic);
 //                                go.setGeoPosition( 21.32 , longivic);
                                 go.setImageUri("https://d2c7ipcroan06u.cloudfront.net/wp-content/uploads/2020/05/tanmay-bhat-2-edited-696x392.jpg");
-                                go.setName("Online image");
+                                go.setName("Help");
 //                                listVictims.add(go2);
                                 listVictims.add(go);
                                 Log.d("Correct", "latlong -> " + latvic +" " + longivic);
@@ -213,7 +214,6 @@ public class BeyondARWorld {
             sharedWorld.addBeyondarObject(temp,LIST_TYPE_EXAMPLE_1);
             Log.d("Correct", "h" + listVictims.size());
         }
-
 
         return sharedWorld;
     }

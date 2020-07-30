@@ -391,3 +391,61 @@ def update_statistics(request, disaster_id):
         )
 
         return HttpResponseRedirect(reverse('main:headquarters_dashboard'))
+
+def add_rescue_team(request):
+    if request.method == "GET":
+        client = connect()
+        db = client.main.disaster
+        info = db.find({})
+        data = list(info)
+
+        all_disasters = []
+        for data1 in data:
+            all_disasters.append({
+                "name" : data1["name"],
+                "id" : data1["id"]
+            })
+
+        context = {
+            "all_disasters" : all_disasters
+        }
+
+        return render(request, 'headquarters/add_rescue_team.html', context)
+
+    elif request.method == "POST":
+        # print("From received")
+        # client = connect()
+        # db = client.main.disaster
+        # id = db.count() + 1
+        # location = []
+        # for loc in request.POST.getlist('location'):
+        #     if loc != '':
+        #         location.append(loc)
+        #
+        # data = {
+        #     'id' : "unique_id_" + str(id),
+        #     'name' : request.POST['name'],
+        #     'isactive' : int(request.POST['activeStatus']),
+        #     'scale' : int(request.POST['scale']),
+        #     'coordinates' : {
+        #         'latitude' : request.POST['latitude'],
+        #         'longitude' : request.POST['longitude'],
+        #         'radius' : request.POST['radius']
+        #     },
+        #     'rescue_teams_usernames' : [],
+        #     'statistics' : {
+        #         'total' : {
+        #             'affected' : 0,
+        #             'deaths' : 0
+        #         },
+        #         'day_0' : {
+        #             'affected' : 0,
+        #             'deaths' : 0
+        #         }
+        #     },
+        #     'location' : location,
+        #     'starting_date' : str(datetime.now().date())
+        # }
+        # print(data)
+        # db.insert_one(data)
+        return HttpResponseRedirect(reverse('main:headquarters_dashboard'))

@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
     <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
-    
+
 {% endblock%}
 
 {% block css %}
@@ -85,7 +85,7 @@
         <button onclick="location.href='{% url 'main:notifications' locationIndex %}'"> Check Notifications </button>
     {% endif %}
     <a href="{% url 'main:find_safe_house' '1' '1' %}" id="nearest_safe_house_button" class="btn  btn-primary">Find Nearest Safe House</a>
-    
+
     <div id="disaster_wise_names">
         <label for="disaster_names">Disaster Name: </label><br>
         <select id="disaster_names" onchange="changeMapInfo()" name="disaster_names">
@@ -110,7 +110,7 @@
         };
       var url_mask = "{% url 'main:find_safe_house' '12345' '6789' %}".replace(/12345/, position.coords.latitude.toString()).replace(/6789/, position.coords.longitude.toString());
       document.getElementById("nearest_safe_house_button").setAttribute('href' , url_mask);
-          
+
       function loadMapNearestSafeHouse(){
           var map = L.map('nearestSafeHouseMap');
 
@@ -129,7 +129,7 @@
           }).addTo(map);
           {% endif %}
       };
-      
+
       });
       // {% if disaster_values.isactive == 1 %}
 //    {%endif%}
@@ -295,11 +295,12 @@
     }
     // var lastNotification = new Date();
     // lastNotification = lastNotification.getDate() + "/" + (lastNotification.getMonth()+1).toString()
-    //     + "/" + lastNotification.getFullYear() + " " + lastNotification.getHours() + ":" + 
+    //     + "/" + lastNotification.getFullYear() + " " + lastNotification.getHours() + ":" +
     //     lastNotification.getMinutes() + ":" + lastNotification.getSeconds();
-     
+
     setInterval(function () {
         console.log('Called new notifications at : ' + new Date());
+        {% if locationIndex %}
         $.ajax({
             type: 'GET',
             url: "{% url 'main:get_new_notifications' locationIndex %}",
@@ -310,7 +311,7 @@
                 // var constantDate = new Date(lastNotification);
                 var constantDate = moment( '{{request.session.lastNotification}}' , 'DD-MM-YYYY HH:mm:ss').toDate();
                 console.log(constantDate);
-                
+
                 for (notf in newnotfs) {
                     // console.log(newnotfs[notf]['date']);
                     // console.log(newnotfs[notf]);
@@ -348,8 +349,9 @@
                 //console.log(response)
             }
         })
+        {% endif %}
     },10000);
-    $(window).on('shown.bs.modal', function() { 
+    $(window).on('shown.bs.modal', function() {
     $('#code').modal('show');
     var map = L.map('nearestSafeHouseMap');
 
@@ -367,7 +369,7 @@
         routeWhileDragging: true
     }).addTo(map);
     {% endif %}
-    }); 
+    });
     {% if nearest_safe_house %}
     setTimeout(function () {
       $( "#launchModalButton" ).click();},1000);

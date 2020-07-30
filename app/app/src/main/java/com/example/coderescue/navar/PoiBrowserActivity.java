@@ -375,6 +375,8 @@ Log.d(TAG, placeid);
 
         world=new World(getApplicationContext());
         world.setGeoPosition(mLastLocation.getLatitude(),mLastLocation.getLongitude());
+
+        System.out.println(mLastLocation.getLatitude() + " " + mLastLocation.getLongitude());
         world.setDefaultImage(R.drawable.ar_sphere_default);
 
         arFragmentSupport.getGLSurfaceView().setPullCloserDistance(0);

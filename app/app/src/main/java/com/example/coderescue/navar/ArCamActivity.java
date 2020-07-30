@@ -15,11 +15,16 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -72,6 +77,10 @@ public class ArCamActivity extends FragmentActivity implements GoogleApiClient.C
     TextView dirDistance;
     @BindView(R.id.ar_dir_time)
     TextView dirTime;
+    @BindView(R.id.ar_card_visibility)
+    CardView cardVisibility;
+    @BindView(R.id.visibility_close_btn)
+    ImageButton visibility_close_btn;
 
     private final static String TAG="ArCamActivity";
     private String srcLatLng;
@@ -98,6 +107,39 @@ public class ArCamActivity extends FragmentActivity implements GoogleApiClient.C
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ar_camera);
+        cardVisibility.setVisibility(View.GONE);
+
+        TextView change_visibility = (TextView) findViewById(R.id.ar_visibility);
+        change_visibility.setOnClickListener(new TextView.OnClickListener() {
+            public void onClick(View v) {
+                cardVisibility.setVisibility(View.VISIBLE);
+            }
+        });
+
+        visibility_close_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cardVisibility.setVisibility(View.GONE);
+            }
+        });
+
+        RadioGroup radioVisibility = (RadioGroup)findViewById(R.id.radio_visibility);
+        radioVisibility.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            public void onCheckedChanged(RadioGroup group, int checkedId)
+            {
+                RadioButton checkedRadioButton = (RadioButton)group.findViewById(checkedId);
+                boolean isChecked = checkedRadioButton.isChecked();
+                if (isChecked)
+                {
+                    Log.d("visibility", (String) checkedRadioButton.getText());
+                    visibility = (String) checkedRadioButton.getText();
+                    cardVisibility.setVisibility(View.GONE);
+                    Configure_AR();
+                }
+            }
+        });
+
         ButterKnife.bind(this);
 
         Set_googleApiClient(); //Sets the GoogleApiClient
@@ -229,6 +271,7 @@ public class ArCamActivity extends FragmentActivity implements GoogleApiClient.C
                             //Initialize count of ar objects to be added
                             int arObj_count = ((int) dist / para) - 1;
 
+                            Log.d("visibilibity", visibility + " " + visibility_level + " " + para + " " + arObj_count);
                             //Log.d(TAG, "Configure_AR: Dist:" + dist + " # No of Objects: " + arObj_count + "\n --------");
 
                             double bearing = LocationCalc.calcBearing(polylineLatLng.get(j).get(k).latitude,
@@ -299,6 +342,7 @@ public class ArCamActivity extends FragmentActivity implements GoogleApiClient.C
             srcLatLng=intent.getStringExtra("SRCLATLNG");
             destLatLng=intent.getStringExtra("DESTLATLNG");
 
+            System.out.println(srcLatLng + " ---> " + destLatLng);
             Directions_call(); //HTTP Google Directions API Call
         }
     }

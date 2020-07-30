@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-     android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/arcam_layout">
 
     <fragment
@@ -9,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:name="com.example.coderescue.navar.ar.ArFragmentSupport">
-        </fragment>
+    </fragment>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -70,6 +71,90 @@
             android:layout_alignBaseline="@+id/ar_dir_distance"
             android:layout_alignBottom="@+id/ar_dir_distance"
             android:layout_toStartOf="@+id/ar_dir_distance" />
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:id="@+id/ar_visibility"
+            android:layout_alignBaseline="@+id/ar_dir_distance"
+            android:layout_alignBottom="@+id/ar_dir_distance"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:background="@drawable/src_dest_bg"
+            android:layout_marginStart="8dp" />
     </RelativeLayout>
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/ar_card_visibility"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="40dp"
+        android:layout_gravity="center"
+        android:elevation="2dp"
+        app:cardCornerRadius="8dp">
+
+        <ImageButton
+            android:id="@+id/visibility_close_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:src="@drawable/places_ic_clear"
+            android:elevation="2dp"
+            android:layout_gravity="end|top" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/visibility_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Change Visibility"
+                android:textColor="#000"
+                android:maxLines="2"
+                android:textSize="28sp"
+                android:paddingTop="10dp"
+                android:paddingLeft="10dp" />
+
+            <RadioGroup
+                android:id="@+id/radio_visibility"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checkedButton="@+id/visi_low"
+                android:layout_below="@+id/visibility_name"
+                android:layout_marginTop="10dp"
+                android:padding="10dp" >
+
+                <RadioButton
+                    android:id="@+id/visi_low"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="LOW"
+                    android:textSize="12sp"
+                    android:textStyle="normal|bold"/>
+
+                <RadioButton
+                    android:id="@+id/visi_medium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="MEDIUM"
+                    android:textSize="12sp"
+                    android:textStyle="normal|bold"/>
+
+                <RadioButton
+                    android:id="@+id/visi_high"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="HIGH"
+                    android:textSize="12sp"
+                    android:textStyle="normal|bold"/>
+
+            </RadioGroup>
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
 </FrameLayout>

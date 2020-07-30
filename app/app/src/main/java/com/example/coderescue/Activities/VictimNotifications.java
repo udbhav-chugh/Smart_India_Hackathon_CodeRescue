@@ -146,7 +146,7 @@ public class VictimNotifications extends AppCompatActivity {
         final RemoteMongoCollection<Document> disasters = mongoClient.getDatabase("main").getCollection("disaster");
         final RemoteMongoCollection<Document> notifications = mongoClient.getDatabase("main").getCollection("notification");
 
-        RemoteFindIterable importantDisasters = disasters.find();
+        RemoteFindIterable importantDisasters = disasters.find(eq("isactive",1));
         RemoteFindIterable findResults = notifications.find();
 
         Task<List<Document>> itemsTask = findResults.into(new ArrayList<Document>());

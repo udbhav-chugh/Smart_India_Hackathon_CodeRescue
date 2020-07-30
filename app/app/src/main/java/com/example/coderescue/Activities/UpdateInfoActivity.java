@@ -20,18 +20,18 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.AutocompletePrediction;
-import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.model.RectangularBounds;
-import com.google.android.libraries.places.api.model.TypeFilter;
-import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
-import com.google.android.libraries.places.api.net.PlacesClient;
-import com.google.android.libraries.places.widget.Autocomplete;
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
-import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
+//import com.google.android.libraries.places.api.Places;
+//import com.google.android.libraries.places.api.model.AutocompletePrediction;
+//import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
+//import com.google.android.libraries.places.api.model.Place;
+//import com.google.android.libraries.places.api.model.RectangularBounds;
+//import com.google.android.libraries.places.api.model.TypeFilter;
+//import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
+//import com.google.android.libraries.places.api.net.PlacesClient;
+//import com.google.android.libraries.places.widget.Autocomplete;
+//import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+//import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+//import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
 import com.mongodb.stitch.core.services.mongodb.remote.RemoteInsertOneResult;
@@ -66,18 +66,18 @@ public class UpdateInfoActivity extends AppCompatActivity {
         submit = findViewById(R.id.submit_info);
         String apiKey = getString(R.string.google_maps_key);
 //        String apiKey = "AIzaSyCYd9DNtP8fAnic_H5XwgCef7dmqj_7vB0";
-        Places.initialize(getApplicationContext(), apiKey);
-
-        location.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                List<Place.Field> fieldList = Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.NAME);
-                Log.d(TAG, "intent starting");
-                Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldList)
-                        .build(UpdateInfoActivity.this);
-                startActivityForResult(intent, 100);
-            }
-        });
+//        Places.initialize(getApplicationContext(), apiKey);
+//
+//        location.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                List<Place.Field> fieldList = Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.NAME);
+//                Log.d(TAG, "intent starting");
+//                Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldList)
+//                        .build(UpdateInfoActivity.this);
+//                startActivityForResult(intent, 100);
+//            }
+//        });
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,19 +87,19 @@ public class UpdateInfoActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if( requestCode == 100 && resultCode == RESULT_OK && data != null){
-            Place place = Autocomplete.getPlaceFromIntent(data);
-            location.setText(place.getAddress());
-            Toast.makeText(this, String.valueOf(place.getLatLng()), Toast.LENGTH_SHORT).show();
-        }
-        else{
-            Status status = data == null ? null : Autocomplete.getStatusFromIntent(data);
-            Log.e(TAG, (status == null || status.getStatusMessage() == null) ? "null" : status.getStatusMessage());
-        }
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if( requestCode == 100 && resultCode == RESULT_OK && data != null){
+//            Place place = Autocomplete.getPlaceFromIntent(data);
+//            location.setText(place.getAddress());
+//            Toast.makeText(this, String.valueOf(place.getLatLng()), Toast.LENGTH_SHORT).show();
+//        }
+//        else{
+//            Status status = data == null ? null : Autocomplete.getStatusFromIntent(data);
+//            Log.e(TAG, (status == null || status.getStatusMessage() == null) ? "null" : status.getStatusMessage());
+//        }
+//    }
 
     private void updateVictimInfo() {
         String loc = location.getText().toString().trim();

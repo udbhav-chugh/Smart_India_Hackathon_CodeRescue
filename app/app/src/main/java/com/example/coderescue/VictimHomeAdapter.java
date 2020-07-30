@@ -87,6 +87,7 @@ public class VictimHomeAdapter extends RecyclerView.Adapter<VictimHomeHolder>{
                                                 new Document()
                                                         .append("latitude", lat)
                                                         .append("longitude", longi)
+                                                        .append("count",1)
                                                         .append("isactive", 1)
                                         ));
 
@@ -109,7 +110,7 @@ public class VictimHomeAdapter extends RecyclerView.Adapter<VictimHomeHolder>{
                                 Document first = items.get(0);
                                 final RemoteMongoCollection<Document> victimneedhelp = mongoClient.getDatabase("main").getCollection("victimsneedhelp");
                                 List<Document> temp = (List<Document>)first.get("victims");
-                                Document newvic = new Document().append("latitude",lat).append("longitude",longi).append("isactive",1);
+                                Document newvic = new Document().append("latitude",lat).append("longitude",longi).append("count",1).append("isactive",1);
                                 temp.add(newvic);
                                 Log.d("Exists", "update");
                                 Document filterDoc = new Document().append("disaster_id", dis_id);

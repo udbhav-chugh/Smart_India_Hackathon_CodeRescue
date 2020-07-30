@@ -49,10 +49,10 @@
     <label for="female">Location Wise</label><br>
 
   <div id="disaster_wise_names">
-    <label for="disaster_names">Disaster Name: </label><br>
-    <select id="disaster_names" name="disaster_names">
-      {% for disaster in disaster_names %}
-        <option value = "{{disaster}}"> {{disaster}}</option>
+    <label for="all_disasters">Disaster Name: </label><br>
+    <select id="all_disasters" name="all_disasters">
+      {% for disaster in all_disasters %}
+        <option value = "{{disaster.id}}"> {{disaster.name}}</option>
       {% endfor %}
     </select>
     <br><br>

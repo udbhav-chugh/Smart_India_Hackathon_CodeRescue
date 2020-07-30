@@ -103,7 +103,7 @@ def notifications(request, loc_no):
     # or may be not
     notfs = []
     for notf in allnotfs:
-        if 'location' in notf and notf['location'] == notfLocation:
+        if 'location' in notf and notfLocation in notf['location']:
             notf['date'] = notf['date'].strftime('%d/%m/%Y %H:%M:%S')
             # date_time_obj = datetime. strptime(date_time_str, '%d/%m/%y %H:%M:%S')
             notfs.append(notf)
@@ -126,7 +126,7 @@ def get_new_notifications(request, loc_no):
             allnotfs = list(data)
             notfs = []
             for notf in allnotfs:
-                if 'location' in notf and notf['location'] == notfLocation:
+                if 'location' in notf and notfLocation in notf['location']:
                     notf['date'] = notf['date'].strftime('%d/%m/%Y %H:%M:%S')
                     notfs.append(notf)
             if notfs != []:
@@ -142,7 +142,7 @@ def get_new_notifications(request, loc_no):
         # print(lastNotif)
         newnotfs = []
         for notf in allnotfs:
-            if 'location' in notf and notf['location'] == locName:
+            if 'location' in notf and locName in notf['location']:
                 notf['date'] = notf['date'].strftime('%d/%m/%Y %H:%M:%S')
                 if notf['date'] != lastNotif:
                     ########### since ObjectId is not json serializable
@@ -169,9 +169,16 @@ def headquarters_dashboard(request):
 
     if( request.method == 'POST' ):
         if( request.POST['is_disaster'] == "disaster_wise" ):
+
+            id = request.POST['all_disasters']
+
+            db = client.main.disaster
+            disaster = list(db.find({ "id" : id }))[0]
+
             data = {
                 "is_disaster" :  1,
-                "name" : request.POST['disaster_names'],
+                "name" : disaster["name"],
+                "location" : disaster["location"],
                 "directed_to" : "people",
                 "directed_from" : "headquarters",
                 "message" : request.POST['message'],
@@ -199,12 +206,15 @@ def headquarters_dashboard(request):
     info = db.find({})
     data = list(info)
 
-    disaster_names = []
+    all_disasters = []
     location_names = []
     rescue_teams_names = {}
     active_disasters = []
     for data1 in data:
-        disaster_names.append(data1["name"])
+        all_disasters.append({
+            "name" : data1["name"],
+            "id" : data1["id"]
+        })
         if data1['isactive'] == 1:
             active_disasters.append(data1)
 
@@ -214,9 +224,9 @@ def headquarters_dashboard(request):
     for location in locations :
         location_names.append(location)
 
-    # print(active_disasters)
+    print(all_disasters)
     context = {
-        "disaster_names" : disaster_names ,
+        "all_disasters" : all_disasters ,
         "location_names": location_names ,
         "success" : success ,
         "rescue_teams_names" : rescue_teams_names,
@@ -235,7 +245,7 @@ def all_disasters(request):
     info = db.find({})
     data = list(info)
     data.reverse()
-    
+
     disasters_data = []
     for record in data:
         temp = {}

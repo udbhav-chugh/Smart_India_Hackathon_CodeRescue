@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.location.Location;
 import android.net.Uri;
@@ -240,53 +241,58 @@ public class PoiBrowserActivity extends FragmentActivity implements GoogleApiCli
 
         poi_browser_progress.setVisibility(View.VISIBLE);
 
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(getResources().getString(R.string.directions_base_url))
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        RetrofitInterface apiService =
-                retrofit.create(RetrofitInterface.class);
-
-        final Call<PlaceResponse> call = apiService.getPlaceDetail(placeid,
-                getResources().getString(R.string.google_maps_key));
-
-        call.enqueue(new Callback<PlaceResponse>() {
-            @Override
-            public void onResponse(Call<PlaceResponse> call, Response<PlaceResponse> response) {
+//        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+//        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+//        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+//
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(getResources().getString(R.string.directions_base_url))
+//                .client(client)
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//
+//        RetrofitInterface apiService =
+//                retrofit.create(RetrofitInterface.class);
+//
+//        final Call<PlaceResponse> call = apiService.getPlaceDetail(placeid,
+//                getResources().getString(R.string.google_maps_key));
+//
+//        call.enqueue(new Callback<PlaceResponse>() {
+//            @Override
+//            public void onResponse(Call<PlaceResponse> call, Response<PlaceResponse> response) {
 
                 seekbar_cardview.setVisibility(View.GONE);
                 poi_cardview.setVisibility(View.VISIBLE);
                 poi_browser_progress.setVisibility(View.GONE);
 
-                final com.example.coderescue.navar.network.place.Result result=response.body().getResult();
+//                final com.example.coderescue.navar.network.place.Result result=response.body().getResult();
 
-                poi_place_name.setText(result.getName());
-                poi_place_addr.setText(result.getFormattedAddress());
+                poi_place_name.setText("hello");
+                poi_place_addr.setText("new delhi");
+Log.d(TAG, placeid);
+//                try {
+//                    HttpUrl url = new HttpUrl.Builder()
+//                            .scheme("https")
+//                            .host("maps.googleapis.com")
+//                            .addPathSegments("maps/api/place/photo")
+//                            .addQueryParameter("maxwidth", "400")
+//                            .addQueryParameter("photoreference", result.getPhotos().get(0).getPhotoReference())
+//                            .addQueryParameter("key", getResources().getString(R.string.google_maps_key))
+//                            .build();
+//
+//                    new PoiPhotoAsync().execute(url.toString());
+//
+//                }catch (Exception e){
+//                    Log.d(TAG, "onResponse: "+e.getMessage());
+//                    Toast.makeText(PoiBrowserActivity.this, "No image available", Toast.LENGTH_SHORT).show();
+//                }
+            String[] arrOfStr = placeid.split("_");
+            String victimLatitude = arrOfStr[0];
+            String victimLongitude = arrOfStr[1];
+//            String victimLatitude = arrOfStr[0];
 
-                try {
-                    HttpUrl url = new HttpUrl.Builder()
-                            .scheme("https")
-                            .host("maps.googleapis.com")
-                            .addPathSegments("maps/api/place/photo")
-                            .addQueryParameter("maxwidth", "400")
-                            .addQueryParameter("photoreference", result.getPhotos().get(0).getPhotoReference())
-                            .addQueryParameter("key", getResources().getString(R.string.google_maps_key))
-                            .build();
 
-                    new PoiPhotoAsync().execute(url.toString());
-
-                }catch (Exception e){
-                    Log.d(TAG, "onResponse: "+e.getMessage());
-                    Toast.makeText(PoiBrowserActivity.this, "No image available", Toast.LENGTH_SHORT).show();
-                }
-
-                poi_place_maps_btn.setOnClickListener(new View.OnClickListener() {
+            poi_place_maps_btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent intent;
@@ -296,8 +302,8 @@ public class PoiBrowserActivity extends FragmentActivity implements GoogleApiCli
                                     .authority("maps.google.com")
                                     .appendPath("maps")
                                     .appendQueryParameter("saddr", mLastLocation.getLatitude()+","+mLastLocation.getLongitude())
-                                    .appendQueryParameter("daddr",result.getGeometry().getLocation().getLat()+","+
-                                                    result.getGeometry().getLocation().getLng());
+                                    .appendQueryParameter("daddr", Double.parseDouble( victimLatitude)+","+
+                                            Double.parseDouble(victimLongitude));
 
                             intent = new Intent(android.content.Intent.ACTION_VIEW,
                                     Uri.parse( builder.build().toString()));
@@ -317,11 +323,11 @@ public class PoiBrowserActivity extends FragmentActivity implements GoogleApiCli
 
                         try {
                             intent.putExtra("SRC", "Current Location");
-                            intent.putExtra("DEST",  result.getGeometry().getLocation().getLat()+","+
-                                    result.getGeometry().getLocation().getLng());
+                            intent.putExtra("DEST",  victimLatitude+","+
+                                    victimLongitude);
                             intent.putExtra("SRCLATLNG",  mLastLocation.getLatitude()+","+mLastLocation.getLongitude());
-                            intent.putExtra("DESTLATLNG", result.getGeometry().getLocation().getLat()+","+
-                                    result.getGeometry().getLocation().getLng());
+                            intent.putExtra("DESTLATLNG", victimLatitude+","+
+                                    victimLongitude);
                             startActivity(intent);
                             finish();
                         }catch (NullPointerException npe){
@@ -332,13 +338,13 @@ public class PoiBrowserActivity extends FragmentActivity implements GoogleApiCli
 
             }
 
-            @Override
-            public void onFailure(Call<PlaceResponse> call, Throwable t) {
-                poi_browser_progress.setVisibility(View.GONE);
-            }
-        });
-
-    }
+//            @Override
+//            public void onFailure(Call<PlaceResponse> call, Throwable t) {
+//                poi_browser_progress.setVisibility(View.GONE);
+//            }
+//        });
+//
+//    }
 
     public class PoiPhotoAsync extends AsyncTask<String,Void,Bitmap> {
 
@@ -376,63 +382,35 @@ public class PoiBrowserActivity extends FragmentActivity implements GoogleApiCli
         GeoObject geoObjects[]=new GeoObject[pois.size()];
 
         for(int i=0;i<pois.size();i++) {
-            GeoObject poiGeoObj=new GeoObject(1000*(i+1));
-            poiGeoObj = pois.get(i);
-//            poiGeoObj.setGeoPosition(pois.get(i).getGeometry().getLocation().getLat(),
-//                    pois.get(i).getGeometry().getLocation().getLng());
-            poiGeoObj.setName("Custom Name");
-            //poiGeoObj.setPlaceId(pois.get(0).getPlaceId());
-
-            //Bitmap bitmap=textAsBitmap(pois.get(i).getName(),30.0f,Color.WHITE);
-
+            GeoObject poiGeoObj = new GeoObject(1000 * (i + 1));
+//            poiGeoObj = pois.get(i);
+            poiGeoObj.setGeoPosition(pois.get(i).getLatitude(),
+                    pois.get(i).getLongitude());
+            poiGeoObj.setName( poiGeoObj.getLatitude() + "_" + poiGeoObj.getLongitude() + "_" + poiGeoObj.getId() );
+//
             Bitmap snapshot = null;
-            View view= getLayoutInflater().inflate(R.layout.poi_container,null);
-            TextView name= (TextView)view.findViewById(R.id.poi_container_name);
-            TextView dist= (TextView)view.findViewById(R.id.poi_container_dist);
-            ImageView icon=(ImageView)view.findViewById(R.id.poi_container_icon);
+            View view = getLayoutInflater().inflate(R.layout.poi_container, null);
+            TextView name = (TextView) view.findViewById(R.id.poi_container_name);
+            TextView dist = (TextView) view.findViewById(R.id.poi_container_dist);
+            ImageView icon = (ImageView) view.findViewById(R.id.poi_container_icon);
 
             name.setText(pois.get(i).getName());
-            String distance=String.valueOf((SphericalUtil.computeDistanceBetween(
-                    new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude()),
-                    new LatLng(pois.get(i).getLatitude() ,
-                            pois.get(i).getLongitude())))/1000);
-            String d=distance+" KM";
+            String distance = String.valueOf((SphericalUtil.computeDistanceBetween(
+                    new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()),
+                    new LatLng(pois.get(i).getLatitude(),
+                            pois.get(i).getLongitude()))) / 1000);
+            String d = distance + " KM";
             dist.setText(d);
 
-            String type=getResources().getString(R.string.logding);
-            Log.d(TAG, "Configure_AR: TYPE:"+type + "LODGING:"+R.string.logding);
-            if(type.equals(getResources().getString(R.string.restaurant))){
-                icon.setImageResource(R.drawable.food_fork_drink);
-            }else if(type.equals(getResources().getString(R.string.logding))){
-                icon.setImageResource(R.drawable.hotel);
-            }else if(type.equals(getResources().getString(R.string.atm))){
-                icon.setImageResource(R.drawable.cash_usd);
-            }else if(type.equals(getResources().getString(R.string.hosp))){
-                icon.setImageResource(R.drawable.hospital);
-            }else if(type.equals(getResources().getString(R.string.movie))){
-                icon.setImageResource(R.drawable.filmstrip);
-            }else if(type.equals(getResources().getString(R.string.cafe))){
-                icon.setImageResource(R.drawable.coffee);
-            }else if(type.equals(getResources().getString(R.string.bakery))){
+            String type = getResources().getString(R.string.restaurant);
+            if (type.equals(getResources().getString(R.string.restaurant))) {
                 icon.setImageResource(R.drawable.food);
-            }else if(type.equals(getResources().getString(R.string.mall))){
-                icon.setImageResource(R.drawable.shopping);
-            }else if(type.equals(getResources().getString(R.string.pharmacy))){
-                icon.setImageResource(R.drawable.pharmacy);
-            }else if(type.equals(getResources().getString(R.string.park))){
-                icon.setImageResource(R.drawable.pine_tree);
-            }else if(type.equals(getResources().getString(R.string.bus))){
-                icon.setImageResource(R.drawable.bus);
-            }else {
-                icon.setImageResource(R.drawable.map_icon);
             }
-
 
             view.setDrawingCacheEnabled(true);
             view.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
-
             try {
-              //  Paint paint = new Paint(ANTI_ALIAS_FLAG);
+                //  Paint paint = new Paint(ANTI_ALIAS_FLAG);
 //                paint.setTextSize(textSize);
 //                paint.setColor(textColor);
                 //paint.setTextAlign(Paint.Align.LEFT);
@@ -446,27 +424,29 @@ public class PoiBrowserActivity extends FragmentActivity implements GoogleApiCli
                 Canvas canvas = new Canvas(snapshot);
                 view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
                 view.draw(canvas);
+                Thread.sleep(100);
+
                 //canvas.drawBitmap(snapshot);
                 //snapshot = Bitmap.createBitmap(view.getDrawingCache(),10,10,200,100); // You can tell how to crop the snapshot and whatever in this method
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             } finally {
                 view.setDrawingCacheEnabled(false);
             }
 
-
-            String uri=saveToInternalStorage(snapshot,pois.get(i).getId()+".png");
-
+            String uri = saveToInternalStorage(snapshot, pois.get(i).getId() + ".png");
             //icon.setImageURI(Uri.parse(uri));
             poiGeoObj.setImageUri(uri);
-
             world.addBeyondarObject(poiGeoObj);
+            Log.d(TAG, "hello honey bunny " + i + " " + poiGeoObj.getId());
+
         }
 
         textView.setVisibility(View.INVISIBLE);
 
         // ... and send it to the fragment
         arFragmentSupport.setWorld(world);
-
-    }
+ }
 
     private String saveToInternalStorage(Bitmap bitmapImage,String name){
         ContextWrapper cw = new ContextWrapper(getApplicationContext());

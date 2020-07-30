@@ -107,7 +107,7 @@ public class BeyondARWorld {
                                 go.setGeoPosition( 0+latvic , 0+longivic);
 //                                go.setGeoPosition( 21.32 , longivic);
                                 go.setImageUri("https://d2c7ipcroan06u.cloudfront.net/wp-content/uploads/2020/05/tanmay-bhat-2-edited-696x392.jpg");
-                                go.setName("Online image");
+                                go.setName("Help");
 //                                listVictims.add(go2);
                                 listVictims.add(go);
                                 Log.d("Correct", "latlong -> " + latvic +" " + longivic);

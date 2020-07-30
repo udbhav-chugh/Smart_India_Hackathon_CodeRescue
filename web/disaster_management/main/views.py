@@ -40,7 +40,7 @@ def index(request , latitude='' , longitude=''):
     db = client.main.disaster
     print("HELLO Main Dashboard")
 
-    info = db.find({})
+    info = db.find({'isactive': 1})
     temp_data = list(info)
 
     data = {}
@@ -427,3 +427,11 @@ def add_rescue_team(request):
             return HttpResponseRedirect(reverse('main:headquarters_dashboard'))
         else:
             return HttpResponseRedirect(reverse('main:add_rescue_team'))
+
+def headquartersLogout(request):
+    # print("gello")
+    # print(request.session.get('isHeadquartersLoggedIn' , None))
+    # print("gello")
+    if request.session.get('isHeadquartersLoggedIn' , None) == 1 :
+        del request.session['isHeadquartersLoggedIn']
+    return HttpResponseRedirect(reverse('main:index'))

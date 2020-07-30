@@ -17,6 +17,9 @@ def index (request):
     print("Success")
 
 def login (request):
+    print(request.session.get('isHeadquartersLoggedIn' , None))
+    if request.session.get('isHeadquartersLoggedIn' , None) == 1 :
+        return redirect( 'main:headquarters_dashboard' )
 
     if( request.method == 'POST' ):
 
@@ -28,6 +31,7 @@ def login (request):
         count_authorities = db.count_documents({ 'username' :request.POST['username'] , 'password' : request.POST['password']  })
         print(count_authorities)
         if count_authorities == 1:
+            request.session['isHeadquartersLoggedIn'] = 1
             return redirect( 'main:headquarters_dashboard' )
 
         # if rescue team is trying to log in

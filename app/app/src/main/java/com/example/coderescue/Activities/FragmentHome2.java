@@ -11,6 +11,9 @@ import android.widget.LinearLayout;
 
 import com.example.coderescue.Adapters.SectionsPagerAdapter;
 import com.example.coderescue.Fragments.HomeFragment;
+import com.example.coderescue.Fragments.RescueTeamLoginFragment;
+import com.example.coderescue.Fragments.UpdateInfoFragment;
+import com.example.coderescue.Fragments.VictimHomeFragment;
 import com.example.coderescue.R;
 
 import java.util.ArrayList;
@@ -96,9 +99,9 @@ public class FragmentHome2 extends AppCompatActivity {
 
     private List<Fragment> getFragments() {
         List<Fragment> fragments = new ArrayList<Fragment>();
-        fragments.add(new HomeFragment());
-        fragments.add(new HomeFragment());
-        fragments.add(new HomeFragment());
+        fragments.add(new VictimHomeFragment());
+        fragments.add(new RescueTeamLoginFragment());
+        fragments.add(new UpdateInfoFragment());
         fragments.add(new HomeFragment());
         return fragments;
     }

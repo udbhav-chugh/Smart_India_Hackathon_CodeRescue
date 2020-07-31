@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:screenOrientation="portrait"
-    tools:context=".Activities.RescueTeamLoginActivity">
+    tools:context=".Fragments.RescueTeamLoginFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -137,7 +137,6 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/password_container"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    android:onClick="loginaction"
                     app:neumorph_shapeType="flat"
                     android:layout_marginTop="50dp"
                     app:neumorph_backgroundColor="@color/neumorph_background"

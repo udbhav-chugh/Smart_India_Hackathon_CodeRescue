@@ -59,6 +59,7 @@ public class HomeFragment extends Fragment {
         button_voice = root.findViewById(R.id.voiceBtn);
         button_send_msg = root.findViewById(R.id.button_send_msg);
 
+        //added
         button_helper.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,6 +81,8 @@ public class HomeFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        //futile
         button_dashboard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,6 +90,8 @@ public class HomeFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        //added
         button_update_info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

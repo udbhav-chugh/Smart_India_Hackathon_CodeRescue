@@ -34,6 +34,7 @@ import com.example.coderescue.Fragments.HomeFragment;
 import com.example.coderescue.VictimLocationAdapter;
 import com.example.coderescue.VictimLocationCardModel;
 import com.example.coderescue.R;
+import com.example.coderescue.navar.PoiBrowserActivity;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
@@ -78,6 +79,7 @@ public class RescueTeamDashboard extends AppCompatActivity {
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
     private static final int REQUEST_CODE_SPEECH_INPUT = 1000;
     public static String state;
+    soup.neumorphism.NeumorphButton button_ar_map, button_ar_camera;
 
 
     @Override
@@ -85,6 +87,8 @@ public class RescueTeamDashboard extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rescue_team_dashboard);
         speak_msg = findViewById(R.id.voiceBtn3);
+        button_ar_map = findViewById(R.id.button_ar_map);
+        button_ar_camera = findViewById(R.id.button_ar_camera);
         flag=0;
 
         // Get the Intent that started this activity and extract the string
@@ -105,6 +109,20 @@ public class RescueTeamDashboard extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 speak();
+            }
+        });
+        button_ar_map.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RescueTeamDashboard.this, GoogleMapActivity.class);
+                startActivity(intent);
+            }
+        });
+        button_ar_camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RescueTeamDashboard.this, PoiBrowserActivity.class);
+                startActivity(intent);
             }
         });
     }

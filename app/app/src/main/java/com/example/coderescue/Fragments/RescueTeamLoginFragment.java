@@ -81,8 +81,8 @@ public class RescueTeamLoginFragment extends Fragment {
 
     public void loginAction() {
         Intent intent = new Intent(getActivity(), RescueTeamDashboard.class);
-        submit.setShapeType(ShapeType.PRESSED);
-        submit.setEnabled(false);
+//        submit.setShapeType(ShapeType.PRESSED);
+//        submit.setEnabled(false);
 
         String user = username.getText().toString();
         String pswd = password.getText().toString();

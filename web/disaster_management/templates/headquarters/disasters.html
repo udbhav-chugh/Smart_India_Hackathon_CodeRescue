@@ -51,7 +51,7 @@ input[type=text]:focus {
 }
 
 .disasters {
-  display: list-item;
+  display: table-row;
 }
 
 .navbar {
@@ -126,31 +126,35 @@ input[type=text]:focus {
                         <div>
                             <hr>
                             <div class="col-6 align-left">
-                                <a href="{% url 'main:add_disaster' %}" class="btn btn-primary">Add Disaster</a><br>
+                                <!-- <a href="{% url 'main:add_disaster' %}" class="btn btn-primary">Add Disaster</a><br> -->
                                 <i id="search-icon" class="fas fa-search"></i>
                                 <input id="searchbar" onkeyup="search_disaster()" type="text" name="search" placeholder="Search disasters..">
                                 <br><br>
                             </div>
+                            <div id="replaceable-content">
 
-                            <div id="replaceable-content" class="col-6">
-                                <ul id='list'>
+                            <table class="table table-striped">
+                              <thead>
+                                <tr class = "table-warning">
+                                  <th scope="col">Disaster Name</th>
+                                  <th scope="col">States Affected</th>
+                                  <th scope="col">ACTIVE STATUS</th>
+                                </tr>
+                              </thead>
+                              <tbody>
                                 {% for disaster in disasters_data %}
-                                    <li class="disasters">
-                                    <h4>
-                                        <label for="{{ disaster.id }}"> {{ disaster.name }}</label>
-                                        <input type="checkbox" class = "disasterClass" id="{{ disaster.id }}" name="{{ disaster.id }}"
-                                        value="{{ disaster.id }}" {% if disaster.isactive == 1 %} checked {% endif %}>
-                                    </h4>
-                                    <b>Locations:</b>
-                                    <p>
-                                    {% for loc in disaster.location %}
+                                    <tr class="disasters">
+                                      <td><label for="{{ disaster.id }}"> {{ disaster.name }}</label></td>
+                                      <td>{% for loc in disaster.location %}
                                         {{loc}},
-                                    {% endfor %}
-                                    </p>
-                                    <hr>
-                                    </li>
+                                    {% endfor %}</td>
+                                      <td><input type="checkbox" class = "disasterClass" id="{{ disaster.id }}" name="{{ disaster.id }}"
+                                        value="{{ disaster.id }}" {% if disaster.isactive == 1 %} checked {% endif %}></td>
+                                    </tr>
                                 {% endfor%}
-                                </ul>
+                              </tbody>
+                            </table>
+
                             </div>
                         </div>
                     </div>
@@ -197,9 +201,9 @@ function search_disaster() {
 
     for (i = 0; i < x.length; i++) {
         let disaster_name = x[i].children[0].children[0].innerHTML.toLowerCase();
-        let disaster_locs = x[i].children[2].innerHTML.toLowerCase();
+        let disaster_locs = x[i].children[1].innerHTML.toLowerCase();
         if (disaster_name.includes(input) || disaster_locs.includes(input)) {
-            x[i].style.display = "list-item";
+            x[i].style.display = "table-row";
         }
         else {
             x[i].style.display = "none";

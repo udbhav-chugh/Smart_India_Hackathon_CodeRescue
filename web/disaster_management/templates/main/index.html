@@ -31,6 +31,17 @@
     border: 2px solid #212529;
     border-radius: 10px;
   }
+  #peopleAffected{
+    width: 80% !important;
+    margin:auto;
+    margin-top:5%;
+  }
+  #peopleKilled{
+    width: 80% !important;
+    margin:auto;
+    margin-top:5%;
+
+  }
   .modal-dialog{
     min-width:1000px;
     /* background-color: yellow; */
@@ -62,17 +73,33 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
+        {% if nearest_safe_house.latitude != 'undefined' %}
         <h5 class="modal-title" id="exampleModalLabel">Nearest Safe House from your location</h5>
+        {% else %}
+        <h5 class="modal-title" id="exampleModalLabel">Note</h5>
+        {%endif%}
+        
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
+        {% if nearest_safe_house.latitude != 'undefined' %}
         <div  style="width:100%; height:500px" id="nearestSafeHouseMap"></div>
+        {% else %}
+        <h4 class="jumbotron"> Sorry, no safe houses found near your location</h4>
+        {%endif%}
       </div>
+      {% if nearest_safe_house.latitude != 'undefined' %}
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close Directions</button>
       </div>
+      {% else %}
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+      {%endif%}
+
     </div>
   </div>
 </div>
@@ -174,7 +201,7 @@
           L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
               attribution: '© OpenStreetMap contributors'
           }).addTo(map);
-          {% if nearest_safe_house %}
+          {% if nearest_safe_house  and nearest_safe_house.latitude != 'undefined' %}
           console.log(positionUser.latitude + " ## " +positionUser.longitude);
           console.log({{nearest_safe_house.latitude}} + " %% "+   {{nearest_safe_house.longitude}});
           L.Routing.control({
@@ -337,6 +364,10 @@
           title: 'No of people affected by  ' + disaster_data[disaster_name]["name"],
           subtitle: 'Day Wise'
         },
+        series:{
+          0: { color: '#43459d' },
+        },
+
         width: 800,
         height: 500,
         axes: {
@@ -376,7 +407,9 @@
       console.log(data_for_chart);
       var options = {
         legend:{position:'none'},
-
+        series:{
+          0: { color: '#e2431e' },
+        },
         chart: {
           title: 'No of people who lost their lives by  ' + disaster_data[disaster_name]["name"],
           subtitle: 'Day Wise'
@@ -459,7 +492,7 @@
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
-    {% if nearest_safe_house %}
+    {% if nearest_safe_house and nearest_safe_house.latitude != 'undefined'  %}
     console.log(positionUser.latitude + " ## " +positionUser.longitude);
     console.log({{nearest_safe_house.latitude}} + " %% "+   {{nearest_safe_house.longitude}});
     L.Routing.control({

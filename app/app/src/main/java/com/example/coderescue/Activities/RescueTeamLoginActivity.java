@@ -1,20 +1,15 @@
 package com.example.coderescue.Activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputType;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.Switch;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.coderescue.Fragments.HomeFragment;
 import com.example.coderescue.R;
@@ -31,7 +26,6 @@ import java.util.List;
 
 import soup.neumorphism.ShapeType;
 
-import static android.provider.AlarmClock.EXTRA_MESSAGE;
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 

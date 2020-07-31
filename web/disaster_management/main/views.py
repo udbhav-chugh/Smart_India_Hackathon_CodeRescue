@@ -123,7 +123,8 @@ def notifications(request, loc_no):
         request.session['lastNotification'] = notfs[0]['date']
     context = {
         'notifications' : notfs,
-        'notfLocIndex' : loc_no
+        'notfLocIndex' : loc_no,
+        'notfLocationName' : locations[loc_no]
     }
 
     if request.session.get('isHeadquartersLoggedIn' , None) == 1 :

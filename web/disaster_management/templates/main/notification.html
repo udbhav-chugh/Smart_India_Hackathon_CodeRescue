@@ -10,28 +10,53 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js" type="text/javascript"></script>
 {% endblock %}
+{% block css %}
+<style>
+    .card{
+        margin: auto;
+        margin-bottom:3%;
+        margin-top:3%;
+    }
+</style>
+{% endblock %}
 {% block content %}
-
+<!-- <div class="card text-white bg-dark mb-3" style="width: 80%;"> -->
 <div class="container">
-    <ul id = "notf_list">
+    <div id = "notf_list">
         {% if not notifications %}
             <h4>No notifications</h4>
         {% else %}
             {% for x in notifications %}
-                <li><h4>{{ x }}</h4></li>
+                {% if forloop.counter|divisibleby:2  == 0 %}
+                    <div class="card text-white bg-dark mb-3" style="width: 80%;">
+                {% else %}    
+                    <div class="card bg-light mb-3" style="width: 80%;">
+                {% endif %}
+                    <div class="card-header">
+                        {% if x.name %}
+                            Notification for <b>{{x.name}}</b>
+                        {% else %}
+                            Notification for <b>{{notfLocationName}}</b>
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                      <h5 class="card-title">{{x.message}}</h5>
+                      <p class="card-text">{{x.date}}</p>
+                    </div>
+                  </div>
             {% endfor %}
             <script>
                 lastNotification = "{{ notifications.0.date }}";
             </script>
         
         {% endif %}
-    </ul>
+        </div>
 </div>
 {% endblock %}
 
 {% block javascript %}
 <script>
-
+var flagForBackgroundColor = 1;
 // Global variable to store time-date of last notification displayed
 setInterval(function () {
         console.log('Called new notifications at : ' + new Date());
@@ -63,20 +88,37 @@ setInterval(function () {
 
                     console.log(jsDate);
 
+                    var htmlToPrepend = '';
+                    if( newDate > constantDate && flagForBackgroundColor == 1  ){
+                        htmlToPrepend += '<div class="card bg-light mb-3" style="width: 80%;">';
+                        flagForBackgroundColor=0;
+                    }
+                    
+                    else if( newDate > constantDate && flagForBackgroundColor == 0  ){
+                        htmlToPrepend += '<div class="card text-white bg-dark mb-3" style="width: 80%;">';
+                        flagForBackgroundColor=1;
+                    }
 
+                    htmlToPrepend += '<div class="card-header">Notification for <b>';
+                    if( newnotfs[notf].name ){
+                        htmlToPrepend += newnotfs[notf].name;
+                    }
+                    else{
+                        htmlToPrepend += '{{notfLocationName}}';
+                    }
 
+                    htmlToPrepend += '</b><span style="float:right;width:70px;"> <img style="width:25px;height:25px;" src="https://freeiconshop.com/wp-content/uploads/edd/notification-flat.png"/> NEW</span></div><div class="card-body"><h5 class="card-title">';
+                    htmlToPrepend+= newnotfs[notf].message+
+                        '</h5><p class="card-text">'+newnotfs[notf].date+'</p></div></div>';
                     if( newDate > constantDate ) {
-                        $('#notf_list').prepend(
-                            '<li><h4>'+ JSON.stringify(newnotfs[notf]) +'</h4></li>'
-                        )
+                        $('#notf_list').prepend(htmlToPrepend);
                         lastNotification = newnotfs[notf]['date'];
                     }
+
                 }
             },
             error: function (response) {
                 console.log("dsadsadsaasdsadsadsadasads!@!@!@!@!@!!@!@!");
-
-                //console.log(response)
             }
         })
     },10000);

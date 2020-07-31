@@ -86,6 +86,7 @@ def index(request , latitude='' , longitude=''):
 def getUserLocation(request):
     if request.method == 'POST':
         locName = request.POST.get('location')
+        print("yo" + locName)
         # location = location.tolower()
         if locName in locations:
             request.session['locationName'] = locName
@@ -126,20 +127,20 @@ def notifications(request, loc_no):
 
 def get_new_notifications(request, loc_no):
     if request.is_ajax and request.method == "GET":
-        lastNotif = request.session['lastNotification']
-        if(lastNotif == ''):
+        if 'lastNotification' not in request.session:
             client = connect()
             db = client.main.notification
             data = db.find().sort("date", pymongo.DESCENDING)
             allnotfs = list(data)
             notfs = []
             for notf in allnotfs:
-                if 'location' in notf and notfLocation in notf['location']:
+                if 'location' in notf and locations[loc_no] in notf['location']:
                     notf['date'] = notf['date'].strftime('%d/%m/%Y %H:%M:%S')
                     notfs.append(notf)
             if notfs != []:
                 request.session['lastNotification'] = notfs[0]['date']
 
+        lastNotif = request.session['lastNotification']
         locName = locations[loc_no]
         client = connect()
         db = client.main.notification

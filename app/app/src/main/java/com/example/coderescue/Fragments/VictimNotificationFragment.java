@@ -75,8 +75,8 @@ public class VictimNotificationFragment extends Fragment {
         }
 
         mRecylcerView=root.findViewById(R.id.recylcerView);
-        c = getContext();
-        mRecylcerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        c = getActivity();
+        mRecylcerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         return root;
     }
@@ -89,7 +89,7 @@ public class VictimNotificationFragment extends Fragment {
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 getCurrentLocation();
             }else {
-                Toast.makeText(getContext(), "Permission Denied", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Permission Denied", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -122,7 +122,7 @@ public class VictimNotificationFragment extends Fragment {
                             double latitude = locationResult.getLocations().get(latestLocationIndex).getLatitude();
                             double longitude = locationResult.getLocations().get(latestLocationIndex).getLongitude();
 
-                            Geocoder gcd = new Geocoder(getContext(),
+                            Geocoder gcd = new Geocoder(getActivity(),
                                     Locale.getDefault());
                             List<Address> addresses;
                             try {

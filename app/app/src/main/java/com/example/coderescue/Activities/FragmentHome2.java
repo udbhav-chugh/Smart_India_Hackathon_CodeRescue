@@ -1,5 +1,6 @@
 package com.example.coderescue.Activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
@@ -10,14 +11,21 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.example.coderescue.Adapters.SectionsPagerAdapter;
-import com.example.coderescue.Fragments.HomeFragment;
 import com.example.coderescue.Fragments.RescueTeamLoginFragment;
 import com.example.coderescue.Fragments.UpdateInfoFragment;
 import com.example.coderescue.Fragments.VictimHomeFragment;
+import com.example.coderescue.Fragments.VictimNotificationFragment;
 import com.example.coderescue.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.mongodb.stitch.android.core.Stitch;
+import com.mongodb.stitch.android.core.StitchAppClient;
+import com.mongodb.stitch.android.core.auth.StitchUser;
+import com.mongodb.stitch.core.auth.providers.userpassword.UserPasswordCredential;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class FragmentHome2 extends AppCompatActivity {
 
@@ -25,6 +33,7 @@ public class FragmentHome2 extends AppCompatActivity {
     soup.neumorphism.NeumorphCardView tile_victim, tile_rescue, tile_third, tile_notif;
     LinearLayout normal_victim, normal_rescue, normal_third, normal_notif;
     int totalFragments = 0;
+    public static StitchAppClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +64,7 @@ public class FragmentHome2 extends AppCompatActivity {
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(), fragments);
         viewPager.setAdapter(sectionsPagerAdapter);
         viewPager.setCurrentItem(3);
+        enableAnonymousAuth();
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -102,7 +112,8 @@ public class FragmentHome2 extends AppCompatActivity {
         fragments.add(new VictimHomeFragment());
         fragments.add(new RescueTeamLoginFragment());
         fragments.add(new UpdateInfoFragment());
-        fragments.add(new HomeFragment());
+        fragments.add(new VictimNotificationFragment());
+//        fragments.add(new HomeFragment());
         return fragments;
     }
 
@@ -145,5 +156,27 @@ public class FragmentHome2 extends AppCompatActivity {
 
         tile_notif.setVisibility(View.INVISIBLE);
         normal_notif.setVisibility(View.VISIBLE);
+    }
+
+    private void enableAnonymousAuth(){
+        client = Stitch.getDefaultAppClient();
+        UserPasswordCredential credential = new UserPasswordCredential("coderescue2020@gmail.com", "sih@2020");
+        client.getAuth().loginWithCredential(credential).addOnCompleteListener(
+                new OnCompleteListener<StitchUser>() {
+                    @Override
+                    public void onComplete(@NonNull final Task<StitchUser> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("myApp", String.format(
+                                    "logged in as user %s with provider %s",
+                                    task.getResult().getId(),
+                                    task.getResult().getLoggedInProviderType()));
+                            System.out.println("lol login");
+
+                        } else {
+                            Log.e("myApp", "failed to log in", task.getException());
+                            System.out.println("nhi hua login");
+                        }
+                    }
+                });
     }
 }

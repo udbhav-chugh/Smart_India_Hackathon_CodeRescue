@@ -40,7 +40,7 @@
 
   window.onload = function(){
     document.getElementById("location_wise_names").style.display = "none";
-    document.getElementById("disaster_wise_names").style.display = "none";
+    document.getElementById("disaster_wise_names").style.display = "block";
     document.getElementById("success").style.visibility = 'hidden'; 
     document.getElementById("success").click();
   }
@@ -114,10 +114,10 @@
                         <form method="POST" action="{% url 'main:send_notification' %}">
                             {% csrf_token %}
 
-                            <input type="radio" id="disaster_wise" name="is_disaster" value="disaster_wise" onclick="hideLocations()">
+                            <input type="radio" checked id="disaster_wise" name="is_disaster" value="disaster_wise" onclick="hideLocations()">
                             <label for="disaster_wise">Disaster Wise</label><br>
                             <input type="radio" id="location_wise" name="is_disaster" value="location_wise" onclick="hideDisasters()">
-                            <label for="female">Location Wise</label><br>
+                            <label for="location_wise">Location Wise</label><br>
 
                         <div id="disaster_wise_names">
                             <label for="active_disasters">Disaster Name: </label><br>
@@ -142,7 +142,7 @@
 
 
                         <label for="message">Message To Send:</label><br>
-                        <input type="text" id="message" name= "message" value="message"><br><br>
+                        <input type="text" id="message" placeholder="Type your message" name= "message" ><br><br>
 
                         <input type="submit" value="Submit">
                         </form>
@@ -156,7 +156,10 @@
 			</main>
 		</div>
 	</div>
-
 	<script src="{% static 'main/js/app.js' %}"></script>
-
+    <script>
+        if ( window.history.replaceState ) {
+            window.history.replaceState( null, null, window.location.href );
+        }
+    </script>
 {% endblock %}

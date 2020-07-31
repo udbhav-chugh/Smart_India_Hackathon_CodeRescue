@@ -109,7 +109,7 @@
     All disasters
   </button>
   <div class="dropdown-menu" aria-labelledby="dropdownMenuMenu">
-    <button class="dropdown-item" value="All disasters" id="disaster_name_button" onclick="dropdownButtonClicked('all_disasters','all_disasters')" type="button"></button>
+    <button class="dropdown-item" value="All disasters" id="disaster_name_button" onclick="dropdownButtonClicked('all_disasters','all_disasters')" type="button">All disasters</button>
 
     {% for data_key , data_values in data.items %}
       <button class="dropdown-item" onclick="dropdownButtonClicked('{{data_values.id}}','{{data_key}}')" type="button">{{data_key}}</button>

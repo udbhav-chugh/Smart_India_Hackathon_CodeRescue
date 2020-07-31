@@ -77,6 +77,10 @@ def index(request , latitude='' , longitude=''):
                 'longitude': listSafeHousesInUserLocation[destinationIndex]['longitude']
             }
             print(context['nearest_safe_house'])
+
+    if request.session.get('isHeadquartersLoggedIn' , None) == 1 :
+        context['isHeadquartersLoggedIn']=1
+        
     return render(request , 'main/index.html' , context)
 
 def getUserLocation(request):
@@ -114,6 +118,10 @@ def notifications(request, loc_no):
         'notifications' : notfs,
         'notfLocIndex' : loc_no
     }
+
+    if request.session.get('isHeadquartersLoggedIn' , None) == 1 :
+        context['isHeadquartersLoggedIn']=1
+        
     return render(request , 'main/notification.html' , context)
 
 def get_new_notifications(request, loc_no):
@@ -233,6 +241,9 @@ def headquarters_dashboard(request):
         "active_disasters" : active_disasters
     }
 
+    if request.session.get('isHeadquartersLoggedIn' , None) == 1 :
+        context['isHeadquartersLoggedIn']=1
+        
     return render( request , 'headquarters/dashboard.html' , context )
 
 def rescue_team_dashboard(request):
@@ -258,6 +269,10 @@ def all_disasters(request):
     context = {
         'disasters_data' : disasters_data
     }
+
+    if request.session.get('isHeadquartersLoggedIn' , None) == 1 :
+        context['isHeadquartersLoggedIn']=1
+        
     return render(request, 'headquarters/disasters.html', context)
 
 def change_active_status(request):
@@ -354,6 +369,10 @@ def update_statistics(request, disaster_id):
             "total_stats" : total_stats,
             "daily_stats" : daily_stats
         }
+
+        if request.session.get('isHeadquartersLoggedIn' , None) == 1 :
+            context['isHeadquartersLoggedIn']=1
+        
         return render(request, 'headquarters/update_statistics.html', context)
 
     elif request.method == "POST":
@@ -410,6 +429,9 @@ def add_rescue_team(request):
             "all_disasters" : all_disasters
         }
 
+        if request.session.get('isHeadquartersLoggedIn' , None) == 1 :
+            context['isHeadquartersLoggedIn']=1
+            
         return render(request, 'headquarters/add_rescue_team.html', context)
 
     elif request.method == "POST":
@@ -435,3 +457,5 @@ def headquartersLogout(request):
     if request.session.get('isHeadquartersLoggedIn' , None) == 1 :
         del request.session['isHeadquartersLoggedIn']
     return HttpResponseRedirect(reverse('main:index'))
+
+

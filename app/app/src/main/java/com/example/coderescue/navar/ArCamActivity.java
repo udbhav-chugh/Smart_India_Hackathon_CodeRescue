@@ -107,6 +107,8 @@ public class ArCamActivity extends FragmentActivity implements GoogleApiClient.C
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ar_camera);
+        ButterKnife.bind(this);
+
         cardVisibility.setVisibility(View.GONE);
 
         TextView change_visibility = (TextView) findViewById(R.id.ar_visibility);
@@ -139,8 +141,6 @@ public class ArCamActivity extends FragmentActivity implements GoogleApiClient.C
                 }
             }
         });
-
-        ButterKnife.bind(this);
 
         Set_googleApiClient(); //Sets the GoogleApiClient
 

@@ -40,7 +40,7 @@ def index(request , latitude='' , longitude=''):
     db = client.main.disaster
     print("HELLO Main Dashboard")
 
-    info = db.find({})
+    info = db.find({'isactive': 1})
     temp_data = list(info)
 
     data = {}
@@ -77,11 +77,16 @@ def index(request , latitude='' , longitude=''):
                 'longitude': listSafeHousesInUserLocation[destinationIndex]['longitude']
             }
             print(context['nearest_safe_house'])
+
+    if request.session.get('isHeadquartersLoggedIn' , None) == 1 :
+        context['isHeadquartersLoggedIn']=1
+        
     return render(request , 'main/index.html' , context)
 
 def getUserLocation(request):
     if request.method == 'POST':
         locName = request.POST.get('location')
+        print("yo" + locName)
         # location = location.tolower()
         if locName in locations:
             request.session['locationName'] = locName
@@ -103,7 +108,7 @@ def notifications(request, loc_no):
     # or may be not
     notfs = []
     for notf in allnotfs:
-        if 'location' in notf and notf['location'] == notfLocation:
+        if 'location' in notf and notfLocation in notf['location']:
             notf['date'] = notf['date'].strftime('%d/%m/%Y %H:%M:%S')
             # date_time_obj = datetime. strptime(date_time_str, '%d/%m/%y %H:%M:%S')
             notfs.append(notf)
@@ -114,24 +119,28 @@ def notifications(request, loc_no):
         'notifications' : notfs,
         'notfLocIndex' : loc_no
     }
+
+    if request.session.get('isHeadquartersLoggedIn' , None) == 1 :
+        context['isHeadquartersLoggedIn']=1
+        
     return render(request , 'main/notification.html' , context)
 
 def get_new_notifications(request, loc_no):
     if request.is_ajax and request.method == "GET":
-        lastNotif = request.session['lastNotification']
-        if(lastNotif == ''):
+        if 'lastNotification' not in request.session:
             client = connect()
             db = client.main.notification
             data = db.find().sort("date", pymongo.DESCENDING)
             allnotfs = list(data)
             notfs = []
             for notf in allnotfs:
-                if 'location' in notf and notf['location'] == notfLocation:
+                if 'location' in notf and locations[loc_no] in notf['location']:
                     notf['date'] = notf['date'].strftime('%d/%m/%Y %H:%M:%S')
                     notfs.append(notf)
             if notfs != []:
                 request.session['lastNotification'] = notfs[0]['date']
 
+        lastNotif = request.session['lastNotification']
         locName = locations[loc_no]
         client = connect()
         db = client.main.notification
@@ -142,7 +151,7 @@ def get_new_notifications(request, loc_no):
         # print(lastNotif)
         newnotfs = []
         for notf in allnotfs:
-            if 'location' in notf and notf['location'] == locName:
+            if 'location' in notf and locName in notf['location']:
                 notf['date'] = notf['date'].strftime('%d/%m/%Y %H:%M:%S')
                 if notf['date'] != lastNotif:
                     ########### since ObjectId is not json serializable
@@ -169,9 +178,16 @@ def headquarters_dashboard(request):
 
     if( request.method == 'POST' ):
         if( request.POST['is_disaster'] == "disaster_wise" ):
+
+            id = request.POST['all_disasters']
+
+            db = client.main.disaster
+            disaster = list(db.find({ "id" : id }))[0]
+
             data = {
                 "is_disaster" :  1,
-                "name" : request.POST['disaster_names'],
+                "name" : disaster["name"],
+                "location" : disaster["location"],
                 "directed_to" : "people",
                 "directed_from" : "headquarters",
                 "message" : request.POST['message'],
@@ -199,12 +215,15 @@ def headquarters_dashboard(request):
     info = db.find({})
     data = list(info)
 
-    disaster_names = []
+    all_disasters = []
     location_names = []
     rescue_teams_names = {}
     active_disasters = []
     for data1 in data:
-        disaster_names.append(data1["name"])
+        all_disasters.append({
+            "name" : data1["name"],
+            "id" : data1["id"]
+        })
         if data1['isactive'] == 1:
             active_disasters.append(data1)
 
@@ -214,15 +233,18 @@ def headquarters_dashboard(request):
     for location in locations :
         location_names.append(location)
 
-    # print(active_disasters)
+    print(all_disasters)
     context = {
-        "disaster_names" : disaster_names ,
+        "all_disasters" : all_disasters ,
         "location_names": location_names ,
         "success" : success ,
         "rescue_teams_names" : rescue_teams_names,
         "active_disasters" : active_disasters
     }
 
+    if request.session.get('isHeadquartersLoggedIn' , None) == 1 :
+        context['isHeadquartersLoggedIn']=1
+        
     return render( request , 'headquarters/dashboard.html' , context )
 
 def rescue_team_dashboard(request):
@@ -235,7 +257,7 @@ def all_disasters(request):
     info = db.find({})
     data = list(info)
     data.reverse()
-    
+
     disasters_data = []
     for record in data:
         temp = {}
@@ -248,6 +270,10 @@ def all_disasters(request):
     context = {
         'disasters_data' : disasters_data
     }
+
+    if request.session.get('isHeadquartersLoggedIn' , None) == 1 :
+        context['isHeadquartersLoggedIn']=1
+        
     return render(request, 'headquarters/disasters.html', context)
 
 def change_active_status(request):
@@ -344,6 +370,10 @@ def update_statistics(request, disaster_id):
             "total_stats" : total_stats,
             "daily_stats" : daily_stats
         }
+
+        if request.session.get('isHeadquartersLoggedIn' , None) == 1 :
+            context['isHeadquartersLoggedIn']=1
+        
         return render(request, 'headquarters/update_statistics.html', context)
 
     elif request.method == "POST":
@@ -381,3 +411,52 @@ def update_statistics(request, disaster_id):
         )
 
         return HttpResponseRedirect(reverse('main:headquarters_dashboard'))
+
+def add_rescue_team(request):
+    if request.method == "GET":
+        client = connect()
+        db = client.main.disaster
+        info = db.find({})
+        data = list(info)
+
+        all_disasters = []
+        for data1 in data:
+            all_disasters.append({
+                "name" : data1["name"],
+                "id" : data1["id"]
+            })
+
+        context = {
+            "all_disasters" : all_disasters
+        }
+
+        if request.session.get('isHeadquartersLoggedIn' , None) == 1 :
+            context['isHeadquartersLoggedIn']=1
+            
+        return render(request, 'headquarters/add_rescue_team.html', context)
+
+    elif request.method == "POST":
+        client = connect()
+        db = client.authorization.rescue_team
+
+        if request.POST['rescuePassword'] == request.POST['rescueConfirmPassword']:
+            data = {
+                "username" : request.POST['rescueUsername'],
+                "password" : request.POST['rescuePassword'],
+                "disaster_id" : request.POST['selectedDisaster']
+            }
+            # print(data)
+            db.insert_one(data)
+            return HttpResponseRedirect(reverse('main:headquarters_dashboard'))
+        else:
+            return HttpResponseRedirect(reverse('main:add_rescue_team'))
+
+def headquartersLogout(request):
+    # print("gello")
+    # print(request.session.get('isHeadquartersLoggedIn' , None))
+    # print("gello")
+    if request.session.get('isHeadquartersLoggedIn' , None) == 1 :
+        del request.session['isHeadquartersLoggedIn']
+    return HttpResponseRedirect(reverse('main:index'))
+
+

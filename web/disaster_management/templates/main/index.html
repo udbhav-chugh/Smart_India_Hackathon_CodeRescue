@@ -21,14 +21,31 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
     <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
-    
+
 {% endblock%}
 
 {% block css %}
 <style>
+  #mapid{
+    margin:auto;
+    border: 2px solid #212529;
+    border-radius: 10px;
+  }
   .modal-dialog{
     min-width:1000px;
     /* background-color: yellow; */
+  }
+  .dropdown-menu{
+    width:300px;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  .dropdown{
+    width: fit-content;
+    margin: auto;
+  }
+  .jumbotron {
+    margin-bottom: 0px;
   }
 </style>
 {% endblock %}
@@ -60,33 +77,69 @@
   </div>
 </div>
 
-    <form id='locform' method = "POST" action = "{% url 'main:getUserLocation' %}">
-        {% csrf_token %}
-            <label>Current State :</label><br>
-        {% if locationName %}
-            {{ locationName }}<br>
-        {% else %}
-            <div id="location_wise_names">
-              <label for="location_names">Location Name: </label><br>
-              <select id="location" name="location">
-                {% for loc in location_names %}
-                  <option value = "{{loc}}"> {{loc}}</option>
-                {% endfor %}
-              </select>
-              <br><br>
-            </div>
-            <br>
-            <input type = "submit" value = "Go"><br>
-        {% endif %}
-    </form>
+<div class="container">
+<div class="row">
 
-    <br><br>
-    {% if locationIndex %}
-        <button onclick="location.href='{% url 'main:notifications' locationIndex %}'"> Check Notifications </button>
-    {% endif %}
-    <a href="{% url 'main:find_safe_house' '1' '1' %}" id="nearest_safe_house_button" class="btn  btn-primary">Find Nearest Safe House</a>
-    
-    <div id="disaster_wise_names">
+  <div class="col-md-6">
+    <form id='locform' method = "POST" action = "{% url 'main:getUserLocation' %}">
+      {% csrf_token %}
+          <!-- <label>Current State :</label><br> -->
+        <div class="dropdown">
+          <h5 style="padding: 10px 50px 10px 50px; text-align: center;" class="jumbotron">
+            <label><b>Choose Location</b></label>
+            <button style="width:300px; padding: 10px 20px 10px 20px; margin: 0px 0px 0px 0px;" class="btn btn-primary dropdown-toggle" type="button" id="dropdownLocation" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              {% if locationName %}
+                {{ locationName }}
+              {% else %}
+                Choose Location
+              {% endif %}
+            </button> 
+            
+            <input id="location" name="location" value="" type="hidden">
+            <div id="location_wise_names" class="dropdown-menu" aria-labelledby="dropdownLocation">
+              {% for loc in location_names %}
+                <button class="dropdown-item" type="button" onclick="dropdownLocationClicked('{{loc}}')">{{ loc }}</button>
+              {% endfor %}
+            </div>
+          </h5>
+        </div>
+  </form>
+  </div>
+
+      <!-- <br><br>
+      {% if locationIndex %}
+          <button onclick="location.href='{% url 'main:notifications' locationIndex %}'"> Check Notifications </button>
+      {% endif %}
+      <a href="{% url 'main:find_safe_house' '1' '1' %}" id="nearest_safe_house_button" class="btn  btn-primary">Find Nearest Safe House</a> -->
+
+
+  <div class="col-md-6">
+    <div class="dropdown">
+      <h5 style="padding: 10px 50px 10px 50px;
+      text-align: center;"
+      class="jumbotron"><label><b>Choose Disaster</b></label>
+      <button style="width:300px; padding: 10px 20px 10px 20px; margin: 0px 0px 0px 0px;" class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuMenu" data-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="false">
+        All disasters
+      </button>
+      
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuMenu">
+        <button class="dropdown-item" value="All disasters" id="disaster_name_button" onclick="dropdownButtonClicked('all_disasters','all_disasters')" type="button">All disasters</button>
+
+        {% for data_key , data_values in data.items %}
+          <button class="dropdown-item" onclick="dropdownButtonClicked('{{data_values.id}}','{{data_key}}')" type="button">{{data_key}}</button>
+        {% endfor %}
+      </div>
+      </h5>
+    </div>
+    <br>
+  </div>
+
+</div>
+</div>
+
+    <!-- <div id="disaster_wise_names">
         <label for="disaster_names">Disaster Name: </label><br>
         <select id="disaster_names" onchange="changeMapInfo()" name="disaster_names">
           <option value = "all_disasters"> All</option>
@@ -95,13 +148,16 @@
           {% endfor %}
         </select>
         <br><br>
-      </div>
+      </div> -->
 
-      <div style="height:800px;width:700px;" id="mapid"></div>
-      <div style="height:800px;width:700px;" id="line_top_x"></div>
+      <div style="height:750px;width:90%;" id="mapid"></div>
+      <div style="width:700px;" class="class"id="peopleAffected"></div>
+      <div style="width:700px;" class="class"id="peopleKilled"></div>
+
+
+
+
     <script>
-      // $(document).ready(function(){
-      // });
       var positionUser;
       navigator.geolocation.getCurrentPosition((position)=>{
         positionUser = {
@@ -109,8 +165,9 @@
           'longitude': position.coords.longitude
         };
       var url_mask = "{% url 'main:find_safe_house' '12345' '6789' %}".replace(/12345/, position.coords.latitude.toString()).replace(/6789/, position.coords.longitude.toString());
-      document.getElementById("nearest_safe_house_button").setAttribute('href' , url_mask);
-          
+      // document.getElementById("nearest_safe_house_button").setAttribute('href' , url_mask);
+      document.getElementById("find_nearest_safe_house_link").setAttribute('href' , url_mask);
+
       function loadMapNearestSafeHouse(){
           var map = L.map('nearestSafeHouseMap');
 
@@ -129,12 +186,13 @@
           }).addTo(map);
           {% endif %}
       };
-      
+
       });
       // {% if disaster_values.isactive == 1 %}
 //    {%endif%}
 
       function getLocation() {
+        console.log("Getting position...")
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(showPosition);
         } else {
@@ -209,11 +267,12 @@
           '}).addTo(mymap);');
           eval('circle_' + disaster_values.id + '.bindPopup( "<b>'+disaster_values.name+'</b><br><b>Scale:</b>'+ disaster_values.scale+'<br><b>Total Affected: </b>'+disaster_values.statistics.total.affected+ '<br><b>Total Deaths: </b>'+disaster_values.statistics.total.deaths+'<br>" );');
           }
-        function changeMapInfo()
-        {
-          drawChart();
+        function dropdownButtonClicked(value,value2){
+          document.getElementById('dropdownMenuMenu').innerText= value2;
+          drawChartPeopleAffected(value);
+          drawChartPeopleKilled(value);
           center =[21.853283,81.079102];
-          var disaster_name = document.getElementById("disaster_names").value;
+          var disaster_name = value;
           console.log(disaster_name);
           mymap.remove();
           mymap = L.map('mapid').setView( center, 5);
@@ -245,11 +304,12 @@
               }
           }
           return;
-        };
+      
+        }
+       
+    function drawChartPeopleAffected(value) {
 
-    function drawChart() {
-
-      var disaster_name = document.getElementById("disaster_names").value;
+      var disaster_name = value;
       var data = new google.visualization.DataTable();
       var data_for_chart = new google.visualization.DataTable();
       if( disaster_name == "all_disasters" )
@@ -257,6 +317,47 @@
 
       data_for_chart.addColumn('number', 'Day');
       data_for_chart.addColumn('number', 'Affected');
+      var ctr = 0;
+      for (let [ statistics_key,statistics_value ] of Object.entries(disaster_data[disaster_name]["statistics"] )) {
+        // console.log(statistics_key);
+        if( statistics_key != "total" )
+        {
+          var temp_list =[];
+          temp_list.push(ctr);
+          temp_list.push(statistics_value.affected);
+          ctr++;
+          data_for_chart.addRow(temp_list);
+        }
+      }
+    
+      console.log(data_for_chart);
+      var options = {
+        legend:{position:'none'},
+        chart: {
+          title: 'No of people affected by  ' + disaster_data[disaster_name]["name"],
+          subtitle: 'Day Wise'
+        },
+        width: 800,
+        height: 500,
+        axes: {
+          x: {
+            0: {side: 'bottom'}
+          }
+        }
+      };
+      var chartPeopleAffected = new google.charts.Line(document.getElementById('peopleAffected'));
+      chartPeopleAffected.draw(data_for_chart, google.charts.Line.convertOptions(options));
+      return;
+    }
+
+    function drawChartPeopleKilled(value) {
+      var disaster_name = value;
+      var data = new google.visualization.DataTable();
+      var data_for_chart = new google.visualization.DataTable();
+      if( disaster_name == "all_disasters" )
+        return;
+
+      data_for_chart.addColumn('number', 'Day');
       data_for_chart.addColumn('number', 'Deaths');
 
       var ctr = 0;
@@ -267,20 +368,20 @@
         {
           var temp_list =[];
           temp_list.push(ctr);
-          temp_list.push(statistics_value.affected);
           temp_list.push(statistics_value.deaths);
           ctr++;
           data_for_chart.addRow(temp_list);
         }
       }
-
       console.log(data_for_chart);
       var options = {
+        legend:{position:'none'},
+
         chart: {
-          title: 'No of people affected by  ' + disaster_data[disaster_name]["name"],
+          title: 'No of people who lost their lives by  ' + disaster_data[disaster_name]["name"],
           subtitle: 'Day Wise'
         },
-        width: 900,
+        width: 800,
         height: 500,
         axes: {
           x: {
@@ -289,17 +390,18 @@
         }
       };
 
-      var chart = new google.charts.Line(document.getElementById('line_top_x'));
-      chart.draw(data_for_chart, google.charts.Line.convertOptions(options));
+      var chartPeopleKilled = new google.charts.Line(document.getElementById('peopleKilled'));
+      chartPeopleKilled.draw(data_for_chart, google.charts.Line.convertOptions(options));
       return;
     }
     // var lastNotification = new Date();
     // lastNotification = lastNotification.getDate() + "/" + (lastNotification.getMonth()+1).toString()
-    //     + "/" + lastNotification.getFullYear() + " " + lastNotification.getHours() + ":" + 
+    //     + "/" + lastNotification.getFullYear() + " " + lastNotification.getHours() + ":" +
     //     lastNotification.getMinutes() + ":" + lastNotification.getSeconds();
-     
+
     setInterval(function () {
         console.log('Called new notifications at : ' + new Date());
+        {% if locationIndex %}
         $.ajax({
             type: 'GET',
             url: "{% url 'main:get_new_notifications' locationIndex %}",
@@ -310,7 +412,7 @@
                 // var constantDate = new Date(lastNotification);
                 var constantDate = moment( '{{request.session.lastNotification}}' , 'DD-MM-YYYY HH:mm:ss').toDate();
                 console.log(constantDate);
-                
+
                 for (notf in newnotfs) {
                     // console.log(newnotfs[notf]['date']);
                     // console.log(newnotfs[notf]);
@@ -348,8 +450,9 @@
                 //console.log(response)
             }
         })
+        {% endif %}
     },10000);
-    $(window).on('shown.bs.modal', function() { 
+    $(window).on('shown.bs.modal', function() {
     $('#code').modal('show');
     var map = L.map('nearestSafeHouseMap');
 
@@ -367,12 +470,20 @@
         routeWhileDragging: true
     }).addTo(map);
     {% endif %}
-    }); 
+    });
     {% if nearest_safe_house %}
     setTimeout(function () {
       $( "#launchModalButton" ).click();},1000);
     {% endif %}
+    $(document).ready(function(){
+ 
+});
 
+
+function dropdownLocationClicked(location){
+  $('#location').val(location);
+  $('#locform').submit();
+}
     </script>
 
 {% endblock %}

@@ -63,6 +63,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
+                            android:visibility="invisible"
                             android:orientation="vertical">
 
                                 <ImageView
@@ -105,7 +106,6 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:visibility="invisible"
                             android:orientation="vertical">
 
                                 <ImageView
@@ -169,7 +169,6 @@
                             android:id="@+id/tile_rescue"
                             android:layout_width="90dp"
                             android:layout_height="90dp"
-                            android:visibility="invisible"
                             style="@style/Widget.Neumorph.CardView"
                             app:neumorph_backgroundColor="@color/neumorph_background">
                                 <ImageView
@@ -215,6 +214,7 @@
                             android:id="@+id/tile_notif"
                             android:layout_width="90dp"
                             android:layout_height="90dp"
+                            android:visibility="invisible"
                             style="@style/Widget.Neumorph.CardView"
                             app:neumorph_backgroundColor="@color/neumorph_background">
                                 <ImageView

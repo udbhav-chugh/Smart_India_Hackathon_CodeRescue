@@ -19,5 +19,5 @@
     <color name="neumorph_background">#f6f7fa</color>
     <color name="colorPrimary">#eef0f5</color>
     <color name="colorPrimaryDark">#eef0f5</color>
-    <color name="colorAccent">#eef0f5</color>
+    <color name="colorAccent">#03DAC5</color>
 </resources>

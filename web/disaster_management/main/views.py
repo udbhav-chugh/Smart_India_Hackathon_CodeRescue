@@ -245,10 +245,10 @@ def headquarters_dashboard(request):
     if request.session.get('isHeadquartersLoggedIn' , None) == 1 :
         context['isHeadquartersLoggedIn']=1
         
-    return render( request , 'headquarters/dashboard.html' , context )
+    return render( request , 'headquarters/admin_dashboard.html' , context )
 
 def rescue_team_dashboard(request):
-    return render( request , 'rescue_team/dashboard.html' )
+    return render( request , 'headquarters/admin_dashboard.html' )
 
 def all_disasters(request):
     client = connect()

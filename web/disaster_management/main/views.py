@@ -182,40 +182,6 @@ def headquarters_dashboard(request):
     success = 0
     dt_string = datetime.now()
 
-    if( request.method == 'POST' ):
-        if( request.POST['is_disaster'] == "disaster_wise" ):
-
-            id = request.POST['all_disasters']
-
-            db = client.main.disaster
-            disaster = list(db.find({ "id" : id }))[0]
-
-            data = {
-                "is_disaster" :  1,
-                "name" : disaster["name"],
-                "location" : disaster["location"],
-                "directed_to" : "people",
-                "directed_from" : "headquarters",
-                "message" : request.POST['message'],
-                "date" : dt_string
-            }
-            db = client.main.notification
-            db.insert_one(data)
-            success = 1
-
-        if( request.POST['is_disaster'] == "location_wise" ):
-            data = {
-                "is_disaster" :  0,
-                "location" : request.POST['location_names'],
-                "directed_to" : "people",
-                "directed_from" : "headquarters",
-                "message" : request.POST['message'],
-                "date" : dt_string
-            }
-            db = client.main.notification
-            db.insert_one(data)
-            success = 1
-
     db = client.main.disaster
     print("HELLO")
     info = db.find({})
@@ -465,4 +431,66 @@ def headquartersLogout(request):
         del request.session['isHeadquartersLoggedIn']
     return HttpResponseRedirect(reverse('main:index'))
 
+def send_notification(request):
+    client = connect()
+    success = 0
+    dt_string = datetime.now()
 
+    if( request.method == 'POST' ):
+        if( request.POST['is_disaster'] == "disaster_wise" ):
+
+            id = request.POST['active_disasters']
+
+            db = client.main.disaster
+            disaster = list(db.find({ "id" : id }))[0]
+
+            data = {
+                "is_disaster" :  1,
+                "name" : disaster["name"],
+                "location" : disaster["location"],
+                "directed_to" : "people",
+                "directed_from" : "headquarters",
+                "message" : request.POST['message'],
+                "date" : dt_string
+            }
+            db = client.main.notification
+            db.insert_one(data)
+            success = 1
+
+        if( request.POST['is_disaster'] == "location_wise" ):
+            data = {
+                "is_disaster" :  0,
+                "location" : request.POST['location_names'],
+                "directed_to" : "people",
+                "directed_from" : "headquarters",
+                "message" : request.POST['message'],
+                "date" : dt_string
+            }
+            db = client.main.notification
+            db.insert_one(data)
+            success = 1
+    
+    db = client.main.disaster
+    print("HELLO")
+    info = db.find({})
+    data = list(info)
+
+    location_names = []
+    active_disasters = []
+    for data1 in data:
+        if data1['isactive'] == 1:
+            active_disasters.append({
+                "name" : data1["name"],
+                "id" : data1["id"]
+            })
+
+    for location in locations :
+        location_names.append(location)
+
+    context = {
+        "location_names": location_names ,
+        "success" : success ,
+        "active_disasters" : active_disasters
+    }
+
+    return render(request, 'headquarters/send_notification.html', context)

@@ -76,11 +76,11 @@
                         </a>
 					</li>
 
-					<!-- <li class="sidebar-item">
-						<a class="sidebar-link" href="pages-blank.html">
-                        <i class="align-middle" data-feather="book"></i> <span class="align-middle">Blank</span>
+					<li class="sidebar-item">
+						<a class="sidebar-link" href="{% url 'main:send_notification' %}">
+                        <i class="align-middle" data-feather="book"></i> <span class="align-middle">Send Notification</span>
                         </a>
-					</li> -->
+					</li>
                 </ul>
 					
 			</div>
@@ -95,7 +95,7 @@
 							<h3><strong>Add Disaster</strong></h3>
 						</div>
                     </div>
-                    
+                    <hr>
                     <div class="container">
                         <form action="{% url 'main:add_disaster' %}" method="post">
                             {% csrf_token %}

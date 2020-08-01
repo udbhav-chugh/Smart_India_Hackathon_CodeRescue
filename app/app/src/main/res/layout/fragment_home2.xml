@@ -47,7 +47,7 @@
                                     android:layout_width="45dp"
                                     android:layout_height="45dp"
                                     android:background="@android:color/transparent"
-                                    android:src="@drawable/ic_outline_vpn_key_24"
+                                    android:src="@drawable/ic_outline_touch_app_24"
                                     android:contentDescription="Ask for help" />
 
                                 <TextView
@@ -70,7 +70,7 @@
                                     android:layout_width="45dp"
                                     android:layout_height="45dp"
                                     android:background="@android:color/transparent"
-                                    android:src="@drawable/ic_outline_vpn_key_24" />
+                                    android:src="@drawable/ic_outline_how_to_reg_24" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -91,7 +91,7 @@
                                     android:layout_width="45dp"
                                     android:layout_height="45dp"
                                     android:background="@android:color/transparent"
-                                    android:src="@drawable/ic_outline_vpn_key_24" />
+                                    android:src="@drawable/ic_outline_emoji_people_24" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -112,7 +112,7 @@
                                     android:layout_width="45dp"
                                     android:layout_height="45dp"
                                     android:background="@android:color/transparent"
-                                    android:src="@drawable/ic_outline_vpn_key_24" />
+                                    android:src="@drawable/ic_outline_notifications_none_24" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -154,7 +154,7 @@
                                     android:layout_height="match_parent"
                                     android:padding="12dp"
                                     android:background="@color/neumorph_background"
-                                    android:src="@drawable/ic_outline_vpn_key_24"/>
+                                    android:src="@drawable/ic_outline_touch_app_color_24"/>
                         </soup.neumorphism.NeumorphCardView>
 
                 </LinearLayout>
@@ -176,7 +176,7 @@
                                     android:layout_height="match_parent"
                                     android:padding="12dp"
                                     android:background="@color/neumorph_background"
-                                    android:src="@drawable/ic_outline_vpn_key_24"/>
+                                    android:src="@drawable/ic_outline_how_to_reg_color_24"/>
                         </soup.neumorphism.NeumorphCardView>
 
                 </LinearLayout>
@@ -199,7 +199,7 @@
                                     android:layout_height="match_parent"
                                     android:padding="12dp"
                                     android:background="@color/neumorph_background"
-                                    android:src="@drawable/ic_outline_vpn_key_24"/>
+                                    android:src="@drawable/ic_outline_emoji_people_color_24"/>
                         </soup.neumorphism.NeumorphCardView>
 
                 </LinearLayout>
@@ -222,7 +222,7 @@
                                     android:layout_height="match_parent"
                                     android:padding="12dp"
                                     android:background="@color/neumorph_background"
-                                    android:src="@drawable/ic_outline_vpn_key_24"/>
+                                    android:src="@drawable/ic_outline_notifications_none_color_24"/>
                         </soup.neumorphism.NeumorphCardView>
 
                 </LinearLayout>

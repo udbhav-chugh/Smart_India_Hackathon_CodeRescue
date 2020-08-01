@@ -142,6 +142,19 @@
                     app:neumorph_backgroundColor="@color/neumorph_background"
                     android:text="Log In"
                     style="@style/Widget.Neumorph.Button"/>
+
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Rescue Team Login"
+                    android:textSize="27sp"
+                    app:layout_constraintBottom_toTopOf="@+id/username_container"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
     </LinearLayout>

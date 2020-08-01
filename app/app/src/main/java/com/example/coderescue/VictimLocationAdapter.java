@@ -136,7 +136,7 @@ public class VictimLocationAdapter extends RecyclerView.Adapter<VictimLocationHo
                             }
                             Context context = c
                                     .getApplicationContext();
-                            CharSequence text = "Request Sent. Rescue Team Will Arrive as soon as possible!";
+                            CharSequence text = "Opening Maps to guid to the victim!";
                             int duration = Toast.LENGTH_LONG;
 
                             Toast toast = Toast.makeText(context, text, duration);

@@ -54,7 +54,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
 
-                                    android:text="I want help" />
+                                    android:text="Help Me" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -76,7 +76,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
 
-                                    android:text="I want help" />
+                                    android:text="Rescue Team" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -97,7 +97,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
 
-                                    android:text="I want help" />
+                                    android:text="Provide Help" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -118,7 +118,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
 
-                                    android:text="I want help" />
+                                    android:text="Dash Board" />
                         </LinearLayout>
                 </LinearLayout>
 

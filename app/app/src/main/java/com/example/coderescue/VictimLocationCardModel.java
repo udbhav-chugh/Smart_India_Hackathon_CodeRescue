@@ -9,6 +9,7 @@ public class VictimLocationCardModel {
     private  String latitude, longitude;
     private double distance;
     private String disaster_id;
+    int countvic;
     private int img;
 
     public String getTitle() {
@@ -46,6 +47,9 @@ public class VictimLocationCardModel {
     public String getDisaster_id(){ return disaster_id; }
 
     public void setDisaster_id(String disaster_id){ this.disaster_id = disaster_id; }
+
+    public int getCountvic(){ return countvic; }
+    public void setCountvic(int countvic){ this.countvic = countvic; }
 
     public static Comparator<VictimLocationCardModel> DistSort = new Comparator<VictimLocationCardModel>() {
 

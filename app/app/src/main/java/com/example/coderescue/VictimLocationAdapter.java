@@ -59,10 +59,12 @@ public class VictimLocationAdapter extends RecyclerView.Adapter<VictimLocationHo
         String lat = models.get(i).getLatitude();
         String longi = models.get(i).getLongitude();
         String username = models.get(i).getRescueUsername();
+        int countvic = models.get(i).getCountvic();
         String dis_id = models.get(i).getDisaster_id();
         myHolder.mTitle.setText(models.get(i).getTitle());
         myHolder.mLat.setText(lat);
         myHolder.mLong.setText(longi);
+        myHolder.countvic.setText(Integer.toString(countvic));
         System.out.println("jai shree ram2");
 
         //WHEN ITEM IS CLICKED
@@ -96,7 +98,7 @@ public class VictimLocationAdapter extends RecyclerView.Adapter<VictimLocationHo
                                 System.out.println(longi);
                                 for(Document doc: temp){
                                     System.out.println(count + " " + doc.getString("latitude") + " " + doc.getString("longitude"));
-                                    if(count==1 || !doc.getString("latitude").equals(lat) || !doc.getString("longitude").equals(longi))
+                                    if(count==1 || !doc.getString("latitude").equals(lat) || !doc.getString("longitude").equals(longi) || doc.getInteger("count")!=countvic)
                                     {
                                         temp2.add(doc);
                                     }
@@ -107,7 +109,7 @@ public class VictimLocationAdapter extends RecyclerView.Adapter<VictimLocationHo
                                         Document notactive = new Document()
                                                 .append("latitude", lat)
                                                 .append("longitude", longi)
-                                                .append("count",1)
+                                                .append("count",countvic)
                                                 .append("isactive", 0);
                                         temp2.add(notactive);
                                     }

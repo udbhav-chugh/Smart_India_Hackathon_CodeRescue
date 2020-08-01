@@ -93,6 +93,7 @@ public class BeyondARWorld {
                                 float[] results = new float[1];
                                 double latvic = Double.parseDouble(i.getString("latitude"));
                                 double longivic = Double.parseDouble(i.getString("longitude"));
+                                int countvic = i.getInteger("count");
                                 Location.distanceBetween(Double.parseDouble(lat), Double.parseDouble(longi),
                                         latvic, longivic,
                                         results);
@@ -108,7 +109,7 @@ public class BeyondARWorld {
                                 go.setGeoPosition( 0+latvic , 0+longivic);
 //                                go.setGeoPosition( 21.32 , longivic);
                                 go.setImageUri("https://d2c7ipcroan06u.cloudfront.net/wp-content/uploads/2020/05/tanmay-bhat-2-edited-696x392.jpg");
-                                go.setName("Help");
+                                go.setName("Victims: " + countvic);
 //                                listVictims.add(go2);
                                 listVictims.add(go);
                                 Log.d("Correct", "latlong -> " + latvic +" " + longivic);

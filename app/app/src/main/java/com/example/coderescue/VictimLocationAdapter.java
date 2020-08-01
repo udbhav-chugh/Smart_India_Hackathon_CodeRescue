@@ -106,6 +106,7 @@ public class VictimLocationAdapter extends RecyclerView.Adapter<VictimLocationHo
                                         Document notactive = new Document()
                                                 .append("latitude", lat)
                                                 .append("longitude", longi)
+                                                .append("count",1)
                                                 .append("isactive", 0);
                                         temp2.add(notactive);
                                     }

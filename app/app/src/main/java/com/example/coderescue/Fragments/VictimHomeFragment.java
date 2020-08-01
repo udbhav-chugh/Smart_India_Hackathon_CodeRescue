@@ -84,6 +84,7 @@ public class VictimHomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 button_click();
+                snd.setEnabled(false);
             }
         });
 //        button_send_msg.setOnClickListener(new View.OnClickListener() {
@@ -183,7 +184,6 @@ public class VictimHomeFragment extends Fragment {
                                 e.printStackTrace();
                             }
                         }
-                        prog.setVisibility(View.GONE);
                     }
                 }, Looper.getMainLooper());
     }

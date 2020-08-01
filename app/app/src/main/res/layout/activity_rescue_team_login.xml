@@ -139,8 +139,8 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:neumorph_shapeType="flat"
                     android:layout_marginTop="50dp"
-                    app:neumorph_backgroundColor="@color/neumorph_background"
                     android:text="Log In"
+                    app:neumorph_backgroundColor="#ff6663"
                     style="@style/Widget.Neumorph.Button"/>
 
                 <TextView

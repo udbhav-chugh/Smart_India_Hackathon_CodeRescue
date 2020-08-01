@@ -110,8 +110,8 @@ public class PoiBrowserActivity extends FragmentActivity implements GoogleApiCli
     Button poi_place_maps_btn;
     @BindView(R.id.poi_brwoser_progress)
     ProgressBar poi_browser_progress;
-    @BindView(R.id.seekBar)
-    SeekBar seekbar;
+//    @BindView(R.id.seekBar)
+//    SeekBar seekbar;
     @BindView(R.id.seekbar_cardview)
     CardView seekbar_cardview;
 
@@ -151,32 +151,32 @@ public class PoiBrowserActivity extends FragmentActivity implements GoogleApiCli
             }
         });
 
-        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-
-                if(i==0){
-                    Poi_list_call(300);
-                }else{
-                    Poi_list_call((i+1)*300);
-                }
-
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                if(seekBar.getProgress()==0){
-                    Toast.makeText(PoiBrowserActivity.this, "Radius: 300 Metres", Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(PoiBrowserActivity.this, "Radius: "+(seekBar.getProgress()+1)*300+" Metres", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+//        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//            @Override
+//            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+//
+//                if(i==0){
+//                    Poi_list_call(300);
+//                }else{
+//                    Poi_list_call((i+1)*300);
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onStartTrackingTouch(SeekBar seekBar) {
+//
+//            }
+//
+//            @Override
+//            public void onStopTrackingTouch(SeekBar seekBar) {
+//                if(seekBar.getProgress()==0){
+//                    Toast.makeText(PoiBrowserActivity.this, "Radius: 300 Metres", Toast.LENGTH_SHORT).show();
+//                }else{
+//                    Toast.makeText(PoiBrowserActivity.this, "Radius: "+(seekBar.getProgress()+1)*300+" Metres", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
 
     }
 

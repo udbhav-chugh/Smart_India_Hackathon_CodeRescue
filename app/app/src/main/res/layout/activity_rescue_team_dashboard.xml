@@ -27,8 +27,8 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
-        android:layout_marginVertical="10dp"
-        android:text="AR Map" />
+        android:text="AR Map"
+        app:neumorph_backgroundColor="#ff6663" />
 
     <soup.neumorphism.NeumorphButton
         android:id="@+id/button_ar_camera"
@@ -36,6 +36,7 @@
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        app:neumorph_backgroundColor="#ff6663"
         android:layout_gravity="center"
         android:text="AR Camera" />
 
@@ -48,6 +49,7 @@
         android:onClick="button_click2"
         app:neumorph_shapeType="flat"
         android:textAlignment="center"
+        app:neumorph_backgroundColor="#ff6663"
         android:text="Get Victim Locations"
         android:layout_gravity="center"/>
 
@@ -61,14 +63,14 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recylcerView2"
         android:layout_width="match_parent"
-        android:layout_marginTop="10dp"
-        android:layout_height="275dp"
-        android:layout_gravity="center_horizontal" />
+        android:layout_height="298dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp" />
 
     <TextView
         android:id="@+id/textView7"
         android:layout_width="match_parent"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_height="wrap_content"

@@ -41,6 +41,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/montserrat_light"
         android:text="Smart India Hackathon 2020"
+        android:gravity="center"
         android:textSize="20sp"
         android:layout_marginTop="15dp"
         app:layout_constraintEnd_toEndOf="parent"

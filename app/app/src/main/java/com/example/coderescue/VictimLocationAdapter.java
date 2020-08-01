@@ -102,6 +102,7 @@ public class VictimLocationAdapter extends RecyclerView.Adapter<VictimLocationHo
                                     }
                                     else
                                     {
+                                        
                                         count=1;
                                         Document notactive = new Document()
                                                 .append("latitude", lat)

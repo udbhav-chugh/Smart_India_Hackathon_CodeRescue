@@ -89,7 +89,7 @@
         {% else %}
         <h5 class="modal-title" id="exampleModalLabel">Note</h5>
         {%endif%}
-        
+
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -132,8 +132,8 @@
               {% else %}
                 Choose Location
               {% endif %}
-            </button> 
-            
+            </button>
+
             <input id="location" name="location" value="" type="hidden">
             <div id="location_wise_names" class="dropdown-menu" aria-labelledby="dropdownLocation">
               {% for loc in location_names %}
@@ -161,7 +161,7 @@
         aria-haspopup="true" aria-expanded="false">
         All disasters
       </button>
-      
+
       <div class="dropdown-menu" aria-labelledby="dropdownMenuMenu">
         <button class="dropdown-item" value="All disasters" id="disaster_name_button" onclick="dropdownButtonClicked('all_disasters','all_disasters')" type="button">All disasters</button>
 
@@ -342,9 +342,9 @@
               }
           }
           return;
-      
+
         }
-       
+
     function drawChartPeopleAffected(value) {
 
       var disaster_name = value;
@@ -367,7 +367,7 @@
           data_for_chart.addRow(temp_list);
         }
       }
-    
+
       console.log(data_for_chart);
       var options = {
         legend:{position:'none'},
@@ -527,7 +527,7 @@
       $( "#launchModalButton" ).click();},1000);
     {% endif %}
     $(document).ready(function(){
- 
+
 });
 
 

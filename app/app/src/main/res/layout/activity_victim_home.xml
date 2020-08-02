@@ -5,47 +5,62 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/help"
     tools:context=".Activities.VictimHomeActivity">
 
-    <Button
-        android:id="@+id/button_send_msg"
-        android:layout_width="247dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/round_button"
-        android:layout_marginHorizontal="10dp"
-        android:layout_marginTop="30dp"
-        android:layout_gravity="center"
-        android:text="Send Message" />
-
-    <Button
-        android:id="@+id/snd_msg"
-        android:layout_width="247dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/round_button"
-        android:layout_marginTop="30dp"
-        android:text="Ask for Help!"
-        android:layout_gravity="center"/>
-
-    <ProgressBar
-        android:id="@+id/progressBar2"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/snd_msg" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recylcerView5"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.444"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/snd_msg"
-        app:layout_constraintVertical_bias="0.23" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#ddeef0f5">
 
+<!--        <soup.neumorphism.NeumorphButton-->
+<!--            android:id="@+id/button_send_msg"-->
+<!--            android:layout_width="247dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            style="@style/Widget.Neumorph.Button"-->
+<!--            app:neumorph_shapeType="flat"-->
+<!--            android:layout_marginHorizontal="15dp"-->
+<!--            android:layout_marginTop="30dp"-->
+<!--            android:text="Send Message" />-->
+
+        <soup.neumorphism.NeumorphButton
+            android:id="@+id/snd_msg"
+            android:layout_width="247dp"
+            android:layout_height="wrap_content"
+            style="@style/Widget.Neumorph.Button"
+            app:neumorph_shapeType="flat"
+            app:neumorph_backgroundColor="#ff6663"
+            android:fontFamily="@font/montserrat_medium"
+            android:layout_marginTop="50dp"
+            android:layout_gravity="center"
+            android:text="Ask for Help"/>
+
+        <soup.neumorphism.NeumorphCardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            style="@style/Widget.Neumorph.CardView"
+            app:neumorph_shapeType="flat"
+            app:neumorph_backgroundColor="#99eef0f5"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginBottom="150dp"
+            android:layout_marginTop="30dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recylcerView5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginVertical="35dp"/>
+
+            <ProgressBar
+                android:id="@+id/progressBar2"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"/>
+
+        </soup.neumorphism.NeumorphCardView>
+    </LinearLayout>
 </LinearLayout>

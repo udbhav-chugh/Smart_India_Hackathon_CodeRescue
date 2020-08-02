@@ -86,7 +86,7 @@ def index(request , latitude='' , longitude=''):
 
     if request.session.get('isHeadquartersLoggedIn' , None) == 1 :
         context['isHeadquartersLoggedIn']=1
-        
+
     return render(request , 'main/index.html' , context)
 
 def getUserLocation(request):
@@ -129,7 +129,7 @@ def notifications(request, loc_no):
 
     if request.session.get('isHeadquartersLoggedIn' , None) == 1 :
         context['isHeadquartersLoggedIn']=1
-        
+
     return render(request , 'main/notification.html' , context)
 
 def get_new_notifications(request, loc_no):
@@ -190,7 +190,6 @@ def headquarters_dashboard(request):
 
     all_disasters = []
     location_names = []
-    rescue_teams_names = {}
     active_disasters = []
     for data1 in data:
         all_disasters.append({
@@ -200,9 +199,6 @@ def headquarters_dashboard(request):
         if data1['isactive'] == 1:
             active_disasters.append(data1)
 
-    for data1 in data :
-        rescue_teams_names[data1["name"]] = data1["rescue_teams_usernames"]
-
     for location in locations :
         location_names.append(location)
 
@@ -211,13 +207,12 @@ def headquarters_dashboard(request):
         "all_disasters" : all_disasters ,
         "location_names": location_names ,
         "success" : success ,
-        "rescue_teams_names" : rescue_teams_names,
         "active_disasters" : active_disasters
     }
 
     if request.session.get('isHeadquartersLoggedIn' , None) == 1 :
         context['isHeadquartersLoggedIn']=1
-        
+
     return render( request , 'headquarters/admin_dashboard.html' , context )
 
 def rescue_team_dashboard(request):
@@ -246,7 +241,7 @@ def all_disasters(request):
 
     if request.session.get('isHeadquartersLoggedIn' , None) == 1 :
         context['isHeadquartersLoggedIn']=1
-        
+
     return render(request, 'headquarters/disasters.html', context)
 
 def change_active_status(request):
@@ -346,7 +341,7 @@ def update_statistics(request, disaster_id):
 
         if request.session.get('isHeadquartersLoggedIn' , None) == 1 :
             context['isHeadquartersLoggedIn']=1
-        
+
         return render(request, 'headquarters/update_statistics.html', context)
 
     elif request.method == "POST":
@@ -405,7 +400,7 @@ def add_rescue_team(request):
 
         if request.session.get('isHeadquartersLoggedIn' , None) == 1 :
             context['isHeadquartersLoggedIn']=1
-            
+
         return render(request, 'headquarters/add_rescue_team.html', context)
 
     elif request.method == "POST":
@@ -470,7 +465,7 @@ def send_notification(request):
             db = client.main.notification
             db.insert_one(data)
             success = 1
-    
+
     db = client.main.disaster
     print("HELLO")
     info = db.find({})

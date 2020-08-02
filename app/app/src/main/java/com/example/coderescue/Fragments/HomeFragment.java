@@ -212,6 +212,7 @@ public class HomeFragment extends AppCompatActivity {
     LinearLayout normal_victim, normal_rescue, normal_third, normal_notif;
     int totalFragments = 0;
     public static StitchAppClient client;
+    public static String diss_idd;
     private static final int REQUEST_CODE_SPEECH_INPUT = 1000;
 
     @Override
@@ -219,7 +220,7 @@ public class HomeFragment extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_home2);
         viewPager = findViewById(R.id.view_pager);
-
+        diss_idd="aa";
         normal_victim = findViewById(R.id.normal_victim);
         normal_rescue = findViewById(R.id.normal_rescue);
         normal_third = findViewById(R.id.normal_third);

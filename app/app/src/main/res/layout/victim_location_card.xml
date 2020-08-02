@@ -33,7 +33,7 @@
                      android:layout_width="wrap_content"
                      android:layout_height="wrap_content"
                      android:text="Distance"
-                     android:textSize="22sp"
+                     android:textSize="17sp"
                      android:fontFamily="@font/poiretone_regular"
                      android:textStyle="bold"/>
                  <LinearLayout
@@ -45,11 +45,46 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:hint="Distance"
-                        android:textSize="22sp"
+                        android:textSize="17sp"
                         android:fontFamily="@font/poiretone_regular"
                         android:textStyle="bold"/>
                  </LinearLayout>
              </LinearLayout>
+
+             <LinearLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_marginHorizontal="25dp"
+                 android:layout_marginTop="15dp"
+                 android:orientation="horizontal">
+
+                 <TextView
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:text="Victim Count"
+                     android:fontFamily="@font/montserrat_medium"
+                     android:textColor="#a9a9a9"
+                     android:textSize="12sp"
+                     android:gravity="start"
+                     />
+
+                 <LinearLayout
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:gravity="end">
+                     <TextView
+                         android:id="@+id/countvic"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:hint="Victim Count"
+                         android:fontFamily="@font/montserrat_medium"
+                         android:textColor="#a9a9a9"
+                         android:textSize="12sp"
+                         android:gravity="end"
+                         />
+                 </LinearLayout>
+             </LinearLayout>
+
              <LinearLayout
                  android:layout_width="match_parent"
                  android:layout_height="wrap_content"
@@ -63,7 +98,7 @@
                      android:text="Latitude"
                      android:fontFamily="@font/montserrat_medium"
                      android:textColor="#a9a9a9"
-                     android:textSize="15sp"
+                     android:textSize="12sp"
                      android:gravity="start"
                      />
 
@@ -78,7 +113,7 @@
                          android:hint="Latitude"
                          android:fontFamily="@font/montserrat_medium"
                          android:textColor="#a9a9a9"
-                         android:textSize="15sp"
+                         android:textSize="12sp"
                          android:gravity="end"
                          />
                  </LinearLayout>
@@ -97,7 +132,7 @@
                      android:text="Longitude"
                      android:fontFamily="@font/montserrat_medium"
                      android:textColor="#a9a9a9"
-                     android:textSize="15sp"
+                     android:textSize="12sp"
                      android:gravity="start"
                      />
 
@@ -112,7 +147,7 @@
                          android:hint="Longitude"
                          android:fontFamily="@font/montserrat_medium"
                          android:textColor="#a9a9a9"
-                         android:textSize="15sp"
+                         android:textSize="12sp"
                          />
                  </LinearLayout>
 

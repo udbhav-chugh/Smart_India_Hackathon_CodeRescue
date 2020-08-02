@@ -1,5 +1,6 @@
 package com.example.coderescue.Activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
@@ -7,6 +8,7 @@ import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,6 +38,7 @@ public class RescueTeamLoginActivity extends AppCompatActivity {
     EditText username,password;
     soup.neumorphism.NeumorphImageButton showPassword;
     soup.neumorphism.NeumorphButton submit;
+    Context c;
 
     private boolean password_notvisible = false;
 
@@ -49,6 +52,7 @@ public class RescueTeamLoginActivity extends AppCompatActivity {
         password = findViewById(R.id.password);
         showPassword = findViewById(R.id.show_password);
         submit = findViewById(R.id.submit);
+        c=this;
 
         getWindow().setBackgroundDrawable(getDrawable(R.drawable.image));
         showPassword.setOnClickListener(new View.OnClickListener() {
@@ -98,6 +102,11 @@ public class RescueTeamLoginActivity extends AppCompatActivity {
                     int numDocs = items.size();
                     if(numDocs==0){
                         Log.d("Incorrect Sign In", "Wrong username or password");
+                        CharSequence text = "Invalid username or password";
+                        int duration = Toast.LENGTH_LONG;
+
+                        Toast toast = Toast.makeText(c, text, duration);
+                        toast.show();
                     }
                     else{
                         System.out.println(items.get(0));

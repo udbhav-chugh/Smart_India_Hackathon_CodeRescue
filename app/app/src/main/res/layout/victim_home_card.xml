@@ -21,7 +21,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Title"
-            android:textSize="22sp"
+            android:textSize="14sp"
+            android:background="#66eef0f5"
+
             android:fontFamily="@font/montserrat_medium"
             android:layout_marginStart="10dp"/>
 

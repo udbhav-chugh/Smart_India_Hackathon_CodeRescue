@@ -94,9 +94,15 @@ public class RescueTeamDashboard extends AppCompatActivity {
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
         disaster_id = intent.getExtras().getString("disaster_id");
+
+        HomeFragment.diss_idd = disaster_id;
+        System.out.println(HomeFragment.diss_idd);
+        System.out.println("a for apple");
         username = intent.getExtras().getString("username");
         prog=findViewById(R.id.progressBar2);
-
+        TextView teamname = findViewById(R.id.textView7);
+        teamname.append(username);
+        getDisastername();
 
         // Capture the layout's TextView and set the string as its text
 //        TextView textView = findViewById(R.id.textView3);
@@ -254,6 +260,7 @@ public class RescueTeamDashboard extends AppCompatActivity {
                                 m.setLongitude(i.getString("longitude"));
                                 m.setDistance(results[0]);
                                 m.setTitle(results[0] + " m");
+                                m.setCountvic(i.getInteger("count"));
                                 m.setRescueUsername(username);
                                 m.setDescription("Latitude: " + latvic + "\n" + "Longitude: "+ longivic);
                                 m.setDisaster_id(disaster_id);
@@ -394,6 +401,36 @@ public class RescueTeamDashboard extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    public void getDisastername(){
+        mongoClient = HomeFragment.client.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
+        final RemoteMongoCollection<Document> disasters = mongoClient.getDatabase("main").getCollection("disaster");
+
+        RemoteFindIterable findResults = disasters.find(eq("id", disaster_id));
+        Task<List<Document>> itemsTask = findResults.into(new ArrayList<Document>());
+        itemsTask.addOnCompleteListener(new OnCompleteListener<List<Document>>() {
+                @Override
+                public void onComplete(@NonNull Task<List<Document>> task) {
+                    if (task.isSuccessful()) {
+
+                        List<Document> items = task.getResult();
+                        int numDocs = items.size();
+                        if(numDocs==0){
+                            Log.d("Doesn't exist", "Should not happen");
+                        }
+                        else{
+                            Document item=items.get(0);
+                            TextView disastername = findViewById(R.id.textView8);
+                            disastername.append(item.getString("name"));
+                        }
+
+                    }
+                    else{
+                        Log.e("app", "Failed to get disatser name with exception: ", task.getException());
+                    }
+                }
+        });
     }
 
 }

@@ -17,43 +17,46 @@
         android:text="Dashboard"
         android:textSize="23sp" />
 
+<!--    <soup.neumorphism.NeumorphCardView-->
+<!--        android:id="@+id/safe_houses"-->
+<!--        android:layout_width="220dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:layout_weight="1"-->
+<!--        android:padding="20dp"-->
+<!--        style="@style/Widget.Neumorph.CardView">-->
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:gravity="center"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            android:orientation="vertical">-->
+<!--            <de.hdodenhof.circleimageview.CircleImageView-->
+<!--                android:layout_width="80dp"-->
+<!--                android:layout_height="80dp"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:src="@drawable/rescue_drowning"-->
+<!--                android:layout_marginHorizontal="50dp"/>-->
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:fontFamily="@font/montserrat_medium"-->
+<!--                android:text="Safe Houses"-->
+<!--                android:textSize="22sp"/>-->
+<!--        </LinearLayout>-->
+<!--    </soup.neumorphism.NeumorphCardView>-->
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
+    <soup.neumorphism.NeumorphButton
+        android:id="@+id/button_ar_map"
+        style="@style/Widget.Neumorph.Button"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:visibility="gone" />
-    <soup.neumorphism.NeumorphCardView
-        android:id="@+id/safe_houses"
-        android:layout_width="220dp"
-        android:layout_height="0dp"
+        android:layout_centerHorizontal="true"
         android:layout_gravity="center"
-        android:layout_weight="1"
-        android:padding="20dp"
-        style="@style/Widget.Neumorph.CardView">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical">
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_gravity="center"
-                android:src="@drawable/rescue_drowning"
-                android:layout_marginHorizontal="50dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/montserrat_medium"
-                android:text="Safe Houses"
-                android:textSize="22sp"/>
-        </LinearLayout>
-    </soup.neumorphism.NeumorphCardView>
+        android:text="All Disasters Map"
+        app:neumorph_backgroundColor="#ff6663" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -64,13 +67,29 @@
         android:textStyle="bold"
         android:layout_marginTop="25dp"
         android:layout_marginBottom="15dp"
-        android:layout_marginStart="20dp"/>
+        android:layout_gravity="center"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recylcerView"
+    <soup.neumorphism.NeumorphCardView
+        style="@style/Widget.Neumorph.CardView"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:layout_marginBottom="150dp"/>
+        android:layout_height="350dp"
+        android:layout_marginTop="20dp"
+        app:neumorph_backgroundColor="#99eef0f5"
+        app:neumorph_shapeType="flat">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recylcerView"
+            android:layout_width="match_parent"
+            android:layout_height="320dp"/>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+    </soup.neumorphism.NeumorphCardView>
 
 
 </LinearLayout>

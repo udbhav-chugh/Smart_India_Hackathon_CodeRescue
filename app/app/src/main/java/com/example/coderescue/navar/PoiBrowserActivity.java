@@ -353,9 +353,9 @@ Log.d(TAG, placeid);
                                                     count=1;
                                                     Document notactive = new Document()
                                                             .append("latitude", victimLatitude)
-                                                            .append("longitude", victimLatitude)
+                                                            .append("longitude", victimLongitude)
                                                             .append("count",doc.getInteger("count"))
-                                                            .append("isactive", 0);
+                                                            .append("isactive", 1);
                                                     temp2.add(notactive);
                                                 }
                                             }

@@ -3,6 +3,7 @@ package com.example.coderescue.Fragments;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -22,6 +23,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.coderescue.Activities.ViewSafeHousesActivity;
 import com.example.coderescue.NotificationAdapter;
 import com.example.coderescue.NotificationCardModel;
 import com.example.coderescue.R;
@@ -46,6 +48,7 @@ import static com.mongodb.client.model.Filters.eq;
 
 public class VictimNotificationFragment extends Fragment {
 
+    soup.neumorphism.NeumorphCardView safe_houses;
     ArrayList<NotificationCardModel> models = new ArrayList<>();
     NotificationCardModel m;
     public static RemoteMongoClient mongoClient;
@@ -75,9 +78,17 @@ public class VictimNotificationFragment extends Fragment {
         }
 
         mRecylcerView=root.findViewById(R.id.recylcerView);
+        safe_houses=root.findViewById(R.id.safe_houses);
         c = getActivity();
         mRecylcerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        safe_houses.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ViewSafeHousesActivity.class);
+                startActivity(intent);
+            }
+        });
         return root;
     }
 

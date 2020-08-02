@@ -14,8 +14,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +31,8 @@ import androidx.fragment.app.Fragment;
 import com.example.coderescue.Activities.HomeActivity;
 import com.example.coderescue.Activities.UpdateInfoActivity;
 import com.example.coderescue.R;
+import com.example.coderescue.VictimHomeAdapter;
+import com.example.coderescue.VictimHomeCardModel;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -56,18 +61,23 @@ import java.util.List;
 import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
+import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 
 public class UpdateInfoFragment extends Fragment {
 
-    EditText victim_count, location, disaster_type;
+    EditText victim_count, location;
+    Spinner spinner;
     soup.neumorphism.NeumorphButton submit;
     public static RemoteMongoClient mongoClient;
     private String TAG = "autocomplete places";
     TextView latitude, longitude;
     Double lat = 0.0, lon = 0.0;
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
-
+    ArrayList<String> arrayList;
+    ArrayList<String> arrayList2;
+    ArrayAdapter<String> arrayAdapter;
+    String dis_id;
 
     @Nullable
     @Override
@@ -75,11 +85,41 @@ public class UpdateInfoFragment extends Fragment {
         View root = inflater.inflate(R.layout.activity_update_info, container, false);
         victim_count = root.findViewById(R.id.victim_count);
         location = root.findViewById(R.id.location);
-        disaster_type = root.findViewById(R.id.disaster_type);
         latitude = root.findViewById(R.id.latitude);
         longitude = root.findViewById(R.id.longitude);
         submit = root.findViewById(R.id.submit_info);
+        dis_id = "unique_id_4";
         String apiKey = "AIzaSyDYoQybddM6c-Daz0bHVe7h2tuyzxHmW1k";
+
+        spinner = root.findViewById(R.id.spinner);
+        arrayList = new ArrayList<>();
+        arrayList2 = new ArrayList<>();
+
+                arrayList.add("JAVA");
+                arrayList2.add("lol");
+//        arrayList.add("ANDROID");
+//        arrayList.add("C Language");
+//        arrayList.add("CPP Language");
+//        arrayList.add("Go Language");
+//        arrayList.add("AVN SYSTEMS");
+//
+        arrayAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item, arrayList);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(arrayAdapter);
+        getDisasters();
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                String tutorialsName = parent.getItemAtPosition(position).toString();
+//                Toast.makeText(parent.getContext(), "Selected: " + arrayList2.get(position),          Toast.LENGTH_LONG).show();
+                dis_id = arrayList2.get(position);
+                System.out.println(dis_id + "cur disaster");
+
+            }
+            @Override
+            public void onNothingSelected(AdapterView <?> parent) {
+            }
+        });
 
         if (ContextCompat.checkSelfPermission(
                 getActivity(), Manifest.permission.ACCESS_FINE_LOCATION
@@ -138,13 +178,12 @@ public class UpdateInfoFragment extends Fragment {
 
     public void updateVictimInfo() {
         int count = Integer.parseInt(victim_count.getText().toString().trim());
-        String disaster = disaster_type.getText().toString().trim();
 
         mongoClient = HomeFragment.client.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
 
         final RemoteMongoCollection<Document> teams = mongoClient.getDatabase("main").getCollection("victimsneedhelp");
 
-        RemoteFindIterable findResults = teams.find(eq("disaster_id", "unique_id_4"));
+        RemoteFindIterable findResults = teams.find(eq("disaster_id", dis_id));
         Task<List<Document>> itemsTask = findResults.into(new ArrayList<Document>());
         itemsTask.addOnCompleteListener(new OnCompleteListener<List<Document>>() {
             @Override
@@ -156,7 +195,7 @@ public class UpdateInfoFragment extends Fragment {
                         Log.d("Doesn't exist", "Insert");
                         final RemoteMongoCollection<Document> victimneedhelp = mongoClient.getDatabase("main").getCollection("victimsneedhelp");
                         Document newItem = new Document()
-                                .append("disaster_id", "unique_id_4")
+                                .append("disaster_id", dis_id)
                                 .append("victims", Arrays.asList(
                                         new Document()
                                                 .append("latitude", Double.toString(lat))
@@ -187,10 +226,10 @@ public class UpdateInfoFragment extends Fragment {
                         Document newvic = new Document().append("latitude",Double.toString(lat)).append("longitude",Double.toString(lon)).append("count",count).append("isactive",1);
                         temp.add(newvic);
                         Log.d("Exists", "update");
-                        Document filterDoc = new Document().append("disaster_id", "unique_id_4");
+                        Document filterDoc = new Document().append("disaster_id", dis_id);
                         Document updateDoc = new Document().append("$set",
                                 new Document()
-                                        .append("disaster_id", "unique_id_4")
+                                        .append("disaster_id", dis_id)
                                         .append("victims", temp)
                         );
 
@@ -245,6 +284,41 @@ public class UpdateInfoFragment extends Fragment {
                         }
                     }
                 }, Looper.getMainLooper());
+    }
+
+    public void getDisasters(){
+        mongoClient = HomeFragment.client.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
+        final RemoteMongoCollection<Document> disasters = mongoClient.getDatabase("main").getCollection("disaster");
+//        final RemoteMongoCollection<Document> notifications = mongoClient.getDatabase("main").getCollection("notification");
+
+        RemoteFindIterable findResults = disasters.find(eq("isactive", 1));
+        Task<List<Document>> itemsTask = findResults.into(new ArrayList<Document>());
+        itemsTask.addOnCompleteListener(new OnCompleteListener<List<Document>>() {
+            @Override
+            public void onComplete(@androidx.annotation.NonNull Task<List<Document>> task) {
+                if (task.isSuccessful()) {
+                    List<Document> items = task.getResult();
+                    arrayList.clear();
+                    arrayList2.clear();
+                    for(Document i: items){
+                        String dis_name = i.getString("name");
+                        String dis_id = i.getString("id");
+                        arrayList.add(dis_name);
+                        arrayList2.add(dis_id);
+                        System.out.println(i);
+                    }
+                    arrayAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item, arrayList);
+                    arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinner.setAdapter(arrayAdapter);
+                } else {
+                    Log.e("app", "Failed to count documents with exception: ", task.getException());
+                }
+            }
+        });
+
+
+
+        System.out.println("wow2");
     }
 
 }

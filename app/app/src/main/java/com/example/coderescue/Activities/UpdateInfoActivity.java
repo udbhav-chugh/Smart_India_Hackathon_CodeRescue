@@ -34,7 +34,7 @@ import java.util.List;
 
 public class UpdateInfoActivity extends AppCompatActivity {
 
-    EditText victim_count, location, disaster_type;
+    EditText victim_count, location;
     TextView latitude, longitude;
     Double lat = 0.0, lon = 0.0;
 //    RecyclerView disaster_type;
@@ -48,7 +48,6 @@ public class UpdateInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_update_info);
         victim_count = findViewById(R.id.victim_count);
         location = findViewById(R.id.location);
-        disaster_type = findViewById(R.id.disaster_type);
         latitude = findViewById(R.id.latitude);
         longitude = findViewById(R.id.longitude);
         submit = findViewById(R.id.submit_info);
@@ -98,13 +97,11 @@ public class UpdateInfoActivity extends AppCompatActivity {
 
     private void updateVictimInfo() {
         int count = Integer.parseInt(victim_count.getText().toString().trim());
-        String disaster = disaster_type.getText().toString().trim();
 
         Document document = new Document();
         document.put("latitude", lat);
         document.put("longitude", lon);
         document.put("victim_count", count);
-        document.put("disaster", disaster);
         //TODO: if this disaster is not present in db, add it
         //TODO: change disaster to a spinner? which is populated from database
 

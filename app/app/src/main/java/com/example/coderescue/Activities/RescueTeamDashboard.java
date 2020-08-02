@@ -94,6 +94,10 @@ public class RescueTeamDashboard extends AppCompatActivity {
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
         disaster_id = intent.getExtras().getString("disaster_id");
+
+        HomeFragment.diss_idd = disaster_id;
+        System.out.println(HomeFragment.diss_idd);
+        System.out.println("a for apple");
         username = intent.getExtras().getString("username");
         prog=findViewById(R.id.progressBar2);
         TextView teamname = findViewById(R.id.textView7);

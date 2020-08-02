@@ -40,6 +40,7 @@ import com.beyondar.android.world.GeoObject;
 import com.beyondar.android.world.World;
 import com.example.coderescue.Activities.BeyondARWorld;
 import com.example.coderescue.Activities.CameraWithGoogleMapsActivity;
+import com.example.coderescue.Fragments.HomeFragment;
 import com.example.coderescue.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -57,7 +58,13 @@ import com.example.coderescue.navar.network.PoiResponse;
 import com.example.coderescue.navar.network.RetrofitInterface;
 import com.example.coderescue.navar.network.poi.Result;
 import com.example.coderescue.navar.utils.UtilsCheck;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteFindIterable;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
+import com.mongodb.stitch.core.services.mongodb.remote.RemoteUpdateResult;
 
+
+import org.bson.Document;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -80,6 +87,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.graphics.Paint.ANTI_ALIAS_FLAG;
+import static com.mongodb.client.model.Filters.eq;
 
 public class PoiBrowserActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks
     ,GoogleApiClient.OnConnectionFailedListener,OnClickBeyondarObjectListener,
@@ -93,6 +101,7 @@ public class PoiBrowserActivity extends FragmentActivity implements GoogleApiCli
     private LayoutInflater layoutInflater;
     private ArFragmentSupport arFragmentSupport;
     private World world;
+    public static RemoteMongoClient mongoClient;
 
     @BindView(R.id.poi_place_detail)
     CardView poi_cardview;
@@ -307,6 +316,85 @@ Log.d(TAG, placeid);
 
                             intent = new Intent(android.content.Intent.ACTION_VIEW,
                                     Uri.parse( builder.build().toString()));
+
+                            mongoClient = HomeFragment.client.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
+
+                            final RemoteMongoCollection<Document> teams = mongoClient.getDatabase("main").getCollection("victimsneedhelp");
+                            System.out.println(HomeFragment.diss_idd + " global diss_id");
+                            RemoteFindIterable findResults = teams.find(eq("disaster_id", HomeFragment.diss_idd));
+                            Task <List<Document>> itemsTask = findResults.into(new ArrayList<Document>());
+                            itemsTask.addOnCompleteListener(new OnCompleteListener <List<Document>> () {
+                                @Override
+                                public void onComplete(@NonNull Task<List<Document>> task) {
+                                    if (task.isSuccessful()) {
+                                        List<Document> items = task.getResult();
+                                        int numDocs = items.size();
+                                        if(numDocs==0){
+                                            Log.d("Doesn't exist", "Should not happen");
+                                        }
+                                        else{
+                                            System.out.println(items.get(0));
+                                            Document first = items.get(0);
+                                            final RemoteMongoCollection<Document> victimneedhelp = mongoClient.getDatabase("main").getCollection("victimsneedhelp");
+                                            List<Document> temp = (List<Document>)first.get("victims");
+                                            List<Document> temp2 = new ArrayList<Document>();
+                                            int count=0;
+                                            System.out.println(victimLatitude);
+                                            System.out.println(victimLongitude);
+                                            for(Document doc: temp){
+                                                System.out.println(count + " " + doc.getString("latitude") + " " + doc.getString("longitude"));
+                                                if(count==1 || !doc.getString("latitude").equals(victimLatitude) || !doc.getString("longitude").equals(victimLongitude))
+                                                {
+                                                    temp2.add(doc);
+                                                }
+                                                else
+                                                {
+
+                                                    count=1;
+                                                    Document notactive = new Document()
+                                                            .append("latitude", victimLatitude)
+                                                            .append("longitude", victimLatitude)
+                                                            .append("count",doc.getInteger("count"))
+                                                            .append("isactive", 0);
+                                                    temp2.add(notactive);
+                                                }
+                                            }
+                                            Log.d("Exists", "update");
+                                            Document filterDoc = new Document().append("disaster_id", HomeFragment.diss_idd);
+                                            Document updateDoc = new Document().append("$set",
+                                                    new Document()
+                                                            .append("disaster_id", HomeFragment.diss_idd)
+                                                            .append("victims", temp2)
+                                            );
+
+                                            final Task<RemoteUpdateResult> updateTask =
+                                                    victimneedhelp.updateOne(filterDoc, updateDoc);
+                                            updateTask.addOnCompleteListener(new OnCompleteListener <RemoteUpdateResult> () {
+                                                @Override
+                                                public void onComplete(@NonNull Task <RemoteUpdateResult> task) {
+                                                    if (task.isSuccessful()) {
+                                                        long numMatched = task.getResult().getMatchedCount();
+                                                        long numModified = task.getResult().getModifiedCount();
+                                                        Log.d("app", String.format("successfully matched %d and modified %d documents",
+                                                                numMatched, numModified));
+                                                    } else {
+                                                        Log.e("app", "failed to update document with: ", task.getException());
+                                                    }
+                                                }
+                                            });
+                                        }
+                                        Context context = PoiBrowserActivity.this
+                                                .getApplicationContext();
+                                        CharSequence text = "Opening Maps to guid to the victim!";
+                                        int duration = Toast.LENGTH_LONG;
+
+                                        Toast toast = Toast.makeText(context, text, duration);
+                                        toast.show();
+                                    } else {
+                                        Log.e("app", "Failed to count documents with exception: ", task.getException());
+                                    }
+                                }
+                            });
                             startActivity(intent);
                             finish();
                         }catch (Exception e){

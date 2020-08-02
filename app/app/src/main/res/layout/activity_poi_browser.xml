@@ -90,18 +90,18 @@
                 android:id="@+id/poi_place_ar_direction"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="AR DIRECTION"
+                android:text="AR NAVIGATION"
                 android:textSize="20sp"
                 android:layout_marginStart="25dp"
                 android:layout_marginTop="4dp"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/colorAccent"
                 android:background="#00000000"/>
 
             <Button
                 android:id="@+id/poi_place_maps_direction"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="         MAPS"
+                android:text="         MAPS NAVIGATION"
                 android:textSize="20sp"
                 android:layout_marginTop="4dp"
                 android:layout_marginStart="185dp"

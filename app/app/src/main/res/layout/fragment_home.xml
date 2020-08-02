@@ -98,16 +98,6 @@ tools:context=".Fragments.HomeFragment">
             android:text="Update Info" />
 
         <Button
-            android:id="@+id/button_ar_map"
-            android:layout_width="247dp"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/button_update_info"
-            android:background="@drawable/round_button"
-            android:layout_margin="10dp"
-            android:text="AR Map" />
-
-        <Button
             android:id="@+id/button_ar_camera"
             android:layout_width="247dp"
             android:layout_height="wrap_content"

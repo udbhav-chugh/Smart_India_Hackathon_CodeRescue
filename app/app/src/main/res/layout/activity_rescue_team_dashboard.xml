@@ -9,26 +9,6 @@
     android:orientation="vertical"
     tools:context=".Activities.RescueTeamDashboard">
 
-    <ImageButton
-        android:id="@+id/voiceBtn3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:background="@null"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_mic"/>
-
-    <soup.neumorphism.NeumorphButton
-        android:id="@+id/button_ar_map"
-        style="@style/Widget.Neumorph.Button"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center"
-        android:text="AR Map"
-        app:neumorph_backgroundColor="#ff6663" />
 
     <soup.neumorphism.NeumorphButton
         android:id="@+id/button_ar_camera"
@@ -38,6 +18,7 @@
         android:layout_centerHorizontal="true"
         app:neumorph_backgroundColor="#ff6663"
         android:layout_gravity="center"
+        android:layout_marginTop="20dp"
         android:text="AR Camera" />
 
     <soup.neumorphism.NeumorphButton
@@ -63,7 +44,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recylcerView2"
         android:layout_width="match_parent"
-        android:layout_height="298dp"
+        android:layout_height="350dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp" />
 

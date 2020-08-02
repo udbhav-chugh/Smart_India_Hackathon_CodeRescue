@@ -72,7 +72,7 @@ public class RescueTeamDashboard extends AppCompatActivity {
     ArrayList<VictimLocationCardModel> models = new ArrayList<>();
     VictimLocationCardModel m;
     private ProgressBar prog;
-    ImageButton speak_msg;
+//    ImageButton speak_msg;
     int flag;
 
     public String lat,longi;
@@ -86,8 +86,8 @@ public class RescueTeamDashboard extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rescue_team_dashboard);
-        speak_msg = findViewById(R.id.voiceBtn3);
-        button_ar_map = findViewById(R.id.button_ar_map);
+//        speak_msg = findViewById(R.id.voiceBtn3);
+//        button_ar_map = findViewById(R.id.button_ar_map);
         button_ar_camera = findViewById(R.id.button_ar_camera);
         flag=0;
 
@@ -111,19 +111,19 @@ public class RescueTeamDashboard extends AppCompatActivity {
         c = this;
         mRecylcerView.setLayoutManager(new LinearLayoutManager(this));
         snd2=findViewById(R.id.snd_msg2);
-        speak_msg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                speak();
-            }
-        });
-        button_ar_map.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(RescueTeamDashboard.this, GoogleMapActivity.class);
-                startActivity(intent);
-            }
-        });
+//        speak_msg.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                speak();
+//            }
+//        });
+//        button_ar_map.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(RescueTeamDashboard.this, GoogleMapActivity.class);
+//                startActivity(intent);
+//            }
+//        });
         button_ar_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

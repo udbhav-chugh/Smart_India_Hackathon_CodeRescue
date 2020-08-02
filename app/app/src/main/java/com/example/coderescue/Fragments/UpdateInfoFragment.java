@@ -3,6 +3,7 @@ package com.example.coderescue.Fragments;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -24,6 +25,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.example.coderescue.Activities.HomeActivity;
 import com.example.coderescue.Activities.UpdateInfoActivity;
 import com.example.coderescue.R;
 import com.google.android.gms.common.api.Status;
@@ -31,22 +33,30 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteFindIterable;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
 import com.mongodb.stitch.core.services.mongodb.remote.RemoteInsertOneResult;
+import com.mongodb.stitch.core.services.mongodb.remote.RemoteUpdateResult;
 
 import org.bson.Document;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
+import static com.mongodb.client.model.Filters.eq;
 
 public class UpdateInfoFragment extends Fragment {
 
@@ -79,7 +89,6 @@ public class UpdateInfoFragment extends Fragment {
         } else {
             getCurrentLocation();
         }
-        getCurrentLocation();
         latitude.setText(Double.toString(lat));
         longitude.setText(Double.toString(lon));
 
@@ -113,8 +122,11 @@ public class UpdateInfoFragment extends Fragment {
         if (requestCode == 100 && resultCode == RESULT_OK && data != null) {
             Place place = Autocomplete.getPlaceFromIntent(data);
             location.setText(place.getAddress());
+            DecimalFormat df = new DecimalFormat("#.########");
             lat = place.getLatLng().latitude;
             lon = place.getLatLng().longitude;
+            lat=(double)Math.round(lat * 100000000d) / 100000000d;
+            lon=(double)Math.round(lon * 100000000d) / 100000000d;
             latitude.setText(Double.toString(lat));
             longitude.setText(Double.toString(lon));
 //            Toast.makeText(getActivity(), String.valueOf(place.getLatLng()), Toast.LENGTH_SHORT).show();
@@ -124,38 +136,85 @@ public class UpdateInfoFragment extends Fragment {
         }
     }
 
-    private void updateVictimInfo() {
-        String loc = location.getText().toString().trim();
+    public void updateVictimInfo() {
         int count = Integer.parseInt(victim_count.getText().toString().trim());
         String disaster = disaster_type.getText().toString().trim();
 
-        Document document = new Document();
-        document.put("latitude", lat);
-        document.put("longitude", lon);
-        document.put("victim_count", count);
-        document.put("disaster", disaster);
-        //TODO: if this disaster is not present in db, add it
-        //TODO: change disaster to a spinner? which is populated from database
-
         mongoClient = HomeFragment.client.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
-        mongoClient
-                .getDatabase("main")
-                .getCollection("victim")
-                .insertOne(document)
-                .addOnSuccessListener(new OnSuccessListener<RemoteInsertOneResult>() {
-                    @Override
-                    public void onSuccess(RemoteInsertOneResult remoteInsertOneResult) {
-                        if (remoteInsertOneResult != null)
-                            Log.d("update victim info", "Victim info updated with id: " + remoteInsertOneResult.getInsertedId().toString().trim());
-                        else Log.e("update victim info", "Error in updating victim info");
+
+        final RemoteMongoCollection<Document> teams = mongoClient.getDatabase("main").getCollection("victimsneedhelp");
+
+        RemoteFindIterable findResults = teams.find(eq("disaster_id", "unique_id_4"));
+        Task<List<Document>> itemsTask = findResults.into(new ArrayList<Document>());
+        itemsTask.addOnCompleteListener(new OnCompleteListener<List<Document>>() {
+            @Override
+            public void onComplete(@NonNull Task<List<Document>> task) {
+                if (task.isSuccessful()) {
+                    List<Document> items = task.getResult();
+                    int numDocs = items.size();
+                    if(numDocs==0){
+                        Log.d("Doesn't exist", "Insert");
+                        final RemoteMongoCollection<Document> victimneedhelp = mongoClient.getDatabase("main").getCollection("victimsneedhelp");
+                        Document newItem = new Document()
+                                .append("disaster_id", "unique_id_4")
+                                .append("victims", Arrays.asList(
+                                        new Document()
+                                                .append("latitude", Double.toString(lat))
+                                                .append("longitude", Double.toString(lon))
+                                                .append("count",count)
+                                                .append("isactive", 1)
+                                ));
+
+
+                        final Task<RemoteInsertOneResult> insertTask = victimneedhelp.insertOne(newItem);
+                        insertTask.addOnCompleteListener(new OnCompleteListener<RemoteInsertOneResult>() {
+                            @Override
+                            public void onComplete(@com.mongodb.lang.NonNull Task <RemoteInsertOneResult> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d("app", String.format("successfully inserted item with id %s",
+                                            task.getResult().getInsertedId()));
+                                } else {
+                                    Log.e("app", "failed to insert document with: ", task.getException());
+                                }
+                            }
+                        });
                     }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e("update victim info", "Error in updating victim info : " + e.getMessage());
+                    else{
+                        System.out.println(items.get(0));
+                        Document first = items.get(0);
+                        final RemoteMongoCollection<Document> victimneedhelp = mongoClient.getDatabase("main").getCollection("victimsneedhelp");
+                        List<Document> temp = (List<Document>)first.get("victims");
+                        Document newvic = new Document().append("latitude",Double.toString(lat)).append("longitude",Double.toString(lon)).append("count",count).append("isactive",1);
+                        temp.add(newvic);
+                        Log.d("Exists", "update");
+                        Document filterDoc = new Document().append("disaster_id", "unique_id_4");
+                        Document updateDoc = new Document().append("$set",
+                                new Document()
+                                        .append("disaster_id", "unique_id_4")
+                                        .append("victims", temp)
+                        );
+
+                        final Task<RemoteUpdateResult> updateTask =
+                                victimneedhelp.updateOne(filterDoc, updateDoc);
+                        updateTask.addOnCompleteListener(new OnCompleteListener <RemoteUpdateResult> () {
+                            @Override
+                            public void onComplete(@NonNull Task <RemoteUpdateResult> task) {
+                                if (task.isSuccessful()) {
+                                    long numMatched = task.getResult().getMatchedCount();
+                                    long numModified = task.getResult().getModifiedCount();
+                                    Log.d("app", String.format("successfully matched %d and modified %d documents",
+                                            numMatched, numModified));
+                                } else {
+                                    Log.e("app", "failed to update document with: ", task.getException());
+                                }
+                            }
+                        });
                     }
-                });
+                } else {
+                    Log.e("app", "Failed to count documents with exception: ", task.getException());
+                }
+            }
+        });
     }
 
     private void getCurrentLocation() {
@@ -177,10 +236,12 @@ public class UpdateInfoFragment extends Fragment {
                                 .removeLocationUpdates(this);
                         if (locationResult != null && locationResult.getLocations().size() > 0) {
                             int latestLocationIndex = locationResult.getLocations().size() - 1;
-                            double latitude = locationResult.getLocations().get(latestLocationIndex).getLatitude();
-                            double longitude = locationResult.getLocations().get(latestLocationIndex).getLongitude();
-                            lat = latitude;
-                            lon = longitude;
+                            double latt = locationResult.getLocations().get(latestLocationIndex).getLatitude();
+                            double longg = locationResult.getLocations().get(latestLocationIndex).getLongitude();
+                            lat = latt;
+                            lon = longg;
+                            latitude.setText(Double.toString(lat));
+                            longitude.setText(Double.toString(lon));
                         }
                     }
                 }, Looper.getMainLooper());

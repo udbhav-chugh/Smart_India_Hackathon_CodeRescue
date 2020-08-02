@@ -264,8 +264,6 @@ public class HomeFragment extends AppCompatActivity {
 
             }
         });
-        Intent intent = new Intent(HomeFragment.this, GoogleMapActivity.class);
-        startActivity(intent);
     }
 
     private void raisePosition(int position) {

@@ -111,7 +111,37 @@ public class CustomWorldHelper {
                                 go.setGeoPosition( 0+latdis , 0+longidis);
 //                                go.setGeoPosition( 21.32 , longivic);
 //                                go.setImageUri("https://d2c7ipcroan06u.cloudfront.net/wp-content/uploads/2020/05/tanmay-bhat-2-edited-696x392.jpg");
-                                        go.setImageResource(R.drawable.tanmay);
+                                String category =  i.getString("category");
+                                Log.d("Correct", category);
+
+                                if( category == null){
+                                    go.setImageResource(R.drawable.misc);
+                                }
+                                else if( category.equals("Earthquake") ){
+                                    go.setImageResource(R.drawable.earthquake);
+                                }
+                                else if(category.equals("Flood")){
+                                    go.setImageResource(R.drawable.flood);
+                                }
+                                else if(category.equals("Thunderstorm")){
+                                    go.setImageResource(R.drawable.thunderstorm);
+                                }
+                                else if(category.equals("Tsunami")){
+                                    go.setImageResource(R.drawable.tsunami);
+                                }
+                                else if(category.equals("Volcanic Eruption")){
+                                    go.setImageResource(R.drawable.volcano);
+                                }
+                                else if(category.equals("Landslides")){
+                                    go.setImageResource(R.drawable.landslide);
+                                }
+                                else if(category.equals("Cyclone")){
+                                    go.setImageResource(R.drawable.hurricane);
+                                }
+                                else{
+                                    go.setImageResource(R.drawable.misc);
+                                }
+
                                 go.setName((String) i.get("name"));
 //                                listVictims.add(go2);
                                 listDisasters.add(go);

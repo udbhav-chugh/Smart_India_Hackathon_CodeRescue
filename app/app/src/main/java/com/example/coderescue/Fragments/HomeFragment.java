@@ -217,6 +217,7 @@ public class HomeFragment extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_home2);
         viewPager = findViewById(R.id.view_pager);
@@ -263,6 +264,8 @@ public class HomeFragment extends AppCompatActivity {
 
             }
         });
+        Intent intent = new Intent(HomeFragment.this, GoogleMapActivity.class);
+        startActivity(intent);
     }
 
     private void raisePosition(int position) {

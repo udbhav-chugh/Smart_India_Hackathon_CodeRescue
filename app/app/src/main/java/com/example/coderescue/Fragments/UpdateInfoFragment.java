@@ -243,6 +243,8 @@ public class UpdateInfoFragment extends Fragment {
                                     long numModified = task.getResult().getModifiedCount();
                                     Log.d("app", String.format("successfully matched %d and modified %d documents",
                                             numMatched, numModified));
+
+                                Toast.makeText(getActivity(), "Submitted Successfully",          Toast.LENGTH_LONG).show();
                                 } else {
                                     Log.e("app", "failed to update document with: ", task.getException());
                                 }

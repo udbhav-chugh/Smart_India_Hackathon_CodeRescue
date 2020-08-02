@@ -41,6 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/Widget.Neumorph.CardView"
+
                 app:neumorph_shapeType="pressed">
                 <EditText
                     android:id="@+id/location"
@@ -70,6 +71,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="25dp"
+                android:background="#ff6663"
                 android:paddingVertical="8dp"
                 android:orientation="vertical">
                 <RelativeLayout
@@ -186,6 +188,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/poiretone_regular"
             android:textStyle="bold"
+            app:neumorph_backgroundColor="#ff6663"
             android:text="Submit"
             style="@style/Widget.Neumorph.Button"/>
     </LinearLayout>

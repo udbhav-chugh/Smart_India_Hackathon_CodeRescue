@@ -31,6 +31,8 @@ import androidx.fragment.app.Fragment;
 import com.example.coderescue.Activities.HomeActivity;
 import com.example.coderescue.Activities.SendMessageActivity;
 import com.example.coderescue.Activities.UpdateInfoActivity;
+import com.example.coderescue.Adapters.DisasterSpinnerAdapter;
+import com.example.coderescue.Classes.DisasterSpinnerCardModel;
 import com.example.coderescue.Classes.NetworkConnectivity;
 import com.example.coderescue.R;
 import com.example.coderescue.VictimHomeAdapter;
@@ -66,7 +68,7 @@ import static android.app.Activity.RESULT_OK;
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 
-public class UpdateInfoFragment extends Fragment {
+public class UpdateInfoFragment extends Fragment{
 
     EditText victim_count, location;
     Spinner spinner;
@@ -76,9 +78,12 @@ public class UpdateInfoFragment extends Fragment {
     TextView latitude, longitude;
     Double lat = 0.0, lon = 0.0;
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
-    ArrayList<String> arrayList;
+//    ArrayList<String> arrayList;
     ArrayList<String> arrayList2;
+    ArrayList<DisasterSpinnerCardModel> disasterCategories;
+
     ArrayAdapter<String> arrayAdapter;
+    DisasterSpinnerAdapter disasterSpinnerAdapter;
     String dis_id;
 
     @Nullable
@@ -94,26 +99,28 @@ public class UpdateInfoFragment extends Fragment {
         String apiKey = "AIzaSyDYoQybddM6c-Daz0bHVe7h2tuyzxHmW1k";
 
         spinner = root.findViewById(R.id.spinner);
-        arrayList = new ArrayList<>();
+//        arrayList = new ArrayList<>();
         arrayList2 = new ArrayList<>();
 
-                arrayList.add("JAVA");
-                arrayList2.add("lol");
-//        arrayList.add("ANDROID");
-//        arrayList.add("C Language");
-//        arrayList.add("CPP Language");
-//        arrayList.add("Go Language");
-//        arrayList.add("AVN SYSTEMS");
-//
-        arrayAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item, arrayList);
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(arrayAdapter);
+//        arrayList.add("JAVA");
+        arrayList2.add("lol");
+
+        disasterCategories = new ArrayList<>();
+        disasterSpinnerAdapter = new DisasterSpinnerAdapter(getActivity(), disasterCategories);
+        disasterSpinnerAdapter.add(new DisasterSpinnerCardModel("Earthquake", R.drawable.disaster_earthquake ));
+        disasterSpinnerAdapter.setDropDownViewResource(R.layout.disaster_spinner_item);
+
+//        arrayAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item, arrayList);
+//        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         getDisasters();
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 //                String tutorialsName = parent.getItemAtPosition(position).toString();
-//                Toast.makeText(parent.getContext(), "Selected: " + arrayList2.get(position),          Toast.LENGTH_LONG).show();
+//                Toast.makeText(parent.getContext(), "Selected: " + arrayList2.get(position),          Toast.LENGTH_LONG).show();                  Dis
+                DisasterSpinnerCardModel item = (DisasterSpinnerCardModel) parent.getSelectedItem();
                 dis_id = arrayList2.get(position);
                 System.out.println(dis_id + "cur disaster");
 
@@ -313,18 +320,22 @@ public class UpdateInfoFragment extends Fragment {
             public void onComplete(@androidx.annotation.NonNull Task<List<Document>> task) {
                 if (task.isSuccessful()) {
                     List<Document> items = task.getResult();
-                    arrayList.clear();
+                    disasterCategories.clear();
                     arrayList2.clear();
                     for(Document i: items){
                         String dis_name = i.getString("name");
                         String dis_id = i.getString("id");
-                        arrayList.add(dis_name);
+//                        arrayList.add(dis_name);
+                        disasterCategories.add(new DisasterSpinnerCardModel(dis_name, getDisasterSpinnerDrawable(i.getString("category").toLowerCase())));
                         arrayList2.add(dis_id);
                         System.out.println(i);
                     }
-                    arrayAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item, arrayList);
-                    arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    spinner.setAdapter(arrayAdapter);
+                    disasterSpinnerAdapter = new DisasterSpinnerAdapter(getActivity(), disasterCategories);
+                    disasterSpinnerAdapter.setDropDownViewResource(R.layout.disaster_spinner_item);
+//                    arrayAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item, arrayList);
+//                    arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//                    spinner.setAdapter(arrayAdapter);
+                    spinner.setAdapter(disasterSpinnerAdapter);
                 } else {
                     Log.e("app", "Failed to count documents with exception: ", task.getException());
                 }
@@ -336,4 +347,27 @@ public class UpdateInfoFragment extends Fragment {
         System.out.println("wow2");
     }
 
+    int getDisasterSpinnerDrawable(String category){
+        switch (category){
+            case "avalanche": return R.drawable.disaster_avalanche;
+            case "blizzard": return  R.drawable.disaster_blizzard;
+            case "desertification": return  R.drawable.disaster_desertification;
+            case "earthquake": return  R.drawable.disaster_earthquake;
+            case "flood": return  R.drawable.disaster_flood;
+            case "hurricane": return  R.drawable.disaster_hurricane;
+            case "landslide": return  R.drawable.disaster_landslide;
+            case "meteorites": return  R.drawable.disaster_meteorite;
+            case "rain": return  R.drawable.disaster_rain;
+            case "smog": return  R.drawable.disaster_smog;
+            case "snow": return  R.drawable.disaster_snow;
+            case "thunderstorm": return  R.drawable.disaster_thunderstorm;
+            case "tornado": return  R.drawable.disaster_tornado;
+            case "toxic": return  R.drawable.disaster_toxic;
+            case "tsunami": return  R.drawable.disaster_tsunami;
+            case "virus": return  R.drawable.disaster_virus;
+            case "volcano": return  R.drawable.disaster_volcano;
+            case "wind": return  R.drawable.disaster_wind;
+            default: return R.drawable.disaster_alarm;
+        }
+    }
 }

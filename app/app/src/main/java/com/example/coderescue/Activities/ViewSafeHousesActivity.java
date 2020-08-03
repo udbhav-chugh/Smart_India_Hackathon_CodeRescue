@@ -70,7 +70,7 @@ public class ViewSafeHousesActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
     private static final int REQUEST_CODE_SPEECH_INPUT = 1000;
     public static String state;
-    soup.neumorphism.NeumorphButton button_ar_map, button_ar_camera;
+    soup.neumorphism.NeumorphButton button_ar_camera;
 
 
     @Override
@@ -78,7 +78,6 @@ public class ViewSafeHousesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_safe_houses);
         speak_msg = findViewById(R.id.voiceBtn3);
-        button_ar_map = findViewById(R.id.button_ar_map);
         button_ar_camera = findViewById(R.id.button_ar_camera);
         prog = findViewById(R.id.progressBar2);
         recyclerView = findViewById(R.id.recylcerView2);
@@ -99,13 +98,6 @@ public class ViewSafeHousesActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 speak();
-            }
-        });
-        button_ar_map.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ViewSafeHousesActivity.this, GoogleMapActivity.class);
-                startActivity(intent);
             }
         });
         button_ar_camera.setOnClickListener(new View.OnClickListener() {

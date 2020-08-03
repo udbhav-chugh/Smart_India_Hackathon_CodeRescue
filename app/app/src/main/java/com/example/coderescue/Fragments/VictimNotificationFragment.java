@@ -49,13 +49,12 @@ import static com.mongodb.client.model.Filters.eq;
 
 public class VictimNotificationFragment extends Fragment {
 
-    soup.neumorphism.NeumorphCardView safe_houses;
     ArrayList<NotificationCardModel> models = new ArrayList<>();
     NotificationCardModel m;
     public static RemoteMongoClient mongoClient;
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
     private static final int REQUEST_CODE_READ_PHONE_STATE_PERMISSION = 2;
-    soup.neumorphism.NeumorphButton button_ar_map;
+    soup.neumorphism.NeumorphButton safe_houses, button_ar_map;
     double latitude, longitude;
     private ProgressBar prog;
     public static String state;

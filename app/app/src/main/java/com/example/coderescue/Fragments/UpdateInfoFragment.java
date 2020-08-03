@@ -29,7 +29,9 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.coderescue.Activities.HomeActivity;
+import com.example.coderescue.Activities.SendMessageActivity;
 import com.example.coderescue.Activities.UpdateInfoActivity;
+import com.example.coderescue.Classes.NetworkConnectivity;
 import com.example.coderescue.R;
 import com.example.coderescue.VictimHomeAdapter;
 import com.example.coderescue.VictimHomeCardModel;
@@ -177,85 +179,96 @@ public class UpdateInfoFragment extends Fragment {
     }
 
     public void updateVictimInfo() {
-        int count = Integer.parseInt(victim_count.getText().toString().trim());
+        String toastText = "No internet. Send a message to the helpline instead instead.";
+        if (NetworkConnectivity.isInternetAvailable(getActivity())) {
+            toastText = "Internet Available";
+            Toast.makeText(getActivity(), toastText, Toast.LENGTH_SHORT).show();
+        }
+        Toast.makeText(getActivity(), toastText, Toast.LENGTH_LONG).show();
 
-        mongoClient = HomeFragment.client.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
+        if (!NetworkConnectivity.isInternetAvailable(getActivity())) {
+            Intent intent = new Intent(getActivity(), SendMessageActivity.class);
+            startActivity(intent);
+        } else {
+            int count = Integer.parseInt(victim_count.getText().toString().trim());
 
-        final RemoteMongoCollection<Document> teams = mongoClient.getDatabase("main").getCollection("victimsneedhelp");
+            mongoClient = HomeFragment.client.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
 
-        RemoteFindIterable findResults = teams.find(eq("disaster_id", dis_id));
-        Task<List<Document>> itemsTask = findResults.into(new ArrayList<Document>());
-        itemsTask.addOnCompleteListener(new OnCompleteListener<List<Document>>() {
-            @Override
-            public void onComplete(@NonNull Task<List<Document>> task) {
-                if (task.isSuccessful()) {
-                    List<Document> items = task.getResult();
-                    int numDocs = items.size();
-                    if(numDocs==0){
-                        Log.d("Doesn't exist", "Insert");
-                        final RemoteMongoCollection<Document> victimneedhelp = mongoClient.getDatabase("main").getCollection("victimsneedhelp");
-                        Document newItem = new Document()
-                                .append("disaster_id", dis_id)
-                                .append("victims", Arrays.asList(
-                                        new Document()
-                                                .append("latitude", Double.toString(lat))
-                                                .append("longitude", Double.toString(lon))
-                                                .append("count",count)
-                                                .append("isactive", 1)
-                                ));
+            final RemoteMongoCollection<Document> teams = mongoClient.getDatabase("main").getCollection("victimsneedhelp");
+
+            RemoteFindIterable findResults = teams.find(eq("disaster_id", dis_id));
+            Task<List<Document>> itemsTask = findResults.into(new ArrayList<Document>());
+            itemsTask.addOnCompleteListener(new OnCompleteListener<List<Document>>() {
+                @Override
+                public void onComplete(@NonNull Task<List<Document>> task) {
+                    if (task.isSuccessful()) {
+                        List<Document> items = task.getResult();
+                        int numDocs = items.size();
+                        if (numDocs == 0) {
+                            Log.d("Doesn't exist", "Insert");
+                            final RemoteMongoCollection<Document> victimneedhelp = mongoClient.getDatabase("main").getCollection("victimsneedhelp");
+                            Document newItem = new Document()
+                                    .append("disaster_id", dis_id)
+                                    .append("victims", Arrays.asList(
+                                            new Document()
+                                                    .append("latitude", Double.toString(lat))
+                                                    .append("longitude", Double.toString(lon))
+                                                    .append("count", count)
+                                                    .append("isactive", 1)
+                                    ));
 
 
-                        final Task<RemoteInsertOneResult> insertTask = victimneedhelp.insertOne(newItem);
-                        insertTask.addOnCompleteListener(new OnCompleteListener<RemoteInsertOneResult>() {
-                            @Override
-                            public void onComplete(@com.mongodb.lang.NonNull Task <RemoteInsertOneResult> task) {
-                                if (task.isSuccessful()) {
-                                    Log.d("app", String.format("successfully inserted item with id %s",
-                                            task.getResult().getInsertedId()));
-                                } else {
-                                    Log.e("app", "failed to insert document with: ", task.getException());
+                            final Task<RemoteInsertOneResult> insertTask = victimneedhelp.insertOne(newItem);
+                            insertTask.addOnCompleteListener(new OnCompleteListener<RemoteInsertOneResult>() {
+                                @Override
+                                public void onComplete(@com.mongodb.lang.NonNull Task<RemoteInsertOneResult> task) {
+                                    if (task.isSuccessful()) {
+                                        Log.d("app", String.format("successfully inserted item with id %s",
+                                                task.getResult().getInsertedId()));
+                                    } else {
+                                        Log.e("app", "failed to insert document with: ", task.getException());
+                                    }
                                 }
-                            }
-                        });
-                    }
-                    else{
-                        System.out.println(items.get(0));
-                        Document first = items.get(0);
-                        final RemoteMongoCollection<Document> victimneedhelp = mongoClient.getDatabase("main").getCollection("victimsneedhelp");
-                        List<Document> temp = (List<Document>)first.get("victims");
-                        Document newvic = new Document().append("latitude",Double.toString(lat)).append("longitude",Double.toString(lon)).append("count",count).append("isactive",1);
-                        temp.add(newvic);
-                        Log.d("Exists", "update");
-                        Document filterDoc = new Document().append("disaster_id", dis_id);
-                        Document updateDoc = new Document().append("$set",
-                                new Document()
-                                        .append("disaster_id", dis_id)
-                                        .append("victims", temp)
-                        );
+                            });
+                        } else {
+                            System.out.println(items.get(0));
+                            Document first = items.get(0);
+                            final RemoteMongoCollection<Document> victimneedhelp = mongoClient.getDatabase("main").getCollection("victimsneedhelp");
+                            List<Document> temp = (List<Document>) first.get("victims");
+                            Document newvic = new Document().append("latitude", Double.toString(lat)).append("longitude", Double.toString(lon)).append("count", count).append("isactive", 1);
+                            temp.add(newvic);
+                            Log.d("Exists", "update");
+                            Document filterDoc = new Document().append("disaster_id", dis_id);
+                            Document updateDoc = new Document().append("$set",
+                                    new Document()
+                                            .append("disaster_id", dis_id)
+                                            .append("victims", temp)
+                            );
 
-                        final Task<RemoteUpdateResult> updateTask =
-                                victimneedhelp.updateOne(filterDoc, updateDoc);
-                        updateTask.addOnCompleteListener(new OnCompleteListener <RemoteUpdateResult> () {
-                            @Override
-                            public void onComplete(@NonNull Task <RemoteUpdateResult> task) {
-                                if (task.isSuccessful()) {
-                                    long numMatched = task.getResult().getMatchedCount();
-                                    long numModified = task.getResult().getModifiedCount();
-                                    Log.d("app", String.format("successfully matched %d and modified %d documents",
-                                            numMatched, numModified));
+                            final Task<RemoteUpdateResult> updateTask =
+                                    victimneedhelp.updateOne(filterDoc, updateDoc);
+                            updateTask.addOnCompleteListener(new OnCompleteListener<RemoteUpdateResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<RemoteUpdateResult> task) {
+                                    if (task.isSuccessful()) {
+                                        long numMatched = task.getResult().getMatchedCount();
+                                        long numModified = task.getResult().getModifiedCount();
+                                        Log.d("app", String.format("successfully matched %d and modified %d documents",
+                                                numMatched, numModified));
 
-                                Toast.makeText(getActivity(), "Submitted Successfully",          Toast.LENGTH_LONG).show();
-                                } else {
-                                    Log.e("app", "failed to update document with: ", task.getException());
+                                        Toast.makeText(getActivity(), "Submitted Successfully", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Log.e("app", "failed to update document with: ", task.getException());
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
+                    } else {
+                        Log.e("app", "Failed to count documents with exception: ", task.getException());
                     }
-                } else {
-                    Log.e("app", "Failed to count documents with exception: ", task.getException());
                 }
-            }
-        });
+            });
+        }
     }
 
     private void getCurrentLocation() {

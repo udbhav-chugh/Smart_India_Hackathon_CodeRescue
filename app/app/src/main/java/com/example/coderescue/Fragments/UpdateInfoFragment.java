@@ -231,6 +231,8 @@ public class UpdateInfoFragment extends Fragment{
                 String inital = "";
                 if (dLat != -1) {
                     inital += "Latitude: " + dLat + "\n" + "Longitude: " + dLong + "\n";
+                    String mapsurl = "http://maps.google.com/maps?q=loc:" + dLat + "," + dLong;
+                    inital += "Maps Link: " + mapsurl + "\n";
                 }
                 inital += "Message: \n";
                 String message = inital + msg_input.getText().toString();

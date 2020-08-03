@@ -347,7 +347,7 @@ public class UpdateInfoFragment extends Fragment{
         System.out.println("wow2");
     }
 
-    int getDisasterSpinnerDrawable(String category){
+    public int getDisasterSpinnerDrawable(String category){
         switch (category){
             case "avalanche": return R.drawable.disaster_avalanche;
             case "blizzard": return  R.drawable.disaster_blizzard;

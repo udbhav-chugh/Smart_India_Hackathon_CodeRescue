@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.coderescue.Activities.PathToVictimActivity;
 import com.example.coderescue.Fragments.HomeFragment;
+import com.example.coderescue.Fragments.UpdateInfoFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteFindIterable;
@@ -51,6 +52,30 @@ public class VictimHomeAdapter extends RecyclerView.Adapter<VictimHomeHolder>{
         return new VictimHomeHolder(view);
     }
 
+    int getDisasterSpinnerDrawable(String category){
+        switch (category){
+            case "avalanche": return R.drawable.disaster_avalanche;
+            case "blizzard": return  R.drawable.disaster_blizzard;
+            case "desertification": return  R.drawable.disaster_desertification;
+            case "earthquake": return  R.drawable.disaster_earthquake;
+            case "flood": return  R.drawable.disaster_flood;
+            case "hurricane": return  R.drawable.disaster_hurricane;
+            case "landslide": return  R.drawable.disaster_landslide;
+            case "meteorites": return  R.drawable.disaster_meteorite;
+            case "rain": return  R.drawable.disaster_rain;
+            case "smog": return  R.drawable.disaster_smog;
+            case "snow": return  R.drawable.disaster_snow;
+            case "thunderstorm": return  R.drawable.disaster_thunderstorm;
+            case "tornado": return  R.drawable.disaster_tornado;
+            case "toxic": return  R.drawable.disaster_toxic;
+            case "tsunami": return  R.drawable.disaster_tsunami;
+            case "virus": return  R.drawable.disaster_virus;
+            case "volcano": return  R.drawable.disaster_volcano;
+            case "wind": return  R.drawable.disaster_wind;
+            default: return R.drawable.disaster_alarm;
+        }
+    }
+
     @Override
     public void onBindViewHolder(@NonNull VictimHomeHolder myHolder, int i) {
         String dis_id = models.get(i).getDescription();
@@ -59,6 +84,7 @@ public class VictimHomeAdapter extends RecyclerView.Adapter<VictimHomeHolder>{
         // String longi = models.get(i).getDescription();
         // String username = models.get(i).getRescueUsername();
         myHolder.mTitle.setText(models.get(i).getTitle());
+        myHolder.image.setBackgroundResource(getDisasterSpinnerDrawable(models.get(i).getCategory().toLowerCase()));
         // myHolder.mDes.setText(models.get(i).getDescription());
         // System.out.println("jai shree ram2");
 

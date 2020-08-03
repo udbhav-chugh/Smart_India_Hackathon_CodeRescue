@@ -346,6 +346,7 @@ public class VictimHomeFragment extends Fragment {
                         m.setDescription(dis_id);
                         m.setLatitude(lat);
                         m.setLongitude(longi);
+                        m.setCategory(i.getString("category"));
                         models.add(m);
                         System.out.println(i);
                     }

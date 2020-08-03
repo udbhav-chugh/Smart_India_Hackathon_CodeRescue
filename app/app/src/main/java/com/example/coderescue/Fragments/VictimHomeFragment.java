@@ -236,8 +236,7 @@ public class VictimHomeFragment extends Fragment {
             Toast.makeText(getActivity(), toastText, Toast.LENGTH_LONG).show();
 
         if (!NetworkConnectivity.isInternetAvailable(getActivity())) {
-            Intent intent = new Intent(getActivity(), SendMessageActivity.class);
-            startActivity(intent);
+            send_message_dialog();
         } else {
             if (ContextCompat.checkSelfPermission(
                     getActivity(), Manifest.permission.ACCESS_FINE_LOCATION

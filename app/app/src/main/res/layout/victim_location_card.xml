@@ -45,6 +45,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:hint="Distance"
+                        android:textAlignment="viewEnd"
                         android:textSize="17sp"
                         android:fontFamily="@font/poiretone_regular"
                         android:textStyle="bold"/>
@@ -79,6 +80,8 @@
                          android:hint="Victim Count"
                          android:fontFamily="@font/montserrat_medium"
                          android:textColor="#a9a9a9"
+                         android:textAlignment="viewEnd"
+
                          android:textSize="12sp"
                          android:gravity="end"
                          />
@@ -113,6 +116,8 @@
                          android:hint="Latitude"
                          android:fontFamily="@font/montserrat_medium"
                          android:textColor="#a9a9a9"
+                         android:textAlignment="viewEnd"
+
                          android:textSize="12sp"
                          android:gravity="end"
                          />
@@ -147,6 +152,8 @@
                          android:hint="Longitude"
                          android:fontFamily="@font/montserrat_medium"
                          android:textColor="#a9a9a9"
+                         android:textAlignment="viewEnd"
+
                          android:textSize="12sp"
                          />
                  </LinearLayout>

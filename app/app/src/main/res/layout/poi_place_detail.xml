@@ -8,7 +8,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Name of the place"
-        android:textColor="#000"
+        android:fontFamily="@font/poiretone_regular"
+        android:textStyle="bold"
         android:textSize="42sp"
         android:layout_gravity="center"/>
 

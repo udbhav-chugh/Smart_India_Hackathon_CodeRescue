@@ -14,12 +14,17 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="Dashboard"
-        android:textSize="23sp" />
+        android:fontFamily="@font/poiretone_regular"
+        android:textStyle="bold"
+        android:layout_marginBottom="10dp"
+        android:textSize="26sp" />
 
     <soup.neumorphism.NeumorphButton
         android:id="@+id/safe_houses"
         style="@style/Widget.Neumorph.Button"
         android:layout_width="250dp"
+        android:fontFamily="@font/poiretone_regular"
+        android:textStyle="bold"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
@@ -30,6 +35,8 @@
         android:id="@+id/button_ar_map"
         style="@style/Widget.Neumorph.Button"
         android:layout_width="250dp"
+        android:fontFamily="@font/poiretone_regular"
+        android:textStyle="bold"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
@@ -43,20 +50,22 @@
         android:fontFamily="@font/poiretone_regular"
         android:textSize="24sp"
         android:textStyle="bold"
+        android:layout_marginTop="10dp"
         android:layout_marginBottom="15dp"
         android:layout_gravity="center"/>
 
     <soup.neumorphism.NeumorphCardView
         style="@style/Widget.Neumorph.CardView"
         android:layout_width="match_parent"
-        android:layout_height="340dp"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="130dp"
         app:neumorph_backgroundColor="#99eef0f5"
         app:neumorph_shapeType="flat">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recylcerView"
             android:layout_width="match_parent"
-            android:layout_height="320dp"/>
+            android:layout_height="match_parent" />
 
         <ProgressBar
             android:id="@+id/progressBar"

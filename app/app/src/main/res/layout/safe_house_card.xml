@@ -36,18 +36,35 @@
                      android:textSize="17sp"
                      android:fontFamily="@font/poiretone_regular"
                      android:textStyle="bold"/>
+             </LinearLayout>
+
+             <LinearLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_marginHorizontal="25dp"
+                 android:layout_marginTop="15dp"
+                 android:orientation="horizontal">
+                 <TextView
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:text="Distance"
+                     android:fontFamily="@font/montserrat_medium"
+                     android:textColor="#a9a9a9"
+                     android:textSize="12sp"
+                     android:gravity="start"
+                     />
                  <LinearLayout
                      android:layout_width="match_parent"
                      android:layout_height="wrap_content"
                      android:gravity="end">
-                    <TextView
-                        android:id="@+id/titleTv2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:hint="Distance"
-                        android:textSize="17sp"
-                        android:fontFamily="@font/poiretone_regular"
-                        android:textStyle="bold"/>
+                     <TextView
+                         android:id="@+id/titleTv2"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:hint="Distance"
+                         android:textSize="12sp"
+                         android:fontFamily="@font/poiretone_regular"
+                         android:textStyle="bold"/>
                  </LinearLayout>
              </LinearLayout>
 

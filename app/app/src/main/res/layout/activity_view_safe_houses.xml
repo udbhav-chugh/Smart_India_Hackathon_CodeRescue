@@ -20,20 +20,21 @@
         android:scaleType="fitCenter"
         android:src="@drawable/ic_mic"/>
 
-    <soup.neumorphism.NeumorphButton
-        android:id="@+id/button_ar_camera"
-        style="@style/Widget.Neumorph.Button"
-        android:layout_width="250dp"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        app:neumorph_backgroundColor="#ff6663"
-        android:layout_gravity="center"
-        android:text="AR Camera" />
+        android:text="Safe Houses: "
+        android:id="@+id/safehouses"
+        android:fontFamily="@font/poiretone_regular"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="15dp"
+        android:layout_gravity="center"/>
 
     <soup.neumorphism.NeumorphCardView
         style="@style/Widget.Neumorph.CardView"
         android:layout_width="match_parent"
-        android:layout_height="440dp"
+        android:layout_height="460dp"
         android:layout_marginTop="10dp"
         app:neumorph_backgroundColor="#99eef0f5"
         app:neumorph_shapeType="flat">

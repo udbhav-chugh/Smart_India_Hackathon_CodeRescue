@@ -15,6 +15,7 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
 import android.speech.RecognizerIntent;
@@ -22,6 +23,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.coderescue.Classes.NetworkConnectivity;
@@ -65,12 +67,12 @@ public class ViewSafeHousesActivity extends AppCompatActivity {
     private ProgressBar prog;
     ImageButton speak_msg;
     int flag;
-
+    Context c;
     public double lat, longi;
+    TextView sh;
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
     private static final int REQUEST_CODE_SPEECH_INPUT = 1000;
     public static String state;
-    soup.neumorphism.NeumorphButton button_ar_camera;
 
 
     @Override
@@ -78,9 +80,10 @@ public class ViewSafeHousesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_safe_houses);
         speak_msg = findViewById(R.id.voiceBtn3);
-        button_ar_camera = findViewById(R.id.button_ar_camera);
         prog = findViewById(R.id.progressBar2);
         recyclerView = findViewById(R.id.recylcerView2);
+        sh=findViewById(R.id.safehouses);
+        c=this;
 
         flag = 0;
         context = this;
@@ -89,6 +92,7 @@ public class ViewSafeHousesActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         state = intent.getStringExtra("state");
+        sh.append(state);
         lat = intent.getDoubleExtra("lat", 0.0);
         longi = intent.getDoubleExtra("long", 0.0);
         Log.d("safe houses", "state: " + state);
@@ -98,13 +102,6 @@ public class ViewSafeHousesActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 speak();
-            }
-        });
-        button_ar_camera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ViewSafeHousesActivity.this, PoiBrowserActivity.class);
-                startActivity(intent);
             }
         });
     }
@@ -189,7 +186,6 @@ public class ViewSafeHousesActivity extends AppCompatActivity {
 
                     int numDocs = items.size();
                     if(numDocs==0){
-                        Log.d("Incorrect", "Wrong disaster_id should not happen");
                     }
                     else{
                         System.out.println(items.get(0));
@@ -221,9 +217,22 @@ public class ViewSafeHousesActivity extends AppCompatActivity {
                         latvic = Double.parseDouble(latvics);
                         longivic = Double.parseDouble(longivics);
 
-                        myAdapter=new SafeHouseAdapter(context,models);
-                        recyclerView.setAdapter(myAdapter);
-                        prog.setVisibility(View.GONE);
+                        if(flag==1){
+                            flag=0;
+                            System.out.println("jai shree ram");
+//                String uri = String.format(Locale.ENGLISH, "geo:%f,%f", lat, longi);
+                            String geoUri = "http://maps.google.com/maps?q=loc:" + latvic + "," + longivic + " (" + "label temp" + ")";
+
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
+                            c.startActivity(intent);
+                            prog.setVisibility(View.GONE);
+                        }
+                        else{
+                            myAdapter=new SafeHouseAdapter(context,models);
+                            recyclerView.setAdapter(myAdapter);
+                            prog.setVisibility(View.GONE);
+
+                        }
                     }
 
                 } else {
@@ -261,6 +270,7 @@ public class ViewSafeHousesActivity extends AppCompatActivity {
                     if(spoken.contains("near")){
                         flag=1;
 //                        snd2.performClick();
+                        getSafeHouses();
                     }
                 }
             }

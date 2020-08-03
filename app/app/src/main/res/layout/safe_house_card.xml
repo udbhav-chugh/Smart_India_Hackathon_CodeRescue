@@ -106,11 +106,12 @@
                  <LinearLayout
                      android:layout_width="match_parent"
                      android:layout_height="wrap_content"
-                     android:gravity="right">
+                     android:gravity="end">
                      <TextView
                          android:id="@+id/longitude"
                          android:layout_width="wrap_content"
                          android:layout_height="wrap_content"
+                         android:textAlignment="viewEnd"
                          android:hint="Longitude"
                          android:fontFamily="@font/montserrat_medium"
                          android:textColor="#a9a9a9"

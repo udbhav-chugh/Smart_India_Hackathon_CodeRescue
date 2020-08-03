@@ -58,6 +58,7 @@ public class SafeHouseAdapter extends RecyclerView.Adapter<SafeHouseHolder>{
         myHolder.name.setText(models.get(i).getName());
         myHolder.mLat.setText(lat);
         myHolder.mLong.setText(longi);
+        myHolder.mTitle.setText(Double.toString(models.get(i).getDistance()));
         System.out.println("jai shree ram2");
 
         //WHEN ITEM IS CLICKED

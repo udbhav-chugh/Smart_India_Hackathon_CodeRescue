@@ -8,10 +8,22 @@
     android:orientation="vertical"
     tools:context=".Fragments.HomeFragment">
 
+        <ImageButton
+            android:id="@+id/voiceBtn5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="2dp"
+            android:background="@null"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_mic"/>
+
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="30dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <soup.neumorphism.NeumorphCardView

@@ -23,6 +23,7 @@ import com.mongodb.stitch.core.services.mongodb.remote.RemoteUpdateResult;
 
 import org.bson.Document;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,7 +59,9 @@ public class SafeHouseAdapter extends RecyclerView.Adapter<SafeHouseHolder>{
         myHolder.name.setText(models.get(i).getName());
         myHolder.mLat.setText(lat);
         myHolder.mLong.setText(longi);
-        myHolder.mTitle.setText(Double.toString(models.get(i).getDistance()));
+        Double distance = models.get(i).getDistance();
+        if(distance > 1000) myHolder.mTitle.setText(new DecimalFormat("#.##").format(distance / 1000.0) + " Km");
+        else myHolder.mTitle.setText(new DecimalFormat("#.##").format(distance) + " m");
         System.out.println("jai shree ram2");
 
         //WHEN ITEM IS CLICKED

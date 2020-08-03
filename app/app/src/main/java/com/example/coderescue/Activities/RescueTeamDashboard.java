@@ -72,7 +72,7 @@ public class RescueTeamDashboard extends AppCompatActivity {
     ArrayList<VictimLocationCardModel> models = new ArrayList<>();
     VictimLocationCardModel m;
     private ProgressBar prog;
-//    ImageButton speak_msg;
+    ImageButton speak_msg;
     int flag;
 
     public String lat,longi;
@@ -86,7 +86,7 @@ public class RescueTeamDashboard extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rescue_team_dashboard);
-//        speak_msg = findViewById(R.id.voiceBtn3);
+        speak_msg = findViewById(R.id.voiceBtn3);
         button_ar_camera = findViewById(R.id.button_ar_camera);
         flag=0;
 
@@ -103,19 +103,16 @@ public class RescueTeamDashboard extends AppCompatActivity {
         teamname.append(username);
         getDisastername();
 
-        // Capture the layout's TextView and set the string as its text
-//        TextView textView = findViewById(R.id.textView3);
-//        textView.setText(message);
         mRecylcerView=findViewById(R.id.recylcerView2);
         c = this;
         mRecylcerView.setLayoutManager(new LinearLayoutManager(this));
         snd2=findViewById(R.id.snd_msg2);
-//        speak_msg.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                speak();
-//            }
-//        });
+        speak_msg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                speak();
+            }
+        });
 
         button_ar_camera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,7 +130,6 @@ public class RescueTeamDashboard extends AppCompatActivity {
         Toast.makeText(this, toastText, Toast.LENGTH_SHORT).show();
 
         if(!NetworkConnectivity.isInternetAvailable(getApplicationContext())){
-//            SendMessageUtility.sendMessage(getApplicationContext(), RescueTeamDashboard.this, "testing send message");
         }
         else{
             if (ContextCompat.checkSelfPermission(
@@ -144,27 +140,6 @@ public class RescueTeamDashboard extends AppCompatActivity {
             } else {
                 getCurrentLocation();
             }
-        }
-    }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode){
-            case SendMessageUtility.REQUEST_CODE_SEND_MESSAGE_PERMISSION:
-                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    if(!NetworkConnectivity.isInternetAvailable(getApplicationContext())){
-                        SendMessageUtility.sendMessage(getApplicationContext(), RescueTeamDashboard.this, "testing send message");
-                    }
-                }
-                else{
-                    Toast.makeText(getApplicationContext(), "You don't have the required permissions for sending text messages", Toast.LENGTH_SHORT).show();
-                }
-            case ReceiveMessageUtility.REQUEST_CODE_RECEIVE_MESSAGE_PERMISSION:
-                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    //TODO: add code here
-                }
-                else{
-                    Toast.makeText(getApplicationContext(), "You don't have the required permissions for receiving text messages", Toast.LENGTH_SHORT).show();
-                }
         }
     }
 
@@ -300,7 +275,8 @@ public class RescueTeamDashboard extends AppCompatActivity {
                                                     Document notactive = new Document()
                                                             .append("latitude", latvics)
                                                             .append("longitude", longivics)
-                                                            .append("isactive", 0);
+                                                            .append("count", doc.getInteger("count"))
+                                                            .append("isactive", 1);
                                                     temp2.add(notactive);
                                                 }
                                             }
@@ -330,7 +306,7 @@ public class RescueTeamDashboard extends AppCompatActivity {
                                         }
                                         Context context = c
                                                 .getApplicationContext();
-                                        CharSequence text = "Request Sent. Rescue Team Will Arrive as soon as possible!";
+                                        CharSequence text = "Finding Path to nearest victim";
                                         int duration = Toast.LENGTH_LONG;
 
                                         Toast toast = Toast.makeText(context, text, duration);

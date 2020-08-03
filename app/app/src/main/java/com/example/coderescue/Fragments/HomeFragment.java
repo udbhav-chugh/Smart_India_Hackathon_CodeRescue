@@ -214,6 +214,7 @@ public class HomeFragment extends AppCompatActivity {
     public static StitchAppClient client;
     public static String diss_idd;
     private static final int REQUEST_CODE_SPEECH_INPUT = 1000;
+    ImageButton speak_msg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -230,6 +231,8 @@ public class HomeFragment extends AppCompatActivity {
         tile_rescue = findViewById(R.id.tile_rescue);
         tile_third = findViewById(R.id.tile_third);
         tile_notif = findViewById(R.id.tile_notif);
+        speak_msg = findViewById(R.id.voiceBtn5);
+
 
         normal_victim.setOnClickListener(this::onClick);
         normal_rescue.setOnClickListener(this::onClick);
@@ -262,6 +265,13 @@ public class HomeFragment extends AppCompatActivity {
             @Override
             public void onPageScrollStateChanged(int state) {
 
+            }
+        });
+
+        speak_msg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                speak();
             }
         });
     }
@@ -342,7 +352,7 @@ public class HomeFragment extends AppCompatActivity {
 
 
     private void speak(){
-
+        System.out.println("aagye speak mein");
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -366,13 +376,18 @@ public class HomeFragment extends AppCompatActivity {
                 if (resultCode == -1 && null!=data){
                     ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     String spoken = result.get(0);
-                    if(spoken.contains("help")){
-                        Intent intent = new Intent(HomeFragment.this, VictimHomeActivity.class);
-                        startActivity(intent);
+                    if(spoken.contains("provide") && spoken.contains("help")){
+                        viewPager.setCurrentItem(2, true);
                     }
-                    if(spoken.contains("message")){
-                        Intent intent = new Intent(HomeFragment.this, SendMessageActivity.class);
-                        startActivity(intent);
+                    else if(spoken.contains("help") || spoken.contains("need")){
+                        viewPager.setCurrentItem(0, true);
+                    }
+                    else if(spoken.contains("dashboard")){
+                        viewPager.setCurrentItem(3, true);
+
+                    }
+                    else if(spoken.contains("login")){
+                        viewPager.setCurrentItem(1, true);
                     }
                 }
             }

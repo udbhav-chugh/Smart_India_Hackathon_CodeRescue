@@ -1,14 +1,19 @@
 package com.example.coderescue.Activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.coderescue.Adapters.SectionsPagerAdapter;
 import com.example.coderescue.Fragments.RescueTeamLoginFragment;
@@ -34,6 +39,8 @@ public class FragmentHome2 extends AppCompatActivity {
     LinearLayout normal_victim, normal_rescue, normal_third, normal_notif;
     int totalFragments = 0;
     public static StitchAppClient client;
+    private static final int REQUEST_CODE_SPEECH_INPUT = 1000;
+    ImageButton speak_msg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +56,7 @@ public class FragmentHome2 extends AppCompatActivity {
         tile_rescue = findViewById(R.id.tile_rescue);
         tile_third = findViewById(R.id.tile_third);
         tile_notif = findViewById(R.id.tile_notif);
+        speak_msg = findViewById(R.id.voiceBtn5);
 
         normal_victim.setOnClickListener(this::onClick);
         normal_rescue.setOnClickListener(this::onClick);
@@ -61,6 +69,14 @@ public class FragmentHome2 extends AppCompatActivity {
 
         List<Fragment> fragments = getFragments();
         totalFragments = fragments.size();
+
+        speak_msg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                speak();
+            }
+        });
+        System.out.println("frag2");
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(), fragments);
         viewPager.setAdapter(sectionsPagerAdapter);
         viewPager.setCurrentItem(3);
@@ -156,6 +172,43 @@ public class FragmentHome2 extends AppCompatActivity {
 
         tile_notif.setVisibility(View.INVISIBLE);
         normal_notif.setVisibility(View.VISIBLE);
+    }
+
+    private void speak(){
+        System.out.println("aagye speak mein");
+
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Hi speak something");
+
+        try {
+            startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT);
+        }
+        catch (Exception e){
+            Toast.makeText(this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case REQUEST_CODE_SPEECH_INPUT:{
+                if (resultCode == -1 && null!=data){
+                    ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    String spoken = result.get(0);
+                    if(spoken.contains("help")){
+                        Toast.makeText(this, spoken,          Toast.LENGTH_LONG).show();
+                    }
+                    if(spoken.contains("message")){
+
+                    }
+                }
+            }
+        }
     }
 
     private void enableAnonymousAuth(){

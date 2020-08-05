@@ -3,7 +3,7 @@ This repository contains the source code for an augmented-reality based solution
 
 The app folder contains the code for Android Studio application and the web folder conatains the source code for the website developed by team CodeRescue in grand final of Smart India Hackathon 2020.
 
-Demo Video Link: https://drive.google.com/file/d/1MOaY7CY9OtU42e2l-USdYZBia9chZ-gi/view?fbclid=IwAR1MWz32MDf1S1qnztZOd1GICf7KZ2itH7Bh0IXVBw8FkPJF-ojuGGR7bw4
+Demo Video Link: https://www.youtube.com/watch?v=dsKKKAG2kPM
 
 Features of the product:
 

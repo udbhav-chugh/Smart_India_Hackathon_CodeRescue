@@ -110,7 +110,7 @@ public class VictimLocationAdapter extends RecyclerView.Adapter<VictimLocationHo
                                                 .append("latitude", lat)
                                                 .append("longitude", longi)
                                                 .append("count",countvic)
-                                                .append("isactive", 1);
+                                                .append("isactive", 0);
                                         temp2.add(notactive);
                                     }
                                 }

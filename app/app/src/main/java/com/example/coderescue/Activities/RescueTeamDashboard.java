@@ -276,7 +276,7 @@ public class RescueTeamDashboard extends AppCompatActivity {
                                                             .append("latitude", latvics)
                                                             .append("longitude", longivics)
                                                             .append("count", doc.getInteger("count"))
-                                                            .append("isactive", 1);
+                                                            .append("isactive", 0);
                                                     temp2.add(notactive);
                                                 }
                                             }

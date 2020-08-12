@@ -81,5 +81,5 @@
     <string name="park">park</string>
     <string name="parking">parking</string>
 
-    <string name="google_maps_key">AIzaSyDCC_Mh6NG2vkOoMep7nDaTHy4_1g1CXxU</string>
+    <string name="google_maps_key">YOUR_API_KEY</string>
 </resources>

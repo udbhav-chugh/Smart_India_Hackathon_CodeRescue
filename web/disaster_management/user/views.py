@@ -8,13 +8,7 @@ import main
 
 def connect():
     client = MongoClient('mongodb+srv://coderescue:sih2020@trycluster-rfees.mongodb.net/test?retryWrites=true&w=majority&ssl=true&ssl_cert_reqs=CERT_NONE' , ssl = True)
-    # client = MongoClient('mongodb+srv://user:user@sih-jhvxc.mongodb.net/test?retryWrites=true&w=majority')
     return client
-
-def index (request):
-    client = MongoClient('mongodb+srv://user:user@sih-jhvxc.mongodb.net/test?retryWrites=true&w=majority')
-    db = client.database
-    print("Success")
 
 def login (request):
     print(request.session.get('isHeadquartersLoggedIn' , None))
@@ -33,13 +27,6 @@ def login (request):
         if count_authorities == 1:
             request.session['isHeadquartersLoggedIn'] = 1
             return redirect( 'main:headquarters_dashboard' )
-
-        # if rescue team is trying to log in
-        db = client.authorization.rescue_team
-        count_authorities = db.count_documents({ 'username' :request.POST['username'] , 'password' : request.POST['password']  })
-        print(count_authorities)
-        if count_authorities == 1:
-            return redirect( 'main:rescue_team_dashboard' )
 
         return render( request , 'user/login_page.html' , {"error" : 1})
     return render(request, 'user/login_page.html')

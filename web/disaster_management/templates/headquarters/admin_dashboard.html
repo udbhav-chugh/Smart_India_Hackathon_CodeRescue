@@ -8,9 +8,7 @@
 	<link rel="shortcut icon" href="{% static 'main/img/icons/icon-48x48.png' %}" />
 
 	<title>Admin Dashboard</title>
-
     <link href="{% static 'main/css/app.css' %}" rel="stylesheet">
-
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -20,97 +18,100 @@
 
 {% block css %}
 <style>
-    .navbar {
+      .navbar {
         padding-top: 0px ;
         padding-bottom: 0px;
     }
 </style>
 {% endblock %}
-
 {% block content %}
-	<div class="wrapper">
-		<nav id="sidebar" class="sidebar">
-			<div class="sidebar-content js-simplebar">
-				<!-- <a class="sidebar-brand" href="index.html"> -->
-                    <span class="align-middle">Dashboard</span>
-                <!-- </a> -->
 
-				<ul class="sidebar-nav">
-					<li class="sidebar-item active">
-						<a class="sidebar-link" href="{% url 'main:headquarters_dashboard' %}">
-                        <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Manage Active Disasters</span>
-                        </a>
-					</li>
+<div class="wrapper">
+    <nav id="sidebar" class="sidebar">
+        <div class="sidebar-content js-simplebar">
+            <span class="align-middle sidebar-brand">Dashboard</span>  
 
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="{% url 'main:all_disasters' %}">
-                        <i class="align-middle" data-feather="user"></i> <span class="align-middle">All Disasters</span>
-                        </a>
-					</li>
+            <ul class="sidebar-nav" style="width:30em">
 
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="{% url 'main:add_disaster' %}">
-                        <i class="align-middle" data-feather="settings"></i> <span class="align-middle">Add Disaster</span>
-                        </a>
-					</li>
+                <li class="sidebar-item active">
+                    <a class="sidebar-link" href="{% url 'main:headquarters_dashboard' %}">
+                    <i class="align-middle" data-feather="codepen"></i> <span class="align-middle">Manage Active Disasters</span>
+                    </a>
+                </li>
 
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="{% url 'main:add_rescue_team' %}">
-                        <i class="align-middle" data-feather="credit-card"></i> <span class="align-middle">Add Rescue Team</span>
-                        </a>
-					</li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="{% url 'main:all_disasters' %}">
+                    <i class="align-middle" data-feather="list"></i> <span class="align-middle">All Disasters</span>
+                    </a>
+                </li>
 
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="{% url 'main:send_notification' %}">
-                        <i class="align-middle" data-feather="book"></i> <span class="align-middle">Send Notification</span>
-                        </a>
-					</li>
-                </ul>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="{% url 'main:add_disaster' %}">
+                    <i class="align-middle" data-feather="plus"></i> <span class="align-middle">Add Disaster</span>
+                    </a>
+                </li>
 
-			</div>
-		</nav>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="{% url 'main:send_notification' %}">
+                    <i class="align-middle" data-feather="send"></i> <span class="align-middle">Send Notification</span>
+                    </a>
+                </li>
 
-		<div class="main">
-			<main class="content">
-				<div class="container-fluid p-0">
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="{% url 'main:add_safe_house' %}">
+                    <i class="align-middle" data-feather="home"></i> <span class="align-middle">Add Safe House</span>
+                    </a>
+                </li>
 
-					<div class="row mb-2 mb-xl-3">
-						<div class="col-auto d-none d-sm-block">
-							<h3 style="font-family: sans-serif; color:darkslategrey"><strong>Manage Active Disasters</strong></h3>
-						</div>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="{% url 'main:add_rescue_team' %}">
+                    <i class="align-middle" data-feather="users"></i> <span class="align-middle">Add Rescue Team</span>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+    <div class="main">
+        <main class="content">
+            <div class="container-fluid p-0">
+
+                <div class="row mb-2 mb-xl-3">
+                    <div class="col-auto d-none d-sm-block">
+                        <h3 style="font-family: sans-serif; color:darkslategrey; margin-left: 12em;"><strong>Manage Active Disasters</strong></h3>
                     </div>
-                    <hr>
-                    <div class="card-deck mt-3" style="margin-left: 0rem;"></div>
-                            {% for disaster in active_disasters %}
-                            <div style="display:inline-block;">
-                            <div class="card bg-light mb-3 text-center" style="width: 22rem; margin-right: 0.7em;">
-                            <div class="card-body">
-                                <h4 style="color: grey; font-size: large;" class="card-title"><label for="{{ disaster.id }}"> {{ disaster.name }}</label></h4>
-                                <!-- <input type="checkbox" class = "disasterClass" id="{{ disaster.id }}" name="{{ disaster.id }}"
-                                value="{{ disaster.id }}" {% if disaster.isactive == 1 %} checked {% endif %}></h4> -->
-                                <b style="color: grey;" class="card-text">Locations:</b>
-                                {% for loc in disaster.location %}
-                                    {{loc}} |
-                                {% endfor %}
-                                <br/>
-                                <br/>
-                                <!-- <div class="card-footer"> -->
-                                    <a href="{% url 'main:update_statistics' disaster.id %}" class="btn btn-dark">Update Statistics</a>
-                                <!-- </div> -->
-                                <br>
-                                <hr>
-                            </div>
+                </div>
+                <hr>
+                <div class="card-deck mt-3" style="margin-left: 0rem;"></div>
+                        {% for disaster in active_disasters %}
+                        <div style="display:inline-block;">
+                        <div class="card bg-light mb-3 text-center" style="width: 22rem; margin-right: 0.7em;">
+                        <div class="card-body">
+                            <h4 style="color: grey; font-size: large;" class="card-title"><label for="{{ disaster.id }}"> {{ disaster.name }}</label></h4>
+                            <!-- <input type="checkbox" class = "disasterClass" id="{{ disaster.id }}" name="{{ disaster.id }}"
+                            value="{{ disaster.id }}" {% if disaster.isactive == 1 %} checked {% endif %}></h4> -->
+                            <b style="color: grey;" class="card-text">Locations:</b>
+                            {% for loc in disaster.location %}
+                                {{loc}} |
+                            {% endfor %}
+                            <br/>
+                            <br/>
+                            <!-- <div class="card-footer"> -->
+                                <a href="{% url 'main:update_statistics' disaster.id %}" class="btn btn-dark">Update Statistics</a>
+                            <!-- </div> -->
+                            <br>
+                            <hr>
                         </div>
                     </div>
-                            {% endfor%}
-
-                            <!-- <a href="{% url 'main:all_disasters' %}"> See all disasters and change their status </a> -->
                 </div>
-				</div>
-			</main>
-		</div>
-	</div>
+                        {% endfor%}
 
-	<script src="{% static 'main/js/app.js' %}"></script>
+                        <!-- <a href="{% url 'main:all_disasters' %}"> See all disasters and change their status </a> -->
+            </div>
+            </div>
+        </main>
+    </div>
+</div>
+<script src="{% static 'main/js/app.js' %}"></script>
 
 {% endblock %}

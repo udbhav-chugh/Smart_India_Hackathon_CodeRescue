@@ -10,7 +10,7 @@
 	<title>Admin Dashboard</title>
 
     <link href="{% static 'main/css/app.css' %}" rel="stylesheet">
-    
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -24,8 +24,17 @@
 
 .navbar {
     padding-top: 0px ;
-    padding-bottom: 0px; 
-} 
+    padding-bottom: 0px;
+}
+
+.form-group {
+    margin-bottom: 0rem!important;
+}
+
+.waves-input-wrapper {
+    width: 100%;
+}
+
 
 </style>
 
@@ -41,7 +50,7 @@
   window.onload = function(){
     document.getElementById("location_wise_names").style.display = "none";
     document.getElementById("disaster_wise_names").style.display = "block";
-    document.getElementById("success").style.visibility = 'hidden'; 
+    document.getElementById("success").style.visibility = 'hidden';
     document.getElementById("success").click();
   }
 
@@ -61,92 +70,118 @@
 	<div class="wrapper">
 		<nav id="sidebar" class="sidebar">
 			<div class="sidebar-content js-simplebar">
-				<!-- <a class="sidebar-brand" href="index.html"> -->
-                    <span class="align-middle">Dashboard</span>
-                <!-- </a> -->
 
-				<ul class="sidebar-nav">
-					<li class="sidebar-item">
+                <span class="align-middle sidebar-brand">Dashboard</span>
+
+				<ul class="sidebar-nav" style="width:30em">
+
+                    <li class="sidebar-item">
 						<a class="sidebar-link" href="{% url 'main:headquarters_dashboard' %}">
-                        <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Manage Active Disasters</span>
+                        <i class="align-middle" data-feather="codepen"></i> <span class="align-middle">Manage Active Disasters</span>
                         </a>
-					</li>
+                    </li>
 
 					<li class="sidebar-item">
 						<a class="sidebar-link" href="{% url 'main:all_disasters' %}">
-                        <i class="align-middle" data-feather="user"></i> <span class="align-middle">All Disasters</span>
+                        <i class="align-middle" data-feather="list"></i> <span class="align-middle">All Disasters</span>
                         </a>
 					</li>
 
 					<li class="sidebar-item">
 						<a class="sidebar-link" href="{% url 'main:add_disaster' %}">
-                        <i class="align-middle" data-feather="settings"></i> <span class="align-middle">Add Disaster</span>
-                        </a>
-					</li>
-
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="{% url 'main:add_rescue_team' %}">
-                        <i class="align-middle" data-feather="credit-card"></i> <span class="align-middle">Add Rescue Team</span>
+                        <i class="align-middle" data-feather="plus"></i> <span class="align-middle">Add Disaster</span>
                         </a>
 					</li>
 
 					<li class="sidebar-item active">
 						<a class="sidebar-link" href="{% url 'main:send_notification' %}">
-                        <i class="align-middle" data-feather="book"></i> <span class="align-middle">Send Notification</span>
+                        <i class="align-middle" data-feather="send"></i> <span class="align-middle">Send Notification</span>
                         </a>
-					</li>
+                    </li>
+
+                    <li class="sidebar-item">
+						<a class="sidebar-link" href="{% url 'main:add_safe_house' %}">
+                        <i class="align-middle" data-feather="home"></i> <span class="align-middle">Add Safe House</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="{% url 'main:add_rescue_team' %}">
+                        <i class="align-middle" data-feather="users"></i> <span class="align-middle">Add Rescue Team</span>
+                        </a>
+                    </li>
+
                 </ul>
-					
+
 			</div>
 		</nav>
 
 		<div class="main">
 			<main class="content">
-				<div class="container-fluid p-0">
+        <div class="container-fluid p-0">
 
 					<div class="row mb-2 mb-xl-3">
 						<div class="col-auto d-none d-sm-block">
-							<h3><strong>Send Notification</strong></h3>
+							<h3 style="margin-left: 15em;"><strong>Send Notification</strong></h3>
 						</div>
                     </div>
                     <hr>
                     <div class="container">
-                        <form method="POST" action="{% url 'main:send_notification' %}">
+                      <div class="card bg-light" style="width:24em; margin-left: 21em">
+                        <form method="POST" action="{% url 'main:send_notification' %}" style="padding:1em">
                             {% csrf_token %}
+                          <div style="display:flex;">
 
-                            <input type="radio" checked id="disaster_wise" name="is_disaster" value="disaster_wise" onclick="hideLocations()">
-                            <label for="disaster_wise">Disaster Wise</label><br>
-                            <input type="radio" id="location_wise" name="is_disaster" value="location_wise" onclick="hideDisasters()">
-                            <label for="location_wise">Location Wise</label><br>
+                            <div style="display:inline-block; margin-right: 2em;">
+                              <label for="disaster_wise" class="container radioContainer">Disaster Wise
+                                <input type="radio" checked id="disaster_wise" name="is_disaster" value="disaster_wise" onclick="hideLocations()">
+                                <span class="checkmark"></span>
+                              </label>
+                            </div>
 
-                        <div id="disaster_wise_names">
-                            <label for="active_disasters">Disaster Name: </label><br>
-                            <select id="active_disasters" name="active_disasters">
-                            {% for disaster in active_disasters %}
-                                <option value = "{{disaster.id}}"> {{disaster.name}}</option>
-                            {% endfor %}
-                            </select>
-                            <br><br>
+                            <div style="display:inline-block;">
+                              <label for="location_wise" class="container radioContainer">Location Wise
+                                <input type="radio" id="location_wise" name="is_disaster" value="location_wise" onclick="hideDisasters()">
+                                <span class="checkmark"></span>
+                              </label>
+                            </div>
 
+                          </div>
+                          <br/>
+                          <div class="form-group">
+                            <div id="disaster_wise_names" style="display:inline-block">
+                                <label for="active_disasters" >Disaster Name </label><br>
+                                <select id="active_disasters" name="active_disasters" class="form-control input-md">
+                                {% for disaster in active_disasters %}
+                                    <option value = "{{disaster.id}}"> {{disaster.name}}</option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <div id="location_wise_names" style="display:inline-block">
+                                <label for="location_names">Location Name </label><br>
+                                <select id="location_names" name="location_names" class="form-control input-md">
+                                {% for location in location_names %}
+                                    <option value = "{{location}}"> {{location}}</option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                          </div>
+                          <br />
+                        <div class="form-group">
+                            <label for="message">Message To Send</label><br>
+                            <textarea class="form-control" id="message" name= "message" rows="4"></textarea>
                         </div>
+                       <br/>
+                        <!-- <div class="md-form">
+                            <textarea id="message1" class="md-textarea form-control" rows="3"></textarea>
+                            <label for="message1">Message To Send</label>
+                        </div> -->
 
-                        <div id="location_wise_names">
-                            <label for="location_names">Location Name: </label><br>
-                            <select id="location_names" name="location_names">
-                            {% for location in location_names %}
-                                <option value = "{{location}}"> {{location}}</option>
-                            {% endfor %}
-                            </select>
-                            <br><br>
-                        </div>
-
-
-                        <label for="message">Message To Send:</label><br>
-                        <input type="text" id="message" placeholder="Type your message" name= "message" ><br><br>
-
-                        <input type="submit" value="Submit">
+                        <input type="submit" value="Send" class="btn btn-mdb-color" style="color: aliceblue; background-color: #343a40!important; width: 60%; margin-left:4em;">
                         </form>
-
+                        </div>
                         {% if success %}
                             <button onclick="show_success()" id="success" type="hidden"></button>
                         {% endif %}
@@ -157,9 +192,5 @@
 		</div>
 	</div>
 	<script src="{% static 'main/js/app.js' %}"></script>
-    <script>
-        if ( window.history.replaceState ) {
-            window.history.replaceState( null, null, window.location.href );
-        }
-    </script>
+
 {% endblock %}

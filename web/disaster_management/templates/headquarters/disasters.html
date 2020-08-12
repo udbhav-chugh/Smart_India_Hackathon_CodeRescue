@@ -11,12 +11,16 @@
 	<title>Admin Dashboard</title>
 
     <link href="{% static 'main/css/app.css' %}" rel="stylesheet">
-    
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+    <!-- <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script> -->
 
 {% endblock %}
 
@@ -59,6 +63,51 @@ input[type=text]:focus {
     padding-bottom: 0px;
 }
 
+.material-switch > input[type="checkbox"] {
+    display: none;
+}
+
+.material-switch > label {
+    cursor: pointer;
+    height: 0px;
+    position: relative;
+    width: 40px;
+}
+
+.material-switch > label::before {
+    background: #343a40;
+    box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    content: '';
+    height: 16px;
+    margin-top: -8px;
+    position:absolute;
+    opacity: 0.3;
+    transition: all 0.4s ease-in-out;
+    width: 40px;
+}
+.material-switch > label::after {
+    background: rgb(255, 255, 255);
+    border-radius: 16px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    content: '';
+    height: 24px;
+    left: -4px;
+    margin-top: -8px;
+    position: absolute;
+    top: -4px;
+    transition: all 0.3s ease-in-out;
+    width: 24px;
+}
+.material-switch > input[type="checkbox"]:checked + label::before {
+    background: inherit;
+    opacity: 0.5;
+}
+.material-switch > input[type="checkbox"]:checked + label::after {
+    background: #343a40;
+    left: 20px;
+}
+
 </style>
 
 {% endblock %}
@@ -70,45 +119,51 @@ input[type=text]:focus {
 {% block content %}
 	<div class="wrapper">
 		<nav id="sidebar" class="sidebar">
-			<div class="sidebar-content js-simplebar">
-				<!-- <a class="sidebar-brand" href="index.html"> -->
-                    <span class="align-middle">Dashboard</span>
-                <!-- </a> -->
+            <div class="sidebar-content js-simplebar">
+                
+                <span class="align-middle sidebar-brand">Dashboard</span>  
 
-				<ul class="sidebar-nav">
-					<li class="sidebar-item">
+                <ul class="sidebar-nav" style="width:30em">
+
+                    <li class="sidebar-item">
 						<a class="sidebar-link" href="{% url 'main:headquarters_dashboard' %}">
-                        <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Manage Active Disasters</span>
+                        <i class="align-middle" data-feather="codepen"></i> <span class="align-middle">Manage Active Disasters</span>
                         </a>
-					</li>
+                    </li>
 
-					<li class="sidebar-item active">
-						<a class="sidebar-link" href="{% url 'main:all_disasters' %}">
-                        <i class="align-middle" data-feather="user"></i> <span class="align-middle">All Disasters</span>
+                    <li class="sidebar-item active">
+                        <a class="sidebar-link" href="{% url 'main:all_disasters' %}">
+                        <i class="align-middle" data-feather="list"></i> <span class="align-middle">All Disasters</span>
                         </a>
-					</li>
+                    </li>
 
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="{% url 'main:add_disaster' %}">
-                        <i class="align-middle" data-feather="settings"></i> <span class="align-middle">Add Disaster</span>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="{% url 'main:add_disaster' %}">
+                        <i class="align-middle" data-feather="plus"></i> <span class="align-middle">Add Disaster</span>
                         </a>
-					</li>
+                    </li>
 
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="{% url 'main:add_rescue_team' %}">
-                        <i class="align-middle" data-feather="credit-card"></i> <span class="align-middle">Add Rescue Team</span>
-                        </a>
-					</li>
-
-					<li class="sidebar-item">
+                    <li class="sidebar-item">
 						<a class="sidebar-link" href="{% url 'main:send_notification' %}">
-                        <i class="align-middle" data-feather="book"></i> <span class="align-middle">Send Notification</span>
+                        <i class="align-middle" data-feather="send"></i> <span class="align-middle">Send Notification</span>
                         </a>
-					</li>
+                    </li>
+                    
+                    <li class="sidebar-item">
+						<a class="sidebar-link" href="{% url 'main:add_safe_house' %}">
+                        <i class="align-middle" data-feather="home"></i> <span class="align-middle">Add Safe House</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="{% url 'main:add_rescue_team' %}">
+                        <i class="align-middle" data-feather="users"></i> <span class="align-middle">Add Rescue Team</span>
+                        </a>
+                    </li>
+
                 </ul>
-					
-			</div>
-		</nav>
+            </div>
+        </nav>
 
 		<div class="main">
 			<main class="content">
@@ -116,7 +171,7 @@ input[type=text]:focus {
 
 					<div class="row mb-2 mb-xl-3">
 						<div class="col-auto d-none d-sm-block">
-							<h3><strong>All Disasters</strong></h3>
+							<h3 style="margin-left: 15em;"><strong>All Disasters</strong></h3>
 						</div>
                     </div>
                     <hr>
@@ -125,31 +180,38 @@ input[type=text]:focus {
                         {% csrf_token %}
                         <div>
                             <hr>
-                            <div class="col-6 align-left">
+                            <div class="col-6 align-left" style="margin-left: 7em;">
                                 <!-- <a href="{% url 'main:add_disaster' %}" class="btn btn-primary">Add Disaster</a><br> -->
-                                <i id="search-icon" class="fas fa-search"></i>
-                                <input id="searchbar" onkeyup="search_disaster()" type="text" name="search" placeholder="Search disasters..">
-                                <br><br>
+                                <form class="form-inline d-flex justify-content-center md-form form-sm mt-0">
+                                    <i id="search-icon" class="fas fa-search" aria-hidden="true"></i>
+                                    <input id="searchbar" onkeyup="search_disaster()" type="text" name="search" placeholder="Search disasters.." class="form-control form-control-sm ml-3 w-75">
+                                    <br><br>
+                                </form>
                             </div>
                             <div id="replaceable-content">
 
-                            <table class="table table-striped">
-                              <thead>
-                                <tr class = "table-warning">
+                            <table class="table table-striped" style="width:80%; margin-left:5em">
+                              <thead class="thead-dark">
+                                <tr>
                                   <th scope="col">Disaster Name</th>
                                   <th scope="col">States Affected</th>
-                                  <th scope="col">ACTIVE STATUS</th>
+                                  <th scope="col">Active Status</th>
                                 </tr>
                               </thead>
                               <tbody>
                                 {% for disaster in disasters_data %}
                                     <tr class="disasters">
-                                      <td><label for="{{ disaster.id }}"> {{ disaster.name }}</label></td>
-                                      <td>{% for loc in disaster.location %}
-                                        {{loc}},
-                                    {% endfor %}</td>
-                                      <td><input type="checkbox" class = "disasterClass" id="{{ disaster.id }}" name="{{ disaster.id }}"
-                                        value="{{ disaster.id }}" {% if disaster.isactive == 1 %} checked {% endif %}></td>
+                                        <td><label for="{{ disaster.id }}"> {{ disaster.name }}</label></td>
+                                        <td>{% for loc in disaster.location %}
+                                                {{loc}},
+                                            {% endfor %}
+                                        </td>
+                                        <td>
+                                            <div class="material-switch">
+                                                <input id="{{ disaster.id }}" name="{{ disaster.id }}" type="checkbox" class="disasterClass" value="{{ disaster.id }}" {% if disaster.isactive %} checked {% endif %}/>
+                                                <label for="{{ disaster.id }}" class="label-default"></label>
+                                            </div>
+                                        </td>
                                     </tr>
                                 {% endfor%}
                               </tbody>

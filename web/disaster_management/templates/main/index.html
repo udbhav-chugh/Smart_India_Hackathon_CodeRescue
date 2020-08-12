@@ -11,7 +11,6 @@
      google.charts.load('current', {'packages':['line']});
     </script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js" type="text/javascript"></script>
-
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
@@ -26,219 +25,261 @@
 
 {% block css %}
 <style>
-  #mapid{
-    margin:auto;
-    border: 2px solid #212529;
-    border-radius: 10px;
-    z-index:2;
-  }
-  #notf_list{
-    width: 300px;
-    z-index: 3;
-    position: absolute;
-    right: 10px;
-  }
-  #peopleAffected{
-    width: 80% !important;
-    margin:auto;
-    margin-top:5%;
-  }
-  #peopleKilled{
-    width: 80% !important;
-    margin:auto;
-    margin-top:5%;
+    #mapid{
+        border: 2px solid #212529;
+        border-radius: 10px;
+        z-index:2;
+    }
+    #notf_list{
+        z-index: 3;
+        right: 10px;
+    }
+    #peopleAffected{
+        width: 80% !important;
+        margin:auto;
+        margin-top:5%;
+        display:none;
 
-  }
-  .modal-dialog{
-    min-width:1000px;
-    /* background-color: yellow; */
-  }
-  .dropdown-menu{
-    width:300px;
-    max-height: 400px;
-    overflow-y: auto;
-  }
-  .dropdown{
-    width: fit-content;
-    margin: auto;
-  }
-  .jumbotron {
-    margin-bottom: 0px;
-  }
-  #notificationHeadingToast{
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
+    }
+    #peopleKilled{
+        width: 80% !important;
+        margin:auto;
+        margin-top:5%;
+        display:none;
+    }
+    .modal-dialog{
+        min-width:1000px;
+        /* background-color: yellow; */
+    }
+    .dropdown-menu{
+        width:300px;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    .dropdown{
+        width: fit-content;
+        margin: auto;
+    }
+    .jumbotron {
+        margin-bottom: 0px;
+    }
+    #notificationHeadingToast{
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow:hidden;
+    }
+    .row {
+        margin:0;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
-
-<div id = "notf_list">
-</div>
-    <br/>
+<br>
 <button style="display: none;" id="launchModalButton" type="button" class="btn btn-primary" data-toggle="modal" data-target="#nearestSafeHouseModal">
-  Launch demo modal
-</button>
-<div  class="modal fade" id="nearestSafeHouseModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        {% if nearest_safe_house.latitude != 'undefined' %}
-        <h5 class="modal-title" id="exampleModalLabel">Nearest Safe House from your location</h5>
-        {% else %}
-        <h5 class="modal-title" id="exampleModalLabel">Note</h5>
-        {%endif%}
-
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        {% if nearest_safe_house.latitude != 'undefined' %}
-        <div  style="width:100%; height:500px" id="nearestSafeHouseMap"></div>
-        {% else %}
-        <h4 class="jumbotron"> Sorry, no safe houses found near your location</h4>
-        {%endif%}
-      </div>
-      {% if nearest_safe_house.latitude != 'undefined' %}
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close Directions</button>
-      </div>
-      {% else %}
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-      {%endif%}
-
-    </div>
-  </div>
-</div>
-
-<div class="container">
-<div class="row">
-
-  <div class="col-md-6">
-    <form id='locform' method = "POST" action = "{% url 'main:getUserLocation' %}">
-      {% csrf_token %}
-          <!-- <label>Current State :</label><br> -->
-        <div class="dropdown">
-          <h5 style="padding: 10px 50px 10px 50px; text-align: center;" class="jumbotron">
-            <label><b>Choose Location</b></label>
-            <button style="width:300px; padding: 10px 20px 10px 20px; margin: 0px 0px 0px 0px;" class="btn btn-primary dropdown-toggle" type="button" id="dropdownLocation" data-toggle="dropdown"
-              aria-haspopup="true" aria-expanded="false">
-              {% if locationName %}
-                {{ locationName }}
-              {% else %}
-                Choose Location
-              {% endif %}
-            </button>
-
-            <input id="location" name="location" value="" type="hidden">
-            <div id="location_wise_names" class="dropdown-menu" aria-labelledby="dropdownLocation">
-              {% for loc in location_names %}
-                <button class="dropdown-item" type="button" onclick="dropdownLocationClicked('{{loc}}')">{{ loc }}</button>
-              {% endfor %}
-            </div>
-          </h5>
+    Launch demo modal
+  </button>
+  <div  class="modal fade" id="nearestSafeHouseModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          {% if nearest_safe_house.latitude != 'undefined' %}
+          <h5 class="modal-title" id="exampleModalLabel">Nearest Safe House from your location: {{nearest_safe_house.name}} </h5>
+          {% else %}
+          <h5 class="modal-title" id="exampleModalLabel">Note</h5>
+          {%endif%}
+  
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
-  </form>
-  </div>
-
-      <!-- <br><br>
-      {% if locationIndex %}
-          <button onclick="location.href='{% url 'main:notifications' locationIndex %}'"> Check Notifications </button>
-      {% endif %}
-      <a href="{% url 'main:find_safe_house' '1' '1' %}" id="nearest_safe_house_button" class="btn  btn-primary">Find Nearest Safe House</a> -->
-
-
-  <div class="col-md-6">
-    <div class="dropdown">
-      <h5 style="padding: 10px 50px 10px 50px;
-      text-align: center;"
-      class="jumbotron"><label><b>Choose Disaster</b></label>
-      <button style="width:300px; padding: 10px 20px 10px 20px; margin: 0px 0px 0px 0px;" class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuMenu" data-toggle="dropdown"
-        aria-haspopup="true" aria-expanded="false">
-        All disasters
-      </button>
-
-      <div class="dropdown-menu" aria-labelledby="dropdownMenuMenu">
-        <button class="dropdown-item" value="All disasters" id="disaster_name_button" onclick="dropdownButtonClicked('all_disasters','all_disasters')" type="button">All disasters</button>
-
-        {% for data_key , data_values in data.items %}
-          <button class="dropdown-item" onclick="dropdownButtonClicked('{{data_values.id}}','{{data_key}}')" type="button">{{data_key}}</button>
-        {% endfor %}
+        <div class="modal-body">
+          {% if nearest_safe_house.latitude != 'undefined' %}
+            <div  style="width:100%; height:500px" id="nearestSafeHouseMap"></div>
+          {% elif nearest_safe_house and nearest_safe_house.flag %}
+            <h5> {{ errorMessage }}</h5>
+            <div  style="width:100%; height:500px" id="allSafeHouseMap"></div>
+          {% else %}
+            <h4 class="jumbotron"> {{ errorMessage }}</h4>
+          {%endif%}
+        </div>
+        {% if nearest_safe_house.latitude != 'undefined' %}
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close Directions</button>
+        </div>
+        {% else %}
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+        {%endif%}
+  
       </div>
-      </h5>
     </div>
-    <br>
   </div>
+  
+  
+<div class="">
+    <div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-7">
+        <div class="dropdown " style='width:17em'>
+        <h5 style="padding: 0.6em ; text-align: center; background-color:#444246;" class="jumbotron">
+            <label><b style="color:whitesmoke; margin-right:0.5em;">Choose Disaster</b></label>
+            <br>
+        <button style="width:200px; padding: 10px 20px 10px 20px; margin: 0px 0px 0px 0px;" class="btn btn-white dropdown-toggle" type="button" id="dropdownMenuMenu" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            All Disasters
+        </button>
 
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuMenu">
+            <button class="dropdown-item" value="All Disasters" id="disaster_name_button" onclick="dropdownButtonClicked('all_disasters','All disasters')" type="button">All disasters</button>
+
+            {% for data_key , data_values in data.items %}
+            <button class="dropdown-item" onclick="dropdownButtonClicked('{{data_values.id}}','{{data_key}}')" type="button">{{data_key}}</button>
+            {% endfor %}
+        </div>
+        </h5>
+        </div>
+        <br>
+    </div>
+    <div class="col-md-3" style="padding-left:4%">
+        <form id='locform' method = "POST" action = "{% url 'main:getUserLocation' %}" >
+        {% csrf_token %}
+            <!-- <label>Current State :</label><br> -->
+            <div class="dropdown">
+            <h5 style="padding: 0.6em ; text-align: center; background-color:#444246; width:14em" class="jumbotron">
+                <label><b style="color:whitesmoke; margin-right:0.5em;">Choose Location</b></label>
+                <button style="width:200px; padding: 10px 20px 10px 20px; margin: 0px 0px 0px 0px;" class="btn btn-white dropdown-toggle" type="button" id="dropdownLocation" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                {% if locationName %}
+                    {{ locationName }}
+                {% else %}
+                    Choose Location
+                {% endif %}
+                </button>
+
+                <input id="location" name="location" value="" type="hidden">
+                <div id="location_wise_names" class="dropdown-menu" aria-labelledby="dropdownLocation" >
+                {% for loc in location_names %}
+                    <button class="dropdown-item" type="button" onclick="dropdownLocationClicked('{{loc}}')">{{ loc }}</button>
+                {% endfor %}
+                </div>
+            </h5>
+            </div>
+    </form>
+    </div>
+    <div class="col-md-1" ></div>
+
+    </div>
 </div>
+<br/>
+<div>
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-7" style="height:750px;" id="mapid"></div>
+        <div class="col-md-3" style="overflow-y: auto; height:750px; padding-left: 4%;padding-bottom: 1%;">
+            <div class="card text-white bg-info mb-3" style="width: 100%; height:8%">
+                <div style="padding:0.1em; text-align: center; vertical-align: middle;">
+                    <h2 style="line-height: inherit;">NOTIFICATIONS</h2>
+                </div>
+            </div>
+            <div id = "notf_list">
+                {% if not locationName %}
+                    <h4>No location detected. <br/>Please select a location to view notifications.</h4>
+                {% elif not notifications %}
+                    <h4>No notifications</h4>
+                {% else %}
+                    {% for x in notifications %}
+                        {% if forloop.counter|divisibleby:2  == 0 %}
+                            <div class="card text-white bg-dark mb-3" style="width: 100%; height:12%">
+                        {% else %}
+                            <div class="card bg-light mb-3" style="width: 100%; height:12%">
+                        {% endif %}
+                                <div class="card-header" style="padding:0.1em;padding-left:0.4em;">
+                                    {% if x.name %}
+                                        Notification for <b>{{x.name}}</b>
+                                    {% else %}
+                                        Notification for <b>{{notfLocationName}}</b>
+                                    {% endif %}
+                                </div>
+                                <div class="card-body" style="padding:0.1em">
+                                    <h6 class="card-title" style="padding-left:0.2em;padding-right: 0.1em;margin-bottom: 0em;">{{x.message}}</h6>
+                                    <p class="card-text" style="padding:0.2em; margin-top:0em">{{x.date}}</p>
+                                </div>
+                            </div>
+                    {% endfor %}
+                    <script>
+                        lastNotification = "{{ notifications.0.date }}";
+                    </script>
+
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
 </div>
 
-    <!-- <div id="disaster_wise_names">
-        <label for="disaster_names">Disaster Name: </label><br>
-        <select id="disaster_names" onchange="changeMapInfo()" name="disaster_names">
-          <option value = "all_disasters"> All</option>
-          {% for data_key , data_values in data.items %}
-            <option value = "{{data_values.id}}"> {{data_key}}</option>
-          {% endfor %}
-        </select>
-        <br><br>
-      </div> -->
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-4 class" id="peopleAffected"></div>
+    <div class="col-md-4 class" id="peopleKilled"></div>
+    <div class="col-md-2"></div>
+</div>
+<br/>
+<br/>
+<div class="container">
+    <canvas id="pieChart" style="max-width: 750px; margin: auto; display: none;"></canvas>
+    <h5 id="pieChartLabel" style="margin: auto;display: none;text-align: center; padding-top: 1em;">Count of people affected and deaths</h5>
+</div>
 
-      <div style="height:750px;width:90%;" id="mapid"></div>
-      <div style="width:700px;" class="class"id="peopleAffected"></div>
-      <div style="width:700px;" class="class"id="peopleKilled"></div>
-
-
-
-
-    <script>
-      var positionUser;
-      navigator.geolocation.getCurrentPosition((position)=>{
+<script>
+    var positionUser;
+    var cityUser ="";
+    navigator.geolocation.getCurrentPosition((position)=>{
         positionUser = {
-          'latitude': position.coords.latitude,
-          'longitude': position.coords.longitude
+            'latitude': position.coords.latitude,
+            'longitude': position.coords.longitude
         };
-      var url_mask = "{% url 'main:find_safe_house' '12345' '6789' %}".replace(/12345/, position.coords.latitude.toString()).replace(/6789/, position.coords.longitude.toString());
-      // document.getElementById("nearest_safe_house_button").setAttribute('href' , url_mask);
-      document.getElementById("find_nearest_safe_house_link").setAttribute('href' , url_mask);
+        let lat = position.coords.latitude;
+        let long = position.coords.longitude;
+        $.get('https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat='+lat+'&lon='+long , function(data){
+            console.log(data.address);
+            var state = data.address.state;
+            console.log(state);
+            var url_mask = "{% url 'main:find_safe_house' '12345' '6789' 'undefined' %}".replace(/12345/, position.coords.latitude.toString()).replace(/6789/, position.coords.longitude.toString()).replace(/undefined/, state);
+            document.getElementById("find_nearest_safe_house_link").setAttribute('href' , url_mask);
+        });
 
-      function loadMapNearestSafeHouse(){
-          var map = L.map('nearestSafeHouseMap');
+        function loadMapNearestSafeHouse(){
+            var map = L.map('nearestSafeHouseMap');
 
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-              attribution: '© OpenStreetMap contributors'
-          }).addTo(map);
-          {% if nearest_safe_house  and nearest_safe_house.latitude != 'undefined' %}
-          console.log(positionUser.latitude + " ## " +positionUser.longitude);
-          console.log({{nearest_safe_house.latitude}} + " %% "+   {{nearest_safe_house.longitude}});
-          L.Routing.control({
-              waypoints: [
-                  L.latLng(positionUser.latitude,positionUser.longitude ),
-                  L.latLng({{nearest_safe_house.latitude}},  {{nearest_safe_house.longitude}})
-              ],
-              routeWhileDragging: true
-          }).addTo(map);
-          {% endif %}
-      };
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+            {% if nearest_safe_house  and nearest_safe_house.latitude != 'undefined' %}
+            console.log(positionUser.latitude + " ## " +positionUser.longitude);
+            console.log({{nearest_safe_house.latitude}} + " %% "+   {{nearest_safe_house.longitude}});
+            L.Routing.control({
+                waypoints: [
+                    L.latLng(positionUser.latitude,positionUser.longitude ),
+                    L.latLng({{nearest_safe_house.latitude}},  {{nearest_safe_house.longitude}})
+                ],
+                routeWhileDragging: true
+            }).addTo(map);
+            {% endif %}
+        };
+    });
 
-      });
-      // {% if disaster_values.isactive == 1 %}
-//    {%endif%}
-
-      function getLocation() {
+    function getLocation() {
         console.log("Getting position...")
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(showPosition);
         } else {
           alert("Geolocation is not supported by this browser. Try selecting manually.")
         }
-      }
+    }
 
-      function showPosition(position) {
+    function showPosition(position) {
         console.log("Position received");
         positionUser = position;
         let lat = position.coords.latitude;
@@ -251,84 +292,93 @@
             $('#location').val(state).change();
             $('#locform').submit();
         });
-      }
+    }
 
-      window.onload = function() {
-          var loc = "{{locationName}}";
-          if(loc == "") {
-              getLocation();
-          }
-      }
+    window.onload = function() {
+        var loc = "{{locationName}}";
+        if(loc == "") {
+            getLocation();
+        }
+    }
 
-        center = [0, 0];
-        center =[21.853283,81.079102];
+    center = [0, 0];
+    center =[21.853283,81.079102];
          //create the map
-         var disaster_data ={} ;
-        {% for disaster_key,disaster_values in data.items %}
-          disaster_data.{{disaster_values.id}} = {};
-          disaster_data.{{disaster_values.id}}.name = "{{disaster_values.name}}";
-          disaster_data.{{disaster_values.id}}.coordinates={};
-          disaster_data.{{disaster_values.id}}.coordinates.latitude = "{{disaster_values.coordinates.latitude}}";
-          disaster_data.{{disaster_values.id}}.coordinates.longitude = "{{disaster_values.coordinates.longitude}}";
-          disaster_data.{{disaster_values.id}}.coordinates.radius = {{disaster_values.coordinates.radius}};
-          disaster_data.{{disaster_values.id}}.id = "{{disaster_values.id}}";
-          disaster_data.{{disaster_values.id}}.scale = {{disaster_values.scale}};
-          disaster_data.{{disaster_values.id}}.statistics={};
-         {% for day_key,day_value in disaster_values.statistics.items %}
-           disaster_data.{{disaster_values.id}}.statistics.{{day_key}} ={};
-           disaster_data.{{disaster_values.id}}.statistics.{{day_key}}.affected ={{ day_value.affected }};
-           disaster_data.{{disaster_values.id}}.statistics.{{day_key}}.deaths ={{ day_value.deaths }};
-         {% endfor %}
+    var disaster_data ={} ;
+    {% for disaster_key,disaster_values in data.items %}
+        disaster_data.{{disaster_values.id}} = {};
+        disaster_data.{{disaster_values.id}}.name = "{{disaster_values.name}}";
+        disaster_data.{{disaster_values.id}}.coordinates={};
+        disaster_data.{{disaster_values.id}}.coordinates.latitude = "{{disaster_values.coordinates.latitude}}";
+        disaster_data.{{disaster_values.id}}.coordinates.longitude = "{{disaster_values.coordinates.longitude}}";
+        disaster_data.{{disaster_values.id}}.coordinates.radius = {{disaster_values.coordinates.radius}};
+        disaster_data.{{disaster_values.id}}.id = "{{disaster_values.id}}";
+        disaster_data.{{disaster_values.id}}.scale = {{disaster_values.scale}};
+        disaster_data.{{disaster_values.id}}.statistics={};
 
+        {% for day_key,day_value in disaster_values.statistics.items %}
+            disaster_data.{{disaster_values.id}}.statistics.{{day_key}} ={};
+            disaster_data.{{disaster_values.id}}.statistics.{{day_key}}.affected ={{ day_value.affected }};
+            disaster_data.{{disaster_values.id}}.statistics.{{day_key}}.deaths ={{ day_value.deaths }};
         {% endfor %}
 
-        var mymap = L.map('mapid').setView( center, 5);
+    {% endfor %}
+
+    var mymap = L.map('mapid').setView( center, 5);
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 100,
+        id: 'mapbox/streets-v11',
+        tileSize: 512,
+        zoomOffset: -1,
+        accessToken: 'pk.eyJ1IjoibW5rMzQzIiwiYSI6ImNrODY0Z3F2NDBhcW8zZ284Yjg3Z3Q2ZWoifQ.XR8nBDHgRGjJq6nOg0rZAQ'
+    }).addTo(mymap);
+
+    var colors = ["#FA8072" , "#CD5C5C" , "#BA4545" , "#ED2939" , "#CA3433",
+                      "#B22222", "#960018" , "#7CDAD2" , "#5E1914" , "#420D09"];
+
+    for (let [disaster_key, disaster_values] of Object.entries(disaster_data)) {
+        center = [  disaster_values.coordinates.latitude  ,  disaster_values.coordinates.longitude  ]
+        eval( 'var circle_' + disaster_values.id + '= ' +
+        ' L.circle(center, {' +
+        '  color: colors[' + disaster_values.scale +'-1 ],' +
+        '  fillColor: colors['+ disaster_values.scale +'-1 ],' +
+        ' fillOpacity: 0.7,' +
+        '  radius: '+disaster_values.coordinates.radius+
+        '}).addTo(mymap);');
+        eval('circle_' + disaster_values.id + '.bindPopup( "<b>'+disaster_values.name+'</b><br><b>Scale:</b>'+ disaster_values.scale+'<br><b>Total Affected: </b>'+disaster_values.statistics.total.affected+ '<br><b>Total Deaths: </b>'+disaster_values.statistics.total.deaths+'<br>" );');
+    }
+
+    function dropdownButtonClicked(value,value2){
+        document.getElementById('dropdownMenuMenu').innerText= value2;
+        document.getElementById('peopleKilled').style.display= "none";
+        document.getElementById('peopleAffected').style.display= "none";
+
+        // Draw charts
+        drawChartPeopleAffected(value);
+        drawChartPeopleKilled(value);
+        drawPieChart(value);
+
+        center =[21.853283,81.079102];
+        var disaster_name = value;
+        console.log(disaster_name);
+        mymap.remove();
+        mymap = L.map('mapid').setView( center, 5);
+
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-          attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-          maxZoom: 100,
-          id: 'mapbox/streets-v11',
-          tileSize: 512,
-          zoomOffset: -1,
-          accessToken: 'pk.eyJ1IjoibW5rMzQzIiwiYSI6ImNrODY0Z3F2NDBhcW8zZ284Yjg3Z3Q2ZWoifQ.XR8nBDHgRGjJq6nOg0rZAQ'
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 100,
+        id: 'mapbox/streets-v11',
+        tileSize: 512,
+        zoomOffset: -1,
+        accessToken: 'pk.eyJ1IjoibW5rMzQzIiwiYSI6ImNrODY0Z3F2NDBhcW8zZ284Yjg3Z3Q2ZWoifQ.XR8nBDHgRGjJq6nOg0rZAQ'
         }).addTo(mymap);
 
         var colors = ["#FA8072" , "#CD5C5C" , "#BA4545" , "#ED2939" , "#CA3433",
-                      "#B22222", "#960018" , "#7CDAD2" , "#5E1914" , "#420D09"];
+                    "#B22222", "#960018" , "#7CDAD2" , "#5E1914" , "#420D09"];
         for (let [disaster_key, disaster_values] of Object.entries(disaster_data)) {
-          center = [  disaster_values.coordinates.latitude  ,  disaster_values.coordinates.longitude  ]
-          eval( 'var circle_' + disaster_values.id + '= ' +
-          ' L.circle(center, {' +
-          '  color: colors[' + disaster_values.scale +'-1 ],' +
-          '  fillColor: colors['+ disaster_values.scale +'-1 ],' +
-          ' fillOpacity: 0.7,' +
-          '  radius: '+disaster_values.coordinates.radius+
-          '}).addTo(mymap);');
-          eval('circle_' + disaster_values.id + '.bindPopup( "<b>'+disaster_values.name+'</b><br><b>Scale:</b>'+ disaster_values.scale+'<br><b>Total Affected: </b>'+disaster_values.statistics.total.affected+ '<br><b>Total Deaths: </b>'+disaster_values.statistics.total.deaths+'<br>" );');
-          }
-        function dropdownButtonClicked(value,value2){
-          document.getElementById('dropdownMenuMenu').innerText= value2;
-          drawChartPeopleAffected(value);
-          drawChartPeopleKilled(value);
-          center =[21.853283,81.079102];
-          var disaster_name = value;
-          console.log(disaster_name);
-          mymap.remove();
-          mymap = L.map('mapid').setView( center, 5);
-
-          L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-            maxZoom: 100,
-            id: 'mapbox/streets-v11',
-            tileSize: 512,
-            zoomOffset: -1,
-            accessToken: 'pk.eyJ1IjoibW5rMzQzIiwiYSI6ImNrODY0Z3F2NDBhcW8zZ284Yjg3Z3Q2ZWoifQ.XR8nBDHgRGjJq6nOg0rZAQ'
-          }).addTo(mymap);
-
-          var colors = ["#FA8072" , "#CD5C5C" , "#BA4545" , "#ED2939" , "#CA3433",
-                        "#B22222", "#960018" , "#7CDAD2" , "#5E1914" , "#420D09"];
-          for (let [disaster_key, disaster_values] of Object.entries(disaster_data)) {
-              if( disaster_name == "all_disasters" || ( disaster_name!="all_disasters" && disaster_name == disaster_values.id  )  )
-              {
+            if( disaster_name == "all_disasters" || ( disaster_name!="all_disasters" && disaster_name == disaster_values.id  )  )
+            {
                 center = {lat: disaster_values.coordinates.latitude,  lng: disaster_values.coordinates.longitude  }
                 console.log(center);
                 eval( 'var circle_' + disaster_values.id + '= ' +
@@ -339,170 +389,206 @@
                 '  radius: '+disaster_values.coordinates.radius+
                 '}).addTo(mymap);');
                 eval('circle_' + disaster_values.id + '.bindPopup( "<b>'+disaster_values.name+'</b><br><b>Scale:</b>'+ disaster_values.scale+'<br><b>Total Affected: </b>'+disaster_values.statistics.total.affected+ '<br><b>Total Deaths: </b>'+disaster_values.statistics.total.deaths+'<br>" );');
-              }
-          }
-          return;
-
+            }
         }
-
-    function drawChartPeopleAffected(value) {
-
-      var disaster_name = value;
-      var data = new google.visualization.DataTable();
-      var data_for_chart = new google.visualization.DataTable();
-      if( disaster_name == "all_disasters" )
         return;
 
-      data_for_chart.addColumn('number', 'Day');
-      data_for_chart.addColumn('number', 'Affected');
-      var ctr = 0;
-      for (let [ statistics_key,statistics_value ] of Object.entries(disaster_data[disaster_name]["statistics"] )) {
+    }
+
+    function drawChartPeopleAffected(value) {
+        var disaster_name = value;
+        var data = new google.visualization.DataTable();
+        var data_for_chart = new google.visualization.DataTable();
+        if( disaster_name == "all_disasters" ) return;
+
+        data_for_chart.addColumn('number', 'Day');
+        data_for_chart.addColumn('number', 'Affected');
+        var ctr = 0;
+        for (let [ statistics_key,statistics_value ] of Object.entries(disaster_data[disaster_name]["statistics"] )) {
         // console.log(statistics_key);
-        if( statistics_key != "total" )
-        {
-          var temp_list =[];
-          temp_list.push(ctr);
-          temp_list.push(statistics_value.affected);
-          ctr++;
-          data_for_chart.addRow(temp_list);
+            if( statistics_key != "total" )
+            {
+                var temp_list =[];
+                temp_list.push(ctr);
+                temp_list.push(statistics_value.affected);
+                ctr++;
+                data_for_chart.addRow(temp_list);
+            }
         }
-      }
 
-      console.log(data_for_chart);
-      var options = {
-        legend:{position:'none'},
-        chart: {
-          title: 'No of people affected by  ' + disaster_data[disaster_name]["name"],
-          subtitle: 'Day Wise'
-        },
-        series:{
-          0: { color: '#43459d' },
-        },
-
-        width: 800,
-        height: 500,
-        axes: {
-          x: {
-            0: {side: 'bottom'}
-          }
-        }
-      };
-      var chartPeopleAffected = new google.charts.Line(document.getElementById('peopleAffected'));
-      chartPeopleAffected.draw(data_for_chart, google.charts.Line.convertOptions(options));
-      return;
+        console.log(data_for_chart);
+        var options = {
+            legend:{position:'none'},
+            chart: {
+                title: 'No of people affected by  ' + disaster_data[disaster_name]["name"],
+                subtitle: 'Day Wise'
+            },
+            series:{
+                0: { color: '#43459d' },
+            },
+            width: 600,
+            height: 400,
+            axes: {
+                x: {
+                0: {side: 'bottom'}
+                }
+            }
+        };
+        var chartPeopleAffected = new google.charts.Line(document.getElementById('peopleAffected'));
+        chartPeopleAffected.draw(data_for_chart, google.charts.Line.convertOptions(options));
+        document.getElementById('peopleAffected').style.display= "block";
+        return;
     }
 
     function drawChartPeopleKilled(value) {
-      var disaster_name = value;
-      var data = new google.visualization.DataTable();
-      var data_for_chart = new google.visualization.DataTable();
-      if( disaster_name == "all_disasters" )
+        var disaster_name = value;
+        var data = new google.visualization.DataTable();
+        var data_for_chart = new google.visualization.DataTable();
+        if( disaster_name == "all_disasters" )
+            return;
+
+        data_for_chart.addColumn('number', 'Day');
+        data_for_chart.addColumn('number', 'Deaths');
+
+        var ctr = 0;
+
+        for (let [ statistics_key,statistics_value ] of Object.entries(disaster_data[disaster_name]["statistics"] )) {
+            // console.log(statistics_key);
+            if( statistics_key != "total" )
+            {
+            var temp_list =[];
+            temp_list.push(ctr);
+            temp_list.push(statistics_value.deaths);
+            ctr++;
+            data_for_chart.addRow(temp_list);
+            }
+        }
+        console.log(data_for_chart);
+        var options = {
+            legend:{position:'none'},
+            series:{
+            0: { color: '#e2431e' },
+            },
+            chart: {
+            title: 'No of people who lost their lives by  ' + disaster_data[disaster_name]["name"],
+            subtitle: 'Day Wise'
+            },
+            width: 600,
+            height: 400,
+            axes: {
+            x: {
+                0: {side: 'bottom'}
+            }
+            }
+        };
+
+        var chartPeopleKilled = new google.charts.Line(document.getElementById('peopleKilled'));
+        chartPeopleKilled.draw(data_for_chart, google.charts.Line.convertOptions(options));
+        document.getElementById('peopleKilled').style.display= "block";
+
         return;
-
-      data_for_chart.addColumn('number', 'Day');
-      data_for_chart.addColumn('number', 'Deaths');
-
-      var ctr = 0;
-
-      for (let [ statistics_key,statistics_value ] of Object.entries(disaster_data[disaster_name]["statistics"] )) {
-        // console.log(statistics_key);
-        if( statistics_key != "total" )
-        {
-          var temp_list =[];
-          temp_list.push(ctr);
-          temp_list.push(statistics_value.deaths);
-          ctr++;
-          data_for_chart.addRow(temp_list);
-        }
-      }
-      console.log(data_for_chart);
-      var options = {
-        legend:{position:'none'},
-        series:{
-          0: { color: '#e2431e' },
-        },
-        chart: {
-          title: 'No of people who lost their lives by  ' + disaster_data[disaster_name]["name"],
-          subtitle: 'Day Wise'
-        },
-        width: 800,
-        height: 500,
-        axes: {
-          x: {
-            0: {side: 'bottom'}
-          }
-        }
-      };
-
-      var chartPeopleKilled = new google.charts.Line(document.getElementById('peopleKilled'));
-      chartPeopleKilled.draw(data_for_chart, google.charts.Line.convertOptions(options));
-      return;
     }
-    // var lastNotification = new Date();
-    // lastNotification = lastNotification.getDate() + "/" + (lastNotification.getMonth()+1).toString()
-    //     + "/" + lastNotification.getFullYear() + " " + lastNotification.getHours() + ":" +
-    //     lastNotification.getMinutes() + ":" + lastNotification.getSeconds();
 
+    var flagForBackgroundColor = 1;
+// Global variable to store time-date of last notification displayed
     setInterval(function () {
         console.log('Called new notifications at : ' + new Date());
-        {% if locationIndex %}
+        {% if notfLocIndex %}
         $.ajax({
             type: 'GET',
-            url: "{% url 'main:get_new_notifications' locationIndex %}",
+            url: "{% url 'main:get_new_notifications' notfLocIndex %}",
             success: function (response) {
-                // console.log(response);
-                // console.log(lastNotification);
                 var newnotfs = response["new_notifications"];
-                // var constantDate = new Date(lastNotification);
-                var constantDate = moment( '{{request.session.lastNotification}}' , 'DD-MM-YYYY HH:mm:ss').toDate();
-                console.log(constantDate);
-
+                console.log(newnotfs);
+                var constantDate = moment( lastNotification , 'DD-MM-YYYY HH:mm:ss').toDate();
                 for (notf in newnotfs) {
-                    // console.log(newnotfs[notf]['date']);
-                    // console.log(newnotfs[notf]);
-                    // var newDate = Date.parse(newnotfs[notf]['date'], "dd-MM-yyyy HH:mm:ss");
                     var newDate = moment( newnotfs[notf]['date'] , 'DD-MM-YYYY HH:mm:ss').toDate();
-
-                    // var newDate = new Date(newnotfs[notf]['date']);
-                    console.log('{{request.session.lastNotification}}');
+                    console.log(lastNotification);
                     console.log(newnotfs[notf]['date']);
                     console.log(newDate);
                     console.log(constantDate);
                     var momentDate = moment('2015-01-16 22:15:00', 'YYYY-MM-DD HH:mm:ss');
                     var jsDate = momentDate.toDate();
                     console.log("hello");
-
                     console.log(jsDate);
-                    var htmlToPrepend = '<div class="toast" data-autohide="false"><div class="toast-header"><svg class=" rounded mr-2" width="20" height="20" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img"><rect fill="#007aff" width="100%" height="100%" /></svg>'+
-                              '<strong id="notificationHeadingToast" class="mr-auto">Notification for ';
-                        if( newnotfs[notf].name ){
-                        htmlToPrepend += newnotfs[notf].name;
-                        }
-                        else{
-                            htmlToPrepend += '{{locationName}}';
-                        }
-                        htmlToPrepend +='</strong>'+
-                              // '<small class="text-muted">Just Now</small>'+
-                              '<button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close"><span aria-hidden="true">&times;</span></button></div><div class="toast-body">'+
-                                newnotfs[notf]['message']+
-                              '</div></div>';
-                    if( newDate > constantDate ) {
-                        $('#notf_list').prepend(
-                            // '<li><h4>'+ JSON.stringify(newnotfs[notf]) +'</h4></li>'
-                            htmlToPrepend)
-                        // lastNotification = newnotfs[notf]['date'];
+                    var htmlToPrepend = '';
+                    if( newDate > constantDate && flagForBackgroundColor == 1  ){
+                        htmlToPrepend += '<div class="card bg-light mb-3" style="width: 100%; height:12%">';
+                        flagForBackgroundColor=0;
                     }
-                    $(".toast").toast('show');
+
+                    else if( newDate > constantDate && flagForBackgroundColor == 0  ){
+                        htmlToPrepend += '<div class="card text-white bg-dark mb-3" style="width: 100%; height:12%">';
+                        flagForBackgroundColor=1;
+                    }
+                    htmlToPrepend += '<div class="card-header" style="padding:0.1em;padding-left:0.4em;">Notification for <b>';
+                    if( newnotfs[notf].name ){
+                        htmlToPrepend += newnotfs[notf].name;
+                    }
+                    else{
+                        htmlToPrepend += '{{notfLocationName}}';
+                    }
+                    htmlToPrepend += '</b><span style="float:right;width:70px;"> <img style="width:25px;height:25px;" src="https://freeiconshop.com/wp-content/uploads/edd/notification-flat.png"/> NEW</span></div><div class="card-body" style="padding:0.1em"><h6 class="card-title" style="padding-left:0.2em;padding-right: 0.1em;margin-bottom: 0em;">';
+                    htmlToPrepend+= newnotfs[notf].message+
+                        '</h6><p class="card-text" style="padding:0.2em; margin-top:0em">'+newnotfs[notf].date+'</p></div></div>';
+                    if( newDate > constantDate ) {
+                        $('#notf_list').prepend(htmlToPrepend);
+                        lastNotification = newnotfs[notf]['date'];
+                    }
                 }
             },
             error: function (response) {
-                console.log("dsadsadsaasdsadsadsadasads!@!@!@!@!@!!@!@!");
-
-                //console.log(response)
+                console.log("Error");
             }
         })
         {% endif %}
     },10000);
+
+    function dropdownLocationClicked(location){
+        $('#location').val(location);
+        $('#locform').submit();
+    }
+
+    function drawPieChart(value) {
+
+        var affected = 0;
+        var deaths = 0;
+        var disaster_name = value;
+        if( disaster_name == "all_disasters" )  {
+            document.getElementById("pieChart").style.display = "none";
+            document.getElementById("pieChartLabel").style.display = "none";
+
+            return;
+        }
+
+        for (let [ statistics_key,statistics_value ] of Object.entries(disaster_data[disaster_name]["statistics"] )) {
+            if( statistics_key != "total" )
+            {
+                affected += statistics_value.affected;
+                deaths += statistics_value.deaths;
+            }
+        }
+
+        var ctxP = document.getElementById("pieChart").getContext('2d');
+        var myPieChart = new Chart(ctxP, {
+            type: 'pie',
+            data: {
+                labels: ["Affected", "Deaths"],
+                datasets: [{
+                    data: [affected, deaths],
+                    backgroundColor: ["rgb(97, 99, 187)", "rgb(226, 67, 30)"],
+                    hoverBackgroundColor: ["rgb(117, 119, 207)", "rgb(246, 87, 50)"]
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+        document.getElementById("pieChart").style.display = "block";
+        document.getElementById("pieChartLabel").style.display = "block";
+    }
+
     $(window).on('shown.bs.modal', function() {
     $('#code').modal('show');
     var map = L.map('nearestSafeHouseMap');
@@ -510,6 +596,8 @@
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
+    
+
     {% if nearest_safe_house and nearest_safe_house.latitude != 'undefined'  %}
     console.log(positionUser.latitude + " ## " +positionUser.longitude);
     console.log({{nearest_safe_house.latitude}} + " %% "+   {{nearest_safe_house.longitude}});
@@ -522,19 +610,39 @@
     }).addTo(map);
     {% endif %}
     });
+    
     {% if nearest_safe_house %}
-    setTimeout(function () {
-      $( "#launchModalButton" ).click();},1000);
+        setTimeout(function () {
+          $( "#launchModalButton" ).click();},1000);
     {% endif %}
-    $(document).ready(function(){
 
-});
+    {% if nearest_safe_house and nearest_safe_house.latitude == 'undefined' and nearest_safe_house.flag   %}
+        var mymap1;
+        {% if listSafeHouses %}
+            mymap1 = L.map('allSafeHouseMap').setView([{{listSafeHouses.0.latitude}}, {{listSafeHouses.0.longitude}}], 13);
+        {% else %}
+            mymap1 = L.map('allSafeHouseMap').setView([51.505, -0.09], 13);
+        {% endif %}
+        L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 100,
+        id: 'mapbox/streets-v11',
+        tileSize: 512,
+        zoomOffset: -1,
+        accessToken: 'pk.eyJ1IjoibW5rMzQzIiwiYSI6ImNrODY0Z3F2NDBhcW8zZ284Yjg3Z3Q2ZWoifQ.XR8nBDHgRGjJq6nOg0rZAQ'
+        }).addTo(mymap1);
 
+        {% for object in listSafeHouses %}
+                // var marker = L.marker([51.5, -0.09]).addTo(mymap);
+                eval( 'var marker_' + {{forloop.counter}} + '= ' +
+                ' L.marker(' +
+                ' [' + {{object.latitude}} +','+ {{object.longitude}} +' ]).addTo(mymap1);');
+                eval('marker_' + {{forloop.counter}} + '.bindPopup( "<b>{{object.name}}</b>" );');
+        {% endfor %}
 
-function dropdownLocationClicked(location){
-  $('#location').val(location);
-  $('#locform').submit();
-}
-    </script>
+        
+    {% endif %}
+
+</script>
 
 {% endblock %}

@@ -34,7 +34,7 @@
 {% block content%}
 
 <div class = "container">
-    <center>
+    <center style="background-color: #383636; color:whitesmoke; margin-left:16em; margin-top:2em; width:40%">
     <h1> {{ disaster_name }} </h1>
     <b>Locations:</b>
     {% for loc in location %}
@@ -45,21 +45,24 @@
 
     <form action="{% url 'main:update_statistics' disaster_id %}" method="post">
         {% csrf_token %}
-        <div class="col-xs-12">
+        <div class="col-xs-12" style="margin-left: 14em;">
                <div class="col-md-12" >
-                   <h3> Total Statistics: {{ total_stats }} </h3>
-
+                   <h3>Total Statistics - </h3>
+                   <h4>Number of affected people: {{total_stats.affected}}</h4>
+                   <h4>Number of deaths: {{total_stats.deaths}}</h4>
                    <br><br>
-                    <h3> Daily Statistics: </h3>
-
+                    <h3> Daily Statistics - </h3>
+                    <h6 style="margin-left: 5.5em;">Number of affected people &nbsp;&nbsp;&nbsp; Number of deaths</h6>
                     <div id="field">
                         {% for x in daily_stats %}
                         <div id="field{{ forloop.counter|add:'-1' }}">
-                            <div class="form-group">
-                                <div class="daily_stats">
-                                    Day {{ forloop.counter }} :
-                                    <input id="affected_stats" name="affected_stats" type="text" placeholder="" class="form-control input-md" value="{{ x.affected }}">
+                            <div class="form-group row-md-12 mb-3">
+                              <div class="form-inline">
+                                <div class="daily_stats" style="padding: 1em;">
+                                    Day {{ forloop.counter }}
+                                    <input id="affected_stats" name="affected_stats" type="text" placeholder="" class="form-control input-md" value="{{ x.affected }}" style="margin-right:2em; margin-left:2em">
                                     <input id="deaths_stats" name="deaths_stats" type="text" placeholder="" class="form-control input-md" value="{{ x.deaths }}">
+                                </div>
                                 </div>
                             </div>
                         </div>
@@ -67,15 +70,15 @@
                     </div>
 
                     <div class="form-group">
-                        <div class="col-md-4">
-                            <button id="add-more" name="add-more" class="btn btn-primary">Add More</button>
+                        <div class="col-md-4" style="margin-left:13em">
+                            <button id="add-more" name="add-more" class="btn btn-elegant" style="color:whitesmoke">Add More</button>
                         </div>
                     </div>
                     <br><br>
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="submit" class="btn btn-elegant" style="color:whitesmoke;margin-left:26em; width:20%">Save</button>
     </form>
 </div>
 {% endblock %}
@@ -92,12 +95,14 @@
             // var addRemove = "#field" + (next);
             next = next + 1;
             var newIn = ' <div id="field'+ next +'" name="field'+ next + '"> \
-                <div class="form-group"> \
-                    <div class="daily_stats"> \
+                <div class="form-group row-md-12 mb-3""> \
+                    <div class="form-inline">\
+                    <div class="daily_stats" style="padding: 1em;"> \
                         Day ' + (next+1) + ' : \
-                        <input id="affected_stats" name="affected_stats" type="text" placeholder="" class="form-control input-md" value="0"> \
+                        <input id="affected_stats" name="affected_stats" type="text" placeholder="" class="form-control input-md" value="0" style="margin-right:2em; margin-left:2em"> \
                         <input id="deaths_stats" name="deaths_stats" type="text" placeholder="" class="form-control input-md" value="0"> \
                     </div> \
+                    </div>\
                 </div> </div>';
             var newInput = $(newIn);
             $(addto).after(newInput);

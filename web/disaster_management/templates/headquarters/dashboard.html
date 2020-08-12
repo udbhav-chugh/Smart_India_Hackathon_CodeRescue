@@ -8,98 +8,9 @@
 {% endblock %}
 
 {% block script %}
-
-  function show_success()
-    {
-      alert("Notification Sent Successfully ");
-    }
-
-  window.onload = function(){
-    document.getElementById("location_wise_names").style.display = "none";
-    document.getElementById("disaster_wise_names").style.display = "none";
-    document.getElementById("success").style.visibility = "hidden";
-    document.getElementById("success").click();
-
-  }
-
-  function hideLocations(){
-    document.getElementById("location_wise_names").style.display = "none";
-    document.getElementById("disaster_wise_names").style.display = "block";
-  }
-
-  function hideDisasters(){
-    document.getElementById("location_wise_names").style.display = "block";
-    document.getElementById("disaster_wise_names").style.display = "none";
-  }
-
 {% endblock %}
 
 {% block content %}
 
-  Suceessfully logged in headquarters!!
-
-  <h3> Send notification from below </h3>
-
-  <form method="POST" action="{% url 'main:headquarters_dashboard' %}">
-    {% csrf_token %}
-
-    <input type="radio" id="disaster_wise" name="is_disaster" value="disaster_wise" onclick="hideLocations()">
-    <label for="disaster_wise">Disaster Wise</label><br>
-    <input type="radio" id="location_wise" name="is_disaster" value="location_wise" onclick="hideDisasters()">
-    <label for="female">Location Wise</label><br>
-
-  <div id="disaster_wise_names">
-    <label for="all_disasters">Disaster Name: </label><br>
-    <select id="all_disasters" name="all_disasters">
-      {% for disaster in all_disasters %}
-        <option value = "{{disaster.id}}"> {{disaster.name}}</option>
-      {% endfor %}
-    </select>
-    <br><br>
-
-  </div>
-
-  <div id="location_wise_names">
-    <label for="location_names">Location Name: </label><br>
-    <select id="location_names" name="location_names">
-      {% for location in location_names %}
-        <option value = "{{location}}"> {{location}}</option>
-      {% endfor %}
-    </select>
-    <br><br>
-  </div>
-
-
-<label for="message">Message To Send:</label><br>
-  <input type="text" id="message" name= "message" value="message"><br><br>
-
-  <input type="submit" value="Submit">
-  </form>
-
-  {% if success %}
-  <button onclick="show_success()" id="success" ></button>
-  {% endif %}
-
-  <a href="{% url 'main:all_disasters' %}" class="btn btn-primary">View All Disasters</a>
-  <a href="{% url 'main:add_disaster' %}" class="btn btn-primary">Add Disaster</a>
-  <a href="{% url 'main:logout' %}" class="btn btn-primary">Logout</a>
-  <a href="{% url 'main:add_rescue_team' %}" class="btn btn-primary">Add Rescue Team</a>
-
-  <br><br>
-  <h3> Manage Active Disasters : </h3>
-  <hr>
-  {% for disaster in active_disasters %}
-      <h4><label for="{{ disaster.id }}"> {{ disaster.name }}</label></h4>
-      <!-- <input type="checkbox" class = "disasterClass" id="{{ disaster.id }}" name="{{ disaster.id }}"
-      value="{{ disaster.id }}" {% if disaster.isactive == 1 %} checked {% endif %}></h4> -->
-      <b>Locations:</b>
-      {% for loc in disaster.location %}
-          {{loc}},
-      {% endfor %}
-      <a href="{% url 'main:update_statistics' disaster.id %}" class="btn btn-primary">Update Statistics</a>
-      <br>
-      <hr>
-  {% endfor%}
-
-  <a href="{% url 'main:all_disasters' %}"> See all disasters and change their status </a>
+Suceessfully logged in headquarters!!
 {% endblock %}

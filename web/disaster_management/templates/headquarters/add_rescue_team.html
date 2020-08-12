@@ -1,7 +1,6 @@
 {% extends "base_generic.html" %}
 {% load static %}
 
-
 {% block include_header %}
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,7 +10,7 @@
 	<title>Admin Dashboard</title>
 
     <link href="{% static 'main/css/app.css' %}" rel="stylesheet">
-    
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -22,6 +21,13 @@
 
 {% block css %}
 <style>
+* {
+  .border-radius(0) !important;
+}
+
+#field {
+    margin-bottom:20px;
+}
 
 .navbar {
     padding-top: 0px ;
@@ -39,92 +45,114 @@
 {% block content %}
 	<div class="wrapper">
 		<nav id="sidebar" class="sidebar">
-			<div class="sidebar-content js-simplebar">
-				<!-- <a class="sidebar-brand" href="index.html"> -->
-                    <span class="align-middle">Dashboard</span>
-                <!-- </a> -->
+            <div class="sidebar-content js-simplebar">
 
-				<ul class="sidebar-nav">
-					<li class="sidebar-item">
+                <span class="align-middle sidebar-brand">Dashboard</span>
+
+                <ul class="sidebar-nav" style="width:30em">
+
+                    <li class="sidebar-item">
 						<a class="sidebar-link" href="{% url 'main:headquarters_dashboard' %}">
-                        <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Manage Active Disasters</span>
+                        <i class="align-middle" data-feather="codepen"></i> <span class="align-middle">Manage Active Disasters</span>
                         </a>
 					</li>
 
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="{% url 'main:all_disasters' %}">
-                        <i class="align-middle" data-feather="user"></i> <span class="align-middle">All Disasters</span>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="{% url 'main:all_disasters' %}">
+                        <i class="align-middle" data-feather="list"></i> <span class="align-middle">All Disasters</span>
                         </a>
-					</li>
+                    </li>
 
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="{% url 'main:add_disaster' %}">
-                        <i class="align-middle" data-feather="settings"></i> <span class="align-middle">Add Disaster</span>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="{% url 'main:add_disaster' %}">
+                        <i class="align-middle" data-feather="plus"></i> <span class="align-middle">Add Disaster</span>
                         </a>
-					</li>
+                    </li>
 
-					<li class="sidebar-item active">
-						<a class="sidebar-link" href="{% url 'main:add_rescue_team' %}">
-                        <i class="align-middle" data-feather="credit-card"></i> <span class="align-middle">Add Rescue Team</span>
-                        </a>
-					</li>
-
-					<li class="sidebar-item">
+                    <li class="sidebar-item">
 						<a class="sidebar-link" href="{% url 'main:send_notification' %}">
-                        <i class="align-middle" data-feather="book"></i> <span class="align-middle">Send Notification</span>
+                        <i class="align-middle" data-feather="send"></i> <span class="align-middle">Send Notification</span>
                         </a>
 					</li>
-                </ul>
-					
-			</div>
-		</nav>
 
-		<div class="main">
+                    <li class="sidebar-item">
+						<a class="sidebar-link" href="{% url 'main:add_safe_house' %}">
+                        <i class="align-middle" data-feather="home"></i> <span class="align-middle">Add Safe House</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item active">
+                        <a class="sidebar-link" href="{% url 'main:add_rescue_team' %}">
+                        <i class="align-middle" data-feather="users"></i> <span class="align-middle">Add Rescue Team</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </nav>
+        <div class="main">
 			<main class="content">
-				<div class="container-fluid p-0">
+                <div class="container-fluid p-0">
 
 					<div class="row mb-2 mb-xl-3">
 						<div class="col-auto d-none d-sm-block">
-							<h3><strong>Add Rescue Team</strong></h3>
+							<h3 style="margin-left: 15em"><strong>Add Rescue Team</strong></h3>
 						</div>
                     </div>
                     <hr>
-                    <div class="container">
-                        <h2> Fill Rescue Team Details</h2>
-                        <form action="{% url 'main:add_rescue_team' %}" method="post">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <label for="rescueUsername">Username</label>
-                                <input type="text" class="form-control" id="rescueUsername" placeholder="Enter Username" name="rescueUsername">
-                            </div>
-                            <div class="form-group">
-                                <label for="rescuePassword">Password</label>
-                                <input type="password" class="form-control" id="rescuePassword" placeholder="Enter Password" name="rescuePassword">
-                            </div>
-                            <div class="form-group">
-                                <label for="rescueConfirmPassword">Confirm Password</label>
-                                <input type="password" class="form-control" id="rescueConfirmPassword" placeholder="Enter Password" name="rescueConfirmPassword">
-                            </div>
-                    
-                            <div id="disaster_wise_names">
-                            <label for="all_disasters">Disaster Name: </label><br>
-                            <select id="selectedDisaster" name="selectedDisaster">
-                                {% for disaster in all_disasters %}
-                                <option value = "{{disaster.id}}"> {{disaster.name}}</option>
-                                {% endfor %}
-                            </select>
-                            <br><br>
-                            </div>
-                    
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                        </form>
+                    <div class="container" style="margin-left: 10em; display: inline-block;">
+                        <div class="card" style="width:34em; margin-left: 6em">
+                            <form action="{% url 'main:add_rescue_team' %}" method="post" style="padding: 1.5em; margin-left:4em">
+                                {% csrf_token %}
+                                <div class="form-group row-md-12 mb-3">
+                                    <div class="form-inline">
+                                        <label for="rescueUsername" style="margin-right:4.5em;margin-left: 1em;">Username</label>
+                                        <input type="text" class="form-control" id="rescueUsername" placeholder="Enter Username" name="rescueUsername" style="width:12.5em;">
+                                    </div>
+                                </div>
+                                <div class="form-group row-md-12 mb-3">
+                                    <div class="form-inline">
+                                        <label for="rescuePassword" style="margin-right:4.7em;margin-left: 1em;">Password</label>
+                                        <input type="password" class="form-control" id="rescuePassword" placeholder="Enter Password" name="rescuePassword" style="width:12.5em;">
+                                    </div>
+                                </div>
+                                <div class="form-group row-md-12 mb-3">
+                                    <div class="form-inline">
+                                        <label for="rescueConfirmPassword" style="margin-right:0.9em;margin-left: 1em;">Confirm Password</label>
+                                        <input type="password" class="form-control" id="rescueConfirmPassword" placeholder="Enter Password" name="rescueConfirmPassword" style="width:12.5em;">
+                                    </div>
+                                </div>
+                                <div class="col-md-40" >
+                                    <div class="row-md-30 form-inline" style="margin-left:1em" id="disaster_wise_names">
+                                        <label for="all_disasters" style="margin-left:0em; margin-right: 1em;margin-top:0em"> Disaster Name</p>
+                                        <div class="form-group">
+                                            <div class="row-md-5">
+                                                <select id="selectedDisaster" name="selectedDisaster" type="text" class="form-control input-md" style="width:12.5em; margin-left: 2.5em;">
+                                                    {% for disaster in all_disasters %}
+                                                        <option value = "{{disaster.id}}"> {{disaster.name}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <br>
+                                <button type="submit" class="btn btn-elegant" style="width:60%; margin-left: 4em; color: white">Submit</button>
+                            </form>
+                        </div>
                     </div>
 
 				</div>
 			</main>
 		</div>
-	</div>
-
 	<script src="{% static 'main/js/app.js' %}"></script>
-
+</div>
 {% endblock %}
+
+
+{% block javascript %}
+<script>
+
+</script>
+{% endblock javascript %}

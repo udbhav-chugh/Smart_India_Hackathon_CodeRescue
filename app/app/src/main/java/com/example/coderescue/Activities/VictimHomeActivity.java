@@ -94,8 +94,8 @@ public class VictimHomeActivity extends AppCompatActivity {
         Toast.makeText(this, toastText, Toast.LENGTH_SHORT).show();
 
         if(!NetworkConnectivity.isInternetAvailable(getApplicationContext())){
-            Intent intent = new Intent(VictimHomeActivity.this, SendMessageActivity.class);
-            startActivity(intent);
+//            Intent intent = new Intent(VictimHomeActivity.this, SendMessageActivity.class);
+//            startActivity(intent);
         }
         else{
             if (ContextCompat.checkSelfPermission(
@@ -107,7 +107,7 @@ public class VictimHomeActivity extends AppCompatActivity {
                 getCurrentLocation();
             }
         }
-        ReceiveMessageUtility.checkPermissions(getApplicationContext(), VictimHomeActivity.this);
+//        ReceiveMessageUtility.checkPermissions(getApplicationContext(), VictimHomeActivity.this);
     }
 
     @Override

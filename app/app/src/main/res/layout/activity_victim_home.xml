@@ -23,10 +23,9 @@
 <!--            android:layout_marginHorizontal="15dp"-->
 <!--            android:layout_marginTop="30dp"-->
 <!--            android:text="Send Message" />-->
-
         <soup.neumorphism.NeumorphButton
-            android:id="@+id/snd_msg"
-            android:layout_width="247dp"
+            android:id="@+id/snd_msg2"
+            android:layout_width="287dp"
             android:layout_height="wrap_content"
             style="@style/Widget.Neumorph.Button"
             app:neumorph_shapeType="flat"
@@ -34,7 +33,18 @@
             android:fontFamily="@font/montserrat_medium"
             android:layout_marginTop="50dp"
             android:layout_gravity="center"
-            android:text="Ask for Help"/>
+            android:text="Send Message to Helpine"/>
+
+        <soup.neumorphism.NeumorphButton
+            android:id="@+id/snd_msg"
+            android:layout_width="287dp"
+            android:layout_height="wrap_content"
+            style="@style/Widget.Neumorph.Button"
+            app:neumorph_shapeType="flat"
+            app:neumorph_backgroundColor="#ff6663"
+            android:fontFamily="@font/montserrat_medium"
+            android:layout_gravity="center"
+            android:text="Ask for Rescue Team"/>
 
         <soup.neumorphism.NeumorphCardView
             android:layout_width="match_parent"

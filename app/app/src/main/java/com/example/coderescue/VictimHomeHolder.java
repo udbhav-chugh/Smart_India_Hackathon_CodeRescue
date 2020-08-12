@@ -10,12 +10,14 @@ import androidx.recyclerview.widget.RecyclerView;
 public class VictimHomeHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
     TextView mTitle, mDes;
+    ImageView image;
     private ItemClickListener itemClickListener;
 
     public VictimHomeHolder (@NonNull View itemView){
         super(itemView);
 
         this.mTitle = itemView.findViewById(R.id.titleTv3);
+        this.image = itemView.findViewById(R.id.disaster_image);
         // this.mDes = itemView.findViewById(R.id.descriptionTv2);
         itemView.setOnClickListener(this);
     }

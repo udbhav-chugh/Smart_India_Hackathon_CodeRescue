@@ -1,6 +1,7 @@
 package com.example.coderescue.Fragments;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -8,16 +9,20 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.os.Looper;
+import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -26,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.coderescue.Activities.SendMessageActivity;
 import com.example.coderescue.Activities.VictimHomeActivity;
+import com.example.coderescue.Classes.DisasterSpinnerCardModel;
 import com.example.coderescue.Classes.NetworkConnectivity;
 import com.example.coderescue.Classes.ReceiveMessageUtility;
 import com.example.coderescue.Classes.SendMessageUtility;
@@ -59,13 +65,18 @@ public class VictimHomeFragment extends Fragment {
     VictimHomeCardModel m;
     public static RemoteMongoClient mongoClient;
     public String lat, longi;
+    double latitude, longitude;
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
+    private static final int REQUEST_CODE_SPEECH_INPUT = 1000;
     public String deviceid;
     private ProgressBar prog;
     public static String state;
     RecyclerView mRecyclerView;
     VictimHomeAdapter myAdapter;
     Context c;
+    EditText msg_input;
+    soup.neumorphism.NeumorphImageButton voiceBtn2;
+    CardView send;
 
     @Nullable
     @Override
@@ -76,7 +87,7 @@ public class VictimHomeFragment extends Fragment {
 
         prog = root.findViewById(R.id.progressBar2);
         snd = root.findViewById(R.id.snd_msg);
-//        button_send_msg = root.findViewById(R.id.button_send_msg);
+        button_send_msg = root.findViewById(R.id.snd_msg2);
         mRecyclerView = root.findViewById(R.id.recylcerView5);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -87,25 +98,147 @@ public class VictimHomeFragment extends Fragment {
                 snd.setEnabled(false);
             }
         });
-//        button_send_msg.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
+        button_send_msg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 //                Intent intent = new Intent(getActivity(), SendMessageActivity.class);
 //                startActivity(intent);
-//            }
-//        });
+                send_message_dialog();
+            }
+        });
         return root;
+    }
+
+    public void send_message_dialog() {
+        AlertDialog.Builder mBuilder = new AlertDialog.Builder(getActivity());
+        View mView = getLayoutInflater().inflate(R.layout.message_dialog, null);
+
+        msg_input = mView.findViewById(R.id.msg_input);
+        voiceBtn2 = mView.findViewById(R.id.voiceBtn2);
+        send = mView.findViewById(R.id.send_msg);
+
+        if (ContextCompat.checkSelfPermission(
+                getActivity(), Manifest.permission.ACCESS_FINE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION_PERMISSION);
+        } else {
+            getCurrentLocation_Send_Message();
+        }
+
+        send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String inital = "";
+                if (latitude != -1) {
+                    inital += "Latitude: " + latitude + "\n" + "Longitude: " + longitude + "\n";
+                    String mapsurl = "http://maps.google.com/maps?q=loc:" + latitude + "," + longitude;
+                    inital += "Maps Link: " + mapsurl + "\n";
+                }
+                inital += "Message: \n";
+                String message = inital + msg_input.getText().toString();
+                SendMessageUtility.sendMessage(getActivity(), getActivity(), message);
+                String toastText = "Message sent successfully";
+                Toast.makeText(getActivity(), toastText, Toast.LENGTH_SHORT).show();
+                msg_input.setText("");
+            }
+        });
+
+        voiceBtn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                speak();
+            }
+        });
+
+        mBuilder.setView(mView);
+        AlertDialog dialog = mBuilder.create();
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
+    }
+
+    private void getCurrentLocation_Send_Message() {
+        LocationRequest locationRequest = new LocationRequest();
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(3000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        LocationServices.getFusedLocationProviderClient(getActivity())
+                .requestLocationUpdates(locationRequest, new LocationCallback() {
+                    @Override
+
+                    public void onLocationResult(LocationResult locationResult) {
+                        super.onLocationResult(locationResult);
+                        LocationServices.getFusedLocationProviderClient(getActivity())
+                                .removeLocationUpdates(this);
+                        if (locationResult != null && locationResult.getLocations().size() > 0) {
+                            int latestLocationIndex = locationResult.getLocations().size() - 1;
+                            latitude = locationResult.getLocations().get(latestLocationIndex).getLatitude();
+                            longitude = locationResult.getLocations().get(latestLocationIndex).getLongitude();
+                            System.out.println("aagyi location");
+                            Geocoder gcd = new Geocoder(getActivity(),
+                                    Locale.getDefault());
+                            List<Address> addresses;
+                            try {
+                                addresses = gcd.getFromLocation(latitude,
+                                        longitude, 1);
+                                if (addresses.size() > 0) {
+                                    state = addresses.get(0).getAdminArea();
+                                }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }, Looper.getMainLooper());
+    }
+
+    private void speak(){
+
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Hi speak something");
+
+        try {
+            startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT);
+        }
+        catch (Exception e){
+            Toast.makeText(getActivity(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case REQUEST_CODE_SPEECH_INPUT:{
+                if (resultCode == -1 && null!=data){
+                    ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    String spoken = result.get(0);
+                    msg_input.setText(spoken);
+                    send.performClick();
+                }
+            }
+        }
     }
 
     public void button_click() {
         String toastText = "No internet. Send a message to the helpline instead instead.";
-        if (NetworkConnectivity.isInternetAvailable(getActivity()))
+        if (NetworkConnectivity.isInternetAvailable(getActivity())) {
             toastText = "Internet Available";
-        Toast.makeText(getActivity(), toastText, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), toastText, Toast.LENGTH_SHORT).show();
+        }
+        else
+            Toast.makeText(getActivity(), toastText, Toast.LENGTH_LONG).show();
 
         if (!NetworkConnectivity.isInternetAvailable(getActivity())) {
-            Intent intent = new Intent(getActivity(), SendMessageActivity.class);
-            startActivity(intent);
+            send_message_dialog();
         } else {
             if (ContextCompat.checkSelfPermission(
                     getActivity(), Manifest.permission.ACCESS_FINE_LOCATION
@@ -136,6 +269,12 @@ public class VictimHomeFragment extends Fragment {
                 } else {
                     Toast.makeText(getActivity(), "You don't have the required permissions for receiving text messages", Toast.LENGTH_SHORT).show();
                 }
+            case REQUEST_CODE_LOCATION_PERMISSION:
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    getCurrentLocation_Send_Message();
+                }
+                else  Toast.makeText(getActivity(), "Permission Denied", Toast.LENGTH_SHORT).show();
+
         }
     }
 
@@ -209,6 +348,7 @@ public class VictimHomeFragment extends Fragment {
                         m.setDescription(dis_id);
                         m.setLatitude(lat);
                         m.setLongitude(longi);
+                        m.setCategory(i.getString("category"));
                         models.add(m);
                         System.out.println(i);
                     }

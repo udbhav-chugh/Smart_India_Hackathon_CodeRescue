@@ -7,9 +7,17 @@ public class VictimHomeCardModel {
      private String description;
     // private String rescueUsername;
     private  String latitude, longitude;
-
+    private String category;
 //    private double distance;
     // private int img;
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
 
     public String getTitle() {
         return title;

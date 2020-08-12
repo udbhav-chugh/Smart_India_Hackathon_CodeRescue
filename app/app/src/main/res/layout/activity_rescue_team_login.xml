@@ -140,6 +140,8 @@
                     app:neumorph_shapeType="flat"
                     android:layout_marginTop="50dp"
                     android:text="Log In"
+                    android:fontFamily="@font/poiretone_regular"
+                    android:textStyle="bold"
                     app:neumorph_backgroundColor="#ff6663"
                     style="@style/Widget.Neumorph.Button"/>
 
@@ -149,6 +151,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="Rescue Team Login"
+                    android:fontFamily="@font/poiretone_regular"
+                    android:textStyle="bold"
                     android:textSize="27sp"
                     app:layout_constraintBottom_toTopOf="@+id/username_container"
                     app:layout_constraintEnd_toEndOf="parent"

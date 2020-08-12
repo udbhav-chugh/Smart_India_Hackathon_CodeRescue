@@ -72,6 +72,8 @@ public class SendMessageActivity extends AppCompatActivity {
                 String inital = "";
                 if(latitude!=-1){
                     inital +="Latitude: " + latitude + "\n" + "Longitude: " + longitude + "\n";
+                    String mapsurl = "http://maps.google.com/maps?q=loc:" + latitude + "," + longitude;
+                    inital += "Maps Link: " + mapsurl + "\n";
                 }
                 inital+= "Message: \n";
                 String message = inital + msg_input.getText().toString();
